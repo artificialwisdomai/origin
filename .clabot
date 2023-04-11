@@ -1,0 +1,6 @@
+{
+  "contributors": [ "asalkeld" ],
+  "message": "Please sign the CLA. Afterwards, please type `check-cla` as a comment to reprocess this pull request.",
+  "label": "CLA",
+  "recheckComment": "check-cla"
+}
