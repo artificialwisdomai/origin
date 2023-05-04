@@ -1,4 +1,4 @@
-# images
+# Images
 Artificial Wisdom™ golden images for immutable infrastructure.
 
 ## Dependencies
