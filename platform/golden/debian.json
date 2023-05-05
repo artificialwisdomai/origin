@@ -1,0 +1,30 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "/install/vmlinuz<wait>",
+        " initrd=/install/initrd.gz",
+        " auto-install/enable=true",
+        " debconf/priority=critical",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+        " -- <wait>",
+        "<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "guest_os_type": "debian-64",
+      "http_directory": "cfg",
+      "iso_checksum": "sha256:eb3f96fd607e4b67e80f4fc15670feb7d9db5be50f4ca8d0bf07008cb025766b",
+      "iso_url": "https://cdimage.debian.org/debian-cd/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso",
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+      "ssh_password": "packer",
+      "ssh_timeout": "10000s",
+      "ssh_username": "packer",
+      "type": "virtualbox-iso",
+      "vm_name": "debian-11.7"
+    }
+  ]
+}
+
