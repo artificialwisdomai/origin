@@ -1,8 +1,8 @@
 variables {
   headless          = true
-  iso_checksum      = "224cd98011b9184e49f858a46096c6ff4894adff8945ce89b194541afdfd93b73b4666b0705234bd4dff42c0a914fdb6037dd0982efb5813e8a553d8e92e6f51"
-  iso_checksum_type = "sha512"
-  iso_url           = "https://cdimage.debian.org/debian-cd/11.6.0/amd64/iso-cd/debian-11.6.0-amd64-netinst.iso"
+  iso_checksum      = "eb3f96fd607e4b67e80f4fc15670feb7d9db5be50f4ca8d0bf07008cb025766b"
+  iso_checksum_type = "sha256"
+  iso_url           = "https://cdimage.debian.org/debian-cd/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso"
 }
 
 source "virtualbox-iso" "base-debian-amd64" {
@@ -12,7 +12,7 @@ source "virtualbox-iso" "base-debian-amd64" {
         " auto=true",
         " priority=critical",
         " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed2.cfg PACKER_USER=packer PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}<enter>",
-	"debian-installer=en_US.UTF-8 <wait>",
+	      "debian-installer=en_US.UTF-8 <wait>",
         "auto <wait>",
         "locale=en_US.UTF-8 <wait>",
         "kbd-chooser/method=us <wait>",
