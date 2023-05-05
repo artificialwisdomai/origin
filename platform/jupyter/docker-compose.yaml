@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  jupyter:
+    #image: jupyter/datascience-notebook
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./notebooks:/notebooks
+      - $SSH_AUTH_SOCK:$SSH_AUTH_SOCK
+    ports:
+      - 8888:8888
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
