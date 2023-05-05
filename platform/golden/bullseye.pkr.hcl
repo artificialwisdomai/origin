@@ -7,19 +7,31 @@ variables {
 
 source "virtualbox-iso" "base-debian-amd64" {
   boot_command         = [
-        "<esc><wait>",
+	"<esc><wait>",
         "install <wait>",
         " auto=true",
         " priority=critical",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg PACKER_USER=packer PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}<enter>",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed2.cfg PACKER_USER=packer PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}<enter>",
+	"debian-installer=en_US.UTF-8 <wait>",
+        "auto <wait>",
+        "locale=en_US.UTF-8 <wait>",
+        "kbd-chooser/method=us <wait>",
+        "keyboard-configuration/xkb-keymap=us <wait>",
+        "netcfg/get_hostname={{ .Name }} <wait>",
+        "netcfg/get_domain=vagrantup.com <wait>",
+        "fb=false <wait>",
+        "debconf/frontend=noninteractive <wait>",
+        "console-setup/ask_detect=false <wait>",
+        "console-keymaps-at/keymap=us <wait>",
+        "grub-installer/bootdev=/dev/sda <wait>",
 	"<enter><wait>"
   ]
 
-  http_directory       = "/home/sdake/images/cfg"
+  http_directory       = "cfg"
   cpus                 = 8
   disk_size            = 65535
   guest_os_type        = "Debian11_64"
-  guest_additions_mode = "attach"
+  guest_additions_mode = "disable"
   guest_additions_interface = "virtio"
   headless             = true
   output_directory     = "build"
@@ -34,12 +46,9 @@ source "virtualbox-iso" "base-debian-amd64" {
   hard_drive_interface = "virtio"
   rtc_time_base        = "UTC"
   shutdown_command     = "echo 'packer' | sudo -S shutdown -P now"
-  ssh_wait_timeout     = "30m"
   ssh_username         = "packer"
-  vboxmanage = [
-    [ "modifyvm", "{{.Name}}", "--recording", "on" ],
-    [ "modifyvm", "{{.Name}}", "--nic1", "natnetwork" ]
-  ]
+  ssh_password         = "packer"
+  ssh_wait_timeout     = "5m"
 }
 
 # Build a golden image by connecting a compute source with a provisioner
