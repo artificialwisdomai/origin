@@ -5,7 +5,7 @@ variable "config_file" {
 
 variable "config_dir" {
   type    = string
-  default = "${path.root}/cfg"
+  default = "cfg"
 }
 
 variable "cpus" {
@@ -80,7 +80,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   headless             = "${var.headless}"
   output_directory     = "build"
   output_filename      = "${var.image_name}.raw"
-  http_directory       = "${var.config_dir}"
+  http_directory       = "${path.root}/${var.config_dir}"
   communicator         = "ssh"
   skip_nat_mapping     = false
   iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
