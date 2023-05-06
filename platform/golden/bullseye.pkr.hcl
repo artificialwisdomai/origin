@@ -49,6 +49,10 @@ source "virtualbox-iso" "base-debian-amd64" {
   ssh_username         = "packer"
   ssh_password         = "packer"
   ssh_wait_timeout     = "5m"
+  vboxmanage = [
+      [ "modifyvm", "{{.Name}}", "--recording", "on" ],
+      [ "modifyvm", "{{.Name}}", "--nic1", "natnetwork" ]
+  ]
 }
 
 # Build a golden image by connecting a compute source with a provisioner
