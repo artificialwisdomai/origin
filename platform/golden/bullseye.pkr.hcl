@@ -5,7 +5,7 @@ variable "config_file" {
 
 variable "config_dir" {
   type    = string
-  default = "${path.root}/cfg"
+  default = "cfg"
 }
 
 variable "cpus" {
