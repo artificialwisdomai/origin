@@ -53,3 +53,16 @@ Stop virtualbox:
 ```bash
 bash vbox/stop.sh
 ```
+
+## Diagnostics
+
+Convert `webm` to `mp4`:
+
+The video recording is stored in webm. I have not had much success with playing webm
+files that allow fast forward or fast rewind. As a result, you may consider
+converting them to mp4. The files are stored in `$HOME/VirtualBox VMs`.
+
+```
+ffmpeg -i in.webm -c:v libx264 -c:a aac -strict experimental -b:a 192k out.mp4
+```
+
