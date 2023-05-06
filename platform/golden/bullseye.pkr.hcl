@@ -72,7 +72,7 @@ source "virtualbox-iso" "base-debian-amd64" {
     "keyboard-configuration/xkb-keymap=us <wait>",
     "locale=en_US <wait>",
     "netcfg/get_hostname=debian-11-7 <wait>",
-    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_dir}/${var.config_file} <wait>",
+    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file} <wait>",
      "<enter><wait>"
   ]
   guest_os_type        = "Debian11_64"
