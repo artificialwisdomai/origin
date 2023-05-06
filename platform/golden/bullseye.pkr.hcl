@@ -50,12 +50,12 @@ variable "image_name" {
 
 variable "ssh_password" {
   type    = string
-  default = "alwaysAbad1dea"
+  default = "packer"
 }
 
 variable "ssh_username" {
   type    = string
-  default = "builder"
+  default = "packer"
 }
 
 source "virtualbox-iso" "base-debian-amd64" {
