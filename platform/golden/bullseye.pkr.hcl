@@ -11,7 +11,7 @@ source "virtualbox-iso" "base-debian-amd64" {
         "install <wait>",
         " auto=true",
         " priority=critical",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed2.cfg PACKER_USER=packer PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}<enter>",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg PACKER_USER=packer PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}<enter>",
 	"debian-installer=en_US.UTF-8 <wait>",
         "auto <wait>",
         "locale=en_US.UTF-8 <wait>",
@@ -27,7 +27,7 @@ source "virtualbox-iso" "base-debian-amd64" {
 	"<enter><wait>"
   ]
 
-  http_directory       = "cfg"
+  http_directory       = "${path.root}/cfg"
   cpus                 = 8
   disk_size            = 65535
   guest_os_type        = "Debian11_64"
