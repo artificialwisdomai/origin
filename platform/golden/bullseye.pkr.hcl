@@ -75,6 +75,7 @@ source "virtualbox-iso" "base-debian-amd64" {
     "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_dir}/${var.config_file} <wait>",
      "<enter><wait>"
   ]
+  guest_os_type        = "Debian11_64"
   cpus                 = "${var.cpus}"
   disk_size            = "${var.disk_size}"
   headless             = "${var.headless}"
