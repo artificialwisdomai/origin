@@ -1,11 +1,11 @@
 variable "config_file" {
   type    = string
-  default = "debian-11-preseed.cfg"
+  default = "preseed-debian-11.cfg"
 }
 
 variable "config_dir" {
   type    = string
-  default = "cfg"
+  default = "${path.root}/cfg"
 }
 
 variable "cpus" {
@@ -15,7 +15,7 @@ variable "cpus" {
 
 variable "disk_size" {
   type    = string
-  default = "4096"
+  default = "65536"
 }
 
 variable "memory" {
@@ -30,12 +30,12 @@ variable "headless" {
 
 variable "iso_checksum" {
   type    = string
-  default = "eb3f96fd607e4b67e80f4fc15670feb7d9db5be50f4ca8d0bf07008cb025766b"
+  default = "4460ef6470f6d8ae193c268e213d33a6a5a0da90c2d30c1024784faa4e4473f0c9b546a41e2d34c43fbbd43542ae4fb93cfd5cb6ac9b88a476f1a6877c478674"
 }
 
 variable "iso_checksum_type" {
   type    = string
-  default = "sha256"
+  default = "sha512"
 }
 
 variable "iso_url" {
@@ -50,7 +50,6 @@ variable "image_name" {
 
 variable "ssh_password" {
   type    = string
-  default = "packer"
 }
 
 variable "ssh_username" {
