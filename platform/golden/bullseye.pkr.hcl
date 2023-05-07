@@ -57,6 +57,10 @@ variable "ssh_username" {
   default = "packer"
 }
 
+variable "build_time" {
+  type    = string
+}
+
 source "virtualbox-iso" "base-debian-amd64" {
   boot_command         = [
     "<esc><wait>",
@@ -72,7 +76,10 @@ source "virtualbox-iso" "base-debian-amd64" {
     "locale=en_US <wait>",
     "netcfg/get_hostname=debian-11-7 <wait>",
     "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file} <wait>",
-     "<enter><wait>"
+    "passwd/username=${var.ssh_username} <wait>",
+    "passwd/user-password=${var.ssh_password} <wait>",
+    "passwd/user-password-again=${var.ssh_password} <wait>",
+    "<enter><wait>"
   ]
   guest_os_type        = "Debian11_64"
   cpus                 = "${var.cpus}"
@@ -90,11 +97,12 @@ source "virtualbox-iso" "base-debian-amd64" {
   nic_type             = "virtio"
   hard_drive_interface = "virtio"
   rtc_time_base        = "UTC"
-  shutdown_command     = "echo '${var.ssh_username}' | sudo -S shutdown -P now"
+  shutdown_command     = "echo '${var.ssh_password}' | sudo -S shutdown -P now"
   ssh_username         = "${var.ssh_username}"
   ssh_password         = "${var.ssh_password}"
   ssh_wait_timeout     = "30m"
   vboxmanage = [
+    [ "modifyvm", "{{.Name}}", "--recording", "on" ],
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ]
   ]
 }
