@@ -45,13 +45,26 @@ bash vbox/start.sh
 Build the bullseye golden:
 
 ```bash
-PACKER_LOG=1 packer build bullseye.pkr.hcl
+bash run.sh
+```
+
+or
+
+```bash
+SSH_PASSWORD=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+PACKER_LOG=1 packer build -var ssh_password=${SSH_PASSWORD} bullseye.pkr.hcl
 ```
 
 Stop virtualbox:
 
 ```bash
 bash vbox/stop.sh
+```
+
+The built image will be in the build directory:
+
+```bash
+ls build/golden.raw.ovf
 ```
 
 ## Diagnostics
@@ -65,4 +78,3 @@ converting them to mp4. The files are stored in `$HOME/VirtualBox VMs`.
 ```
 ffmpeg -i in.webm -c:v libx264 -c:a aac -strict experimental -b:a 192k out.mp4
 ```
-
