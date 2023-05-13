@@ -97,7 +97,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   nic_type             = "virtio"
   hard_drive_interface = "virtio"
   rtc_time_base        = "UTC"
-  shutdown_command     = "echo '${var.ssh_password}' | sudo -S shutdown -P now"
+  shutdown_command     = "echo '${var.ssh_password}' | sudo -S /usr/sbin/shutdown -P now"
   ssh_username         = "${var.ssh_username}"
   ssh_password         = "${var.ssh_password}"
   ssh_wait_timeout     = "30m"
@@ -110,5 +110,12 @@ source "virtualbox-iso" "base-debian-amd64" {
 # Build a golden image by connecting a compute source with a provisioner
 build {
   sources = ["source.virtualbox-iso.base-debian-amd64"]
+
+  provisioner "shell" {
+    environment_vars = ["SSH_PASSWORD=${var.ssh_password}"]
+    execute_command = "{{ .Vars }} bash '{{ .Path }}'"
+#    inline          = ["echo Hello World"]
+    script          = "scripts/serial.sh"
+  }
 
 }
