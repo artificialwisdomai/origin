@@ -1,3 +1,19 @@
+terraform {
+  required_providers {
+    oci = {
+      source  = "oracle/oci"
+    }
+  }
+}
+
+provider "oci" {
+  tenancy_ocid         = "ocid1.tenancy.oc1..aaaaaaaa6vyjrctvv5ax3lzuah3ldtlnrvni6hxcqdzcfoxjw5stgu4vz32q"
+  user_ocid            = "ocid1.user.oc1..aaaaaaaaihmxsgqpnkbsf5d7nmgm2xy3ctvkhf4oupu43gyti3pzfe6hpvua"
+  fingerprint          = "3f:6c:1d:9b:ef:bc:03:c0:48:a6:63:d5:4c:81:74:54"
+  private_key_path     = "~/.oci/robert-oci.pem"
+  region               = "us-phoenix-1"
+}
+
 resource "oci_objectstorage_bucket" "debian_golden" {
   # Bucket configurations
   compartment_id = var.compartment_id
@@ -7,24 +23,10 @@ resource "oci_objectstorage_bucket" "debian_golden" {
 
 resource "oci_objectstorage_object" "debian_golden" {
   bucket    = oci_objectstorage_bucket.debian_golden.name
-  source    = "golden.raw-disk001.vmdk"
+  source    = "${path.module}/build/golden.raw-disk001.vmdk"
   object    = "golden.raw-disk001.vmdk"
   namespace = var.namespace
 }
-
-
-## Seems this doesn't actually exist
-# resource "oci_compute_image_import" "import_vmdk_image" {
-#   display_name = "debian-golden"
-#   compartment_id = var.compartment_id
-#   bucket_name = "debian-golden"
-#   object_name = "golden.raw-disk001.vmdk"
-#   format = "VMDK"
-#   source_details {
-#     source_type = "objectStorageUri"
-#     source_uri = oci_objectstorage_bucket.debian_golden.namespace_path
-#   }
-# }
 
 resource "oci_core_image" "debian_golden" {
     #Required

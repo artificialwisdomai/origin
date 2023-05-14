@@ -14,6 +14,11 @@ provider "oci" {
   region               = "us-phoenix-1"
 }
 
+data "oci_core_images" "debian_golden" {
+  compartment_id     = var.compartment_id
+  display_name       = var.image_display_name
+}
+
 resource "oci_core_instance" "golden_vm" {
   compartment_id     = var.compartment_id
   availability_domain = "zyFb:PHX-AD-1"
@@ -28,7 +33,7 @@ resource "oci_core_instance" "golden_vm" {
   source_details {
     source_type = "image"
     #source_id = "ocid1.image.oc1.phx.aaaaaaaa6aknnobdsfwxr57es4vmuccela5p57shus7dj5aleqcjc6egy4zq"
-    source_id = oci_core_image.debian_golden.id
+    source_id = data.oci_core_images.debian_golden.images.0.id
   }
 
   metadata = { 
