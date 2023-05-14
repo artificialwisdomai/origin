@@ -21,6 +21,6 @@ echo $WORK_REQUEST_ID
 WORK_DISPLAY_NAME=$(echo $WORK_REQUEST | jq '.data."display-name"' | tr -d '"')
 echo $WORK_DISPLAY_NAME
 if [ $? -gt 0 ]; then exit 1; fi
-while [ "$(oci work-requests work-request get --work-request-id $WORK_REQUEST_ID \
-	| jq '.data.status')" != "SUCCEEDED" ]; do echo waiting; sleep 90; done
+time
+while [ "$(oci work-requests work-request get --work-request-id $WORK_REQUEST_ID         | jq '.data.status' >&/dev/null; echo $?)" -eq 0 ]; do echo waiting 1m; sleep 60; done
 echo "SUCCESS importing $WORK_DISPLAY_NAME"
