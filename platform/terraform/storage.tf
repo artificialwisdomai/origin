@@ -38,6 +38,6 @@ resource "oci_core_image" "debian_golden" {
         source_type = "objectStorageTuple"
         bucket_name = var.bucket_name
         namespace_name = var.namespace
-        object_name = var.object_name # exported image name
+        object_name = oci_objectstorage_object.debian_golden.object # exported image name
     }
 }
