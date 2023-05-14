@@ -2,3 +2,5 @@ build/
 .terraform*
 terraform.tfstate*
 *tfplan
+*ovf
+*vmdk
