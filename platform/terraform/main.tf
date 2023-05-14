@@ -28,7 +28,7 @@ resource "oci_core_instance" "golden_vm" {
   source_details {
     source_type = "image"
     #source_id = "ocid1.image.oc1.phx.aaaaaaaa6aknnobdsfwxr57es4vmuccela5p57shus7dj5aleqcjc6egy4zq"
-    source_id = oci_compute_image_import.import_vmdk_image.image_id
+    source_id = oci_core_image.debian_golden.id
   }
 
   metadata = { 
