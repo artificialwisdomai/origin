@@ -1,5 +1,5 @@
 # https://github.com/marketplace/actions/github-spellcheck-action
-
+---
 name: Lint spelling of relevant files
 on:  # yamllint disable-line rule:truthy
   push:
