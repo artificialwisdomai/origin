@@ -1,4 +1,4 @@
-# https://github.com/marketplace/actions/github-spellcheck-action
+# check markdown links https://github.com/marketplace/actions/markdown-link-check
 
 name: Lint links
 on:  # yamllint disable-line rule:truthy
@@ -12,6 +12,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-      name: Check links with linkcheck
-    - uses: filiph/linkcheck@2.0.23
-      name: linkt-links
+    - uses: gaurav-nelson/github-action-markdown-link-check@v1
