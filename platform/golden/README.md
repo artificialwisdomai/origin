@@ -26,7 +26,7 @@ Install packer:
 sudo apt install packer
 ```
 
-Install virtualbox:
+Install VirtualBox:
 
 ```bash
 sudo apt install fasttrack-archive-keyring
@@ -36,7 +36,7 @@ sudo apt install virtualbox
 
 ## Manual usage
 
-Start virtualbox:
+Start VirtualBox:
 
 ```bash
 bash vbox/start.sh
@@ -55,7 +55,7 @@ SSH_PASSWORD=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | hea
 PACKER_LOG=1 packer build -var ssh_password=${SSH_PASSWORD} bullseye.pkr.hcl
 ```
 
-Stop virtualbox:
+Stop VirtualBox:
 
 ```bash
 bash vbox/stop.sh
