@@ -2,9 +2,9 @@
 name: Lint YAML files
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]   # yamllint disable-line rule:truthy
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ]   # yamllint disable-line rule:truthy
 
 jobs:
   lint_yaml:
