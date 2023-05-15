@@ -1,11 +1,11 @@
 ---
 - name: "Get installed packages"
-    apt:
-      list: "installed"
-    register: installed_packages
+  apt:
+    list: "installed"
+  register: installed_packages
 
 - name: "Install missing packages"
-    package: 
-      state: "present"
-      name: "{{ item }}"
-    with_items: "{{ install_package_list | difference(installed_packages | json_query('results[*].name')) }}"
+  package: 
+    state: "present"
+    name: "{{ item }}"
+      with_items: "{{ install_package_list | difference(installed_packages | json_query('results[*].name')) }}"
