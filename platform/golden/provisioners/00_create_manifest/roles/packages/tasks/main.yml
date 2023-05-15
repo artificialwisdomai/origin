@@ -5,7 +5,7 @@
   register: installed_packages
 
 - name: "Install missing packages"
-  package: 
+  package:
     state: "present"
     name: "{{ item }}"
-      with_items: "{{ install_package_list | difference(installed_packages | json_query('results[*].name')) }}"
+  with_items: "{{ install_package_list | difference(installed_packages | json_query('results[*].name')) }}"
