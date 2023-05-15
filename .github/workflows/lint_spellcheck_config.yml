@@ -8,7 +8,7 @@ matrix:
     lang: en
   dictionary:
     wordlists:
-    - lint_spellcheck_dictionary.txt
+    - .github/workflows/lint_spellcheck_dictionary.txt
     encoding: utf-8
   pipeline:
   - pyspelling.filters.markdown:
