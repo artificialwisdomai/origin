@@ -1,11 +1,11 @@
 # https://github.com/marketplace/actions/yaml-lint
 ---
 name: Lint YAML files
-on:
+on: # yamllint disable-line rule:truthy
   push:
-    branches: ["main"]   # yamllint disable-line rule:truthy
+    branches: ["main"]
   pull_request:
-    branches: ["main"]   # yamllint disable-line rule:truthy
+    branches: ["main"]
 
 jobs:
   lint_yaml:
