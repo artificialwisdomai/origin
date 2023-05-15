@@ -14,15 +14,13 @@ provider "oci" {
   region               = "us-phoenix-1"
 }
 
-resource "oci_objectstorage_bucket" "debian_golden" {
-  # Bucket configurations
-  compartment_id = var.compartment_id
+data "oci_objectstorage_bucket" "debian_golden" {
   name           = "debian-golden"
   namespace      = var.namespace
 }
 
 resource "oci_objectstorage_object" "debian_golden" {
-  bucket    = oci_objectstorage_bucket.debian_golden.name
+  bucket    = data.oci_objectstorage_bucket.debian_golden.name
   source    = "${path.module}/build/golden.raw-disk001.vmdk"
   object    = "golden.raw-disk001.vmdk"
   namespace = var.namespace
