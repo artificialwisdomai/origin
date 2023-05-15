@@ -6,9 +6,6 @@ on:  # yamllint disable-line rule:truthy
     branches: ["main"]
   pull_request:
     branches: ["main"]
-on:
-  pull_request:
-          on:
 
 jobs:
   lint-spelling:
