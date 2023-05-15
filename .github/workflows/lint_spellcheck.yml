@@ -1,0 +1,23 @@
+# https://github.com/marketplace/actions/github-spellcheck-action
+
+name: Lint spelling of relevant files
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+on:
+  pull_request:
+          on:
+
+jobs:
+  lint-spelling:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: rojopolis/spellcheck-github-actions@0.30.0
+      name: lint-spelling
+      with:
+        config_path: ${{ github.workspace }}/.github/workflows/spellcheck.yml
+        task_name: Markdown
+        output_file: spellcheck-output.txt
