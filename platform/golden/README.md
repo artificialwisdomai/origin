@@ -71,7 +71,7 @@ ls build/golden.raw.ovf
 
 Convert `webm` to `mp4`:
 
-The video recording is stored in webm. I have not had much success with playing webm
+The video recording is stored in WebM. I have not had much success with playing WebM
 files that allow fast forward or fast rewind. As a result, you may consider
 converting them to mp4. The files are stored in `$HOME/VirtualBox VMs`.
 
