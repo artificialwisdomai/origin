@@ -1,3 +1,4 @@
+---
  - name: "Get installed packages"
     apt:
       list: "installed"
