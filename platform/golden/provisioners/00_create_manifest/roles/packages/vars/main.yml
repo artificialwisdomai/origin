@@ -1,6 +1,6 @@
 ---
 install_package_list:
-         - apport
+ - apport
  - bc
  - bcache-tools
  - binutils
