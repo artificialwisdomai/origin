@@ -15,6 +15,6 @@ jobs:
     - uses: rojopolis/spellcheck-github-actions@0.30.0
       name: lint-spelling
       with:
-        config_path: ${{ github.workspace }}/.github/workflows/spellcheck.yml
+        config_path: ${{ github.workspace }}/.github/workflows/spellcheck_config.yml
         task_name: Markdown
         output_file: spellcheck-output.txt
