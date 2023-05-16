@@ -3,11 +3,6 @@ variable "config_file" {
   default = "preseed-debian-11.cfg"
 }
 
-variable "auth_keys_file" {
-  type    = string
-  default = "team_authorized_keys"
-}
-
 variable "config_dir" {
   type    = string
   default = "cfg"
