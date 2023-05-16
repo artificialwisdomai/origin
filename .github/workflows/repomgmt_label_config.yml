@@ -1,6 +1,6 @@
 ---
 governance:
-- '*'
+  - '*'
 
 platform:
-- any: ['platform']
+  - any: ['platform']
