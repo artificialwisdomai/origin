@@ -17,7 +17,7 @@ else
   exit 1
 fi
 
-Set up and track the import of the image into OCI
+# Set up and track the import of the image into OCI
 NAMESPACE=$(oci os ns get | jq .data | tr -d '"')
 WORK_REQUEST=$(oci compute image import from-object --namespace $NAMESPACE \
 	--launch-mode PARAVIRTUALIZED --display-name debian-golden \
@@ -27,5 +27,5 @@ WORK_DISPLAY_NAME=$(echo $WORK_REQUEST | jq '.data."display-name"' | tr -d '"')
 
 # check Work Request every 60s until the status is no longer "IN_PROGRESS"
 echo Start time: $(date)
-while [ "$(oci work-requests work-request get --work-request-id $WORK_REQUEST_ID | jq '.data.status')" == "IN_PROGRESS" ]; do echo waiting 1m; sleep 60; done
+while [ "$(oci work-requests work-request get --work-request-id $WORK_REQUEST_ID | jq '.data.status' | tr -d '"')" == "IN_PROGRESS" ]; do echo waiting 1m; sleep 60; done
 echo "SUCCESS importing $WORK_DISPLAY_NAME"
