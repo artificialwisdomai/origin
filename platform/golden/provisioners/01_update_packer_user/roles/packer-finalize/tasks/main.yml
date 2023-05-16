@@ -1,13 +1,6 @@
 ---
 # Fix user setup for packer user
-#  lock password to avoid password logins
 #  update authorized keys from @sdake and @rstarmer
-
-
-- name: Lock packer user password to prevent password reset or login
-  ansible.builtin.user:
-    name: packer
-    password: '*'
 
 - name: Set authorized keys for packer user - sdake
   ansible.posix.authorized_key:
@@ -21,21 +14,18 @@
     state: present
     key: "{{ lookup('url', 'https://github.com/rstarmer.keys', split_lines=False) }}"
 
-# Update apt packages
+# Update apt package cache and installed packages to latest versions
 
 - name: update apt packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     upgrade: true
-  when: ansible_os_family == 'Debian'
 
 # Fix grub config to support tty at boot
 
 - name: Update grub2 config to support tty at boot
-  ansible.builtin.replace:
+  ansible.builtin.lineinfile:
     path: /etc/default/grub
-    regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="(.*)"'
-    replace: 'GRUB_CMDLINE_LINUX_DEFAULT="\1 console=ttyS0"'
-    backup: true
+    lineinfile: 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX console=ttyS0"'
   notify: update grub

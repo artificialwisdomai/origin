@@ -6,19 +6,19 @@ Install the oci command line client
 
 OSX
 
-```sh
+```bash
 brew install oci-cli
 ```
 
 Linux
 
-```sh
+```bash
 python3 -m pip install oci-cli
 ```
 
 Windows
 
-```sh
+```bash
 choclatey install oci-cli
 ```
 
@@ -28,7 +28,7 @@ Download the .pem file that is generated (don't forget to do this, or you'll jus
 
 Also, you need your tenancy, user, and compartment OCIDs. You add them to:
 
-```sh
+```bash
 cat >> ~/.oci/config <<EOF
 [DEFAULT]
 user=<USER_OCID>
@@ -46,6 +46,6 @@ EOF
 
 Run upload-image.sh script
 
-```sh
+```bash
 bash upload-image.sh
 ```

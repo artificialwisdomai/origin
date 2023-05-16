@@ -48,17 +48,9 @@ variable "image_name" {
   default = "golden"
 }
 
-variable "ssh_password" {
+variable "ssh_crypted_password" {
   type    = string
-}
-
-variable "ssh_username" {
-  type    = string
-  default = "packer"
-}
-
-variable "build_time" {
-  type    = string
+  default = "!"
 }
 
 source "virtualbox-iso" "base-debian-amd64" {
@@ -67,10 +59,9 @@ source "virtualbox-iso" "base-debian-amd64" {
     "auto <wait>",
     "fb=false <wait>",
     "install <wait>", 
-    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file} <wait>",
-    "passwd/username=${var.ssh_username} <wait>",
-    "passwd/user-password=${var.ssh_password} <wait>",
-    "passwd/user-password-again=${var.ssh_password} <wait>",
+    "passwd/username=packer <wait>",
+    "passwd/user-password-crypted=${var.ssh_crypted_password} <wait>",
+    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<wait>",
     "<enter><wait>"
   ]
   guest_os_type        = "Debian11_64"
@@ -89,14 +80,12 @@ source "virtualbox-iso" "base-debian-amd64" {
   nic_type             = "virtio"
   hard_drive_interface = "virtio"
   rtc_time_base        = "UTC"
-  shutdown_command     = "echo '${var.ssh_password}' | sudo -S shutdown -P now"
-  ssh_username         = "${var.ssh_username}"
-  ssh_password         = "${var.ssh_password}"
-  ssh_agent_auth       = true
+  shutdown_command     = "sudo -S shutdown -P now"
+  ssh_username         = "packer"
   ssh_wait_timeout     = "30m"
   vboxmanage = [
-    # disable recording video of install process, normally for debug purposes
-    [ "modifyvm", "{{.Name}}", "--recording", "off" ],
+    # enable recording video of install process, for debug and build record
+    [ "modifyvm", "{{.Name}}", "--recording", "on" ],
     # enable proxy access across NAT network interface.
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
   ]
@@ -116,8 +105,7 @@ build {
     ]
     # Add scp-extra-args -O to address inconsistencies with SFTP protocol
     extra_arguments = [ "--scp-extra-args", "'-O'" ]
-    # Set username to install user (ssh_username, generally 'packer')
-    user="${var.ssh_username}"
+    # Set username to install user 'packer'
+    user="packer"
   }
-
 }
