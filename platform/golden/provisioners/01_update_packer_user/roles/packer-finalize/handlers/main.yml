@@ -1,3 +1,4 @@
+---
 - name: update grub
   ansible.builtin.command: update-grub
   when: ansible_os_family == 'Debian'
