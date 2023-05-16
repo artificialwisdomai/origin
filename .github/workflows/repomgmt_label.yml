@@ -1,7 +1,10 @@
 ---
 name: "Label pull requests"
-on:
-  - pull_request_target
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   triage:
@@ -11,3 +14,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/labeler@v4
+        with:
+          configuration_path: ${{ github.workspace }}/.github/workflows/repomgmt_label_config.yml
