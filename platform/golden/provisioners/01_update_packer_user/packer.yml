@@ -2,7 +2,6 @@
 - hosts: all
   any_errors_fatal: true
   become: true
-
   tasks:
     - import_role:
-        name: packer-finalize
+      name: packer-finalize
