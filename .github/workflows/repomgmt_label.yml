@@ -15,4 +15,4 @@ jobs:
     steps:
       - uses: actions/labeler@v4
         with:
-          configuration_path: ${{ github.workspace }}/.github/workflows/repomgmt_label_config.yml
+          configuration-path: ${{ github.workspace }}/.github/workflows/repomgmt_label_config.yml
