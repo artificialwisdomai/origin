@@ -6,19 +6,21 @@ These operations are done one time.
 
 ## Configure Github
 
-This is only ever done once. With your web browser [Fork](https://github.com/artificialwisdomai/origin/fork) the repository. This will create a copy of the Artificial Wisdom™ cloud repository `origin`. Our cloud originates from this repository.
+This is, typically, only ever done once. With your web browser [Fork](https://github.com/artificialwisdomai/origin/fork) the repository. This will create a copy of the Artificial Wisdom™ cloud repository `origin`.
+
+This is our origin.
 
 ## Configure environment
 
 Each environment must be individually configured. An environment may be a Linux shell, MacOS shell, Windows shell, or the like.
 
-Clone the forked repository:
+Clone the forked `origin` repository:
 
 ```bash
 git clone git@github.com:${USER}/origin.git
 ```
 
-Add a remote identified as upstream:
+Add a remote identified as `upstream`:
 
 ```bash
 git remote add upstream https://github.com/artificialwisdomai/origin.git
@@ -33,6 +35,17 @@ The lifecycle of a change involves:
 - Developer issues pull request.
 - Developer and reviewer work to improve pull request.
 - Developer deletes branch.
+- A reviewer will generally approve the pull request after one or more iterations of this cycle.
+
+**This is not a policy**. There are situations under which a reviewer may decline a pull request. Based upon ten years of open source code review, I have seen pull requests declined for a variety of reasonable causes:
+
+- Any review that takes more than twenty minutes per review iteration.
+- Any review that touches ten or more files in unique ways.
+- Modification to the license or code of conduct.
+- Modifications to the CI system.
+- Anything that isn't really an improvement.
+- Unwillingness of the submitter to make required changes.
+- Unwillingness of the submitter to file technical debt bugs.
 
 **Reviewer is responsible for all merge decisions and must always adhere to the [code of conduct](./CODE-OF-CONDUCT.md)**
 
@@ -97,10 +110,15 @@ Once you've committed and pushed all of your changes to GitHub, go to the page f
 
 ## Participate in the review
 
-Communication is essential to completing the review of the change.
+Communication is essential to completing the review of the change. We expect the
+highest ethical and technical standards from our reviewers. There is significant
+reviewer variance. As reviewers are humans, they have individual behavior, make
+mistakes, commit technical fouls, and drive the architecture and quality forward
+in ways that may be hard to comprehend but are nearly always technically sound.
 
-The reviewer's job:
+The reviewer's responsibilites:
 
+- The only technical rule is to never rubber stamp a review.
 - Identify problems wth the change that need resolution now.
 - Identify problems wth the change that need resolution later.
 - Consider the change as it relates to the broader architecture.
@@ -110,9 +128,7 @@ The reviewer's job:
 Communicate with the reviewers using the github UI or by responding to the github
 issue email. A reviewer could make mulitple statements and ask multiple questions
 during a review. Answering all questions speeds up the review process. Resolving
-review comments is essential to merging of the PR. Sometimes the reviewer may ask
-you to write a tech-debt bug, meaning they will accept the change, on condition
-that the technical debt being introduced is recorded in a github issue.
-
-Once a question or issue with the PR is resolved, the reviewer who opened the question
-should close the conversation when they are satisfieid. The reviewer may choose to merge a PR with open conversations.
+review comments helps the submitter understand the line of questioning asked in
+the comment is resolved. As a reviewer, you can ask for reasonable results from
+a submitter, such as filing a tech-debt bug, changing an implementation, ensuring
+linting is functional, rebasing on main, and other reasonable activites.
