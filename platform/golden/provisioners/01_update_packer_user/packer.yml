@@ -1,0 +1,8 @@
+- hosts: all
+  any_errors_fatal: yes
+  become: true
+
+  tasks:
+    - import_role:
+        name: packer-finalize
+

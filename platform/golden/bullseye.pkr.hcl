@@ -3,6 +3,11 @@ variable "config_file" {
   default = "preseed-debian-11.cfg"
 }
 
+variable "auth_keys_file" {
+  type    = string
+  default = "team_authorized_keys"
+}
+
 variable "config_dir" {
   type    = string
   default = "cfg"
@@ -65,16 +70,8 @@ source "virtualbox-iso" "base-debian-amd64" {
   boot_command         = [
     "<esc><wait>",
     "auto <wait>",
-    "console-keymaps-at/keymap=us <wait>",
-    "console-setup/ask_detect=false <wait>",
-    "debconf/frontend=noninteractive <wait>",
-    "debian-installer=en_US <wait>",
     "fb=false <wait>",
     "install <wait>", 
-    "kbd-chooser/method=us <wait>",
-    "keyboard-configuration/xkb-keymap=us <wait>",
-    "locale=en_US <wait>",
-    "netcfg/get_hostname=debian-11-7 <wait>",
     "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file} <wait>",
     "passwd/username=${var.ssh_username} <wait>",
     "passwd/user-password=${var.ssh_password} <wait>",
@@ -83,6 +80,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   ]
   guest_os_type        = "Debian11_64"
   cpus                 = "${var.cpus}"
+  memory               = "${var.memory}"
   disk_size            = "${var.disk_size}"
   headless             = "${var.headless}"
   output_directory     = "build"
@@ -93,29 +91,38 @@ source "virtualbox-iso" "base-debian-amd64" {
   iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
   iso_interface        = "virtio"
-  memory               = "${var.memory}"
   nic_type             = "virtio"
   hard_drive_interface = "virtio"
   rtc_time_base        = "UTC"
-  shutdown_command     = "echo '${var.ssh_password}' | sudo -S /usr/sbin/shutdown -P now"
+  shutdown_command     = "echo '${var.ssh_password}' | sudo -S shutdown -P now"
   ssh_username         = "${var.ssh_username}"
   ssh_password         = "${var.ssh_password}"
+  ssh_agent_auth       = true
   ssh_wait_timeout     = "30m"
   vboxmanage = [
-    [ "modifyvm", "{{.Name}}", "--recording", "on" ],
-    [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ]
+    # disable recording video of install process, normally for debug purposes
+    [ "modifyvm", "{{.Name}}", "--recording", "off" ],
+    # enable proxy access across NAT network interface.
+    [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
   ]
 }
 
 # Build a golden image by connecting a compute source with a provisioner
+
 build {
   sources = ["source.virtualbox-iso.base-debian-amd64"]
 
-  provisioner "shell" {
-    environment_vars = ["SSH_PASSWORD=${var.ssh_password}"]
-    execute_command = "{{ .Vars }} bash '{{ .Path }}'"
-#    inline          = ["echo Hello World"]
-    script          = "scripts/serial.sh"
+# Use Ansible (needs to be on the "packer" host) to provision the instance
+  provisioner "ansible" {
+    playbook_file = "./provisioners/01_update_packer_user/packer.yml"
+    ansible_env_vars = [
+      "ANSIBLE_HOST_KEY_CHECKING=False",
+      "ANSIBLE_SSH_ARGS='-oForwardAgent=yes -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa'"
+    ]
+    # Add scp-extra-args -O to address inconsistencies with SFTP protocol
+    extra_arguments = [ "--scp-extra-args", "'-O'" ]
+    # Set username to install user (ssh_username, generally 'packer')
+    user="${var.ssh_username}"
   }
 
 }
