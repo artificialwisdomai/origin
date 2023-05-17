@@ -35,5 +35,5 @@
 - name: Update grub2 config to support tty at boot
   ansible.builtin.lineinfile:
     path: /etc/default/grub
-    lineinfile: 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX console=ttyS0"'
+    line: 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX console=ttyS0"'
   notify: update grub
