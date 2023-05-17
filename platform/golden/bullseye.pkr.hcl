@@ -83,8 +83,6 @@ source "virtualbox-iso" "base-debian-amd64" {
   shutdown_command     = "sudo -S shutdown -P now"
   ssh_username         = "packer"
   ssh_password         = "${var.ssh_password}"
-  ssh_pty              = true
-  ssh_private_key_file = "~/.ssh/id_ed25519"
   ssh_wait_timeout     = "30m"
   vboxmanage = [
     # enable recording video of install process, for debug and build record
