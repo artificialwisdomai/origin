@@ -48,9 +48,8 @@ variable "image_name" {
   default = "golden"
 }
 
-variable "ssh_crypted_password" {
+variable "ssh_password" {
   type    = string
-  default = "!"
 }
 
 source "virtualbox-iso" "base-debian-amd64" {
@@ -60,7 +59,8 @@ source "virtualbox-iso" "base-debian-amd64" {
     "fb=false <wait>",
     "install <wait>", 
     "passwd/username=packer <wait>",
-    "passwd/user-password-crypted=${var.ssh_crypted_password} <wait>",
+    "passwd/user-password=${var.ssh_password} <wait>",
+    "passwd/user-password-again=${var.ssh_password} <wait>",
     "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<wait>",
     "<enter><wait>"
   ]
@@ -82,6 +82,9 @@ source "virtualbox-iso" "base-debian-amd64" {
   rtc_time_base        = "UTC"
   shutdown_command     = "sudo -S shutdown -P now"
   ssh_username         = "packer"
+  ssh_password         = "${var.ssh_password}"
+  ssh_pty              = true
+  ssh_private_key_file = "~/.ssh/id_ed25519"
   ssh_wait_timeout     = "30m"
   vboxmanage = [
     # enable recording video of install process, for debug and build record
