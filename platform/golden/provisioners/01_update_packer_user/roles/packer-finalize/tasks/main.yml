@@ -1,5 +1,13 @@
 ---
 # Fix user setup for packer user
+
+#  lock password to avoid password logins
+
+- name: Lock packer user password to prevent password reset or login
+  ansible.builtin.user:
+    name: packer
+    password: '*'
+
 #  update authorized keys from @sdake and @rstarmer
 
 - name: Set authorized keys for packer user - sdake
