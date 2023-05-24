@@ -87,8 +87,9 @@ source "virtualbox-iso" "base-debian-amd64" {
   vboxmanage = [
     # enable recording video of install process, for debug and build record
     [ "modifyvm", "{{.Name}}", "--recording", "on" ],
-    # enable proxy access across NAT network interface.
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
+    [ "modifyvm", "{{.Name}}", "--firmware", "efi"],
+    ["modifyvm", "{{.Name}}", "--vram", "16"]
   ]
 }
 
