@@ -54,15 +54,20 @@ variable "ssh_password" {
 
 source "virtualbox-iso" "base-debian-amd64" {
   boot_command         = [
-    "<esc><wait>",
-    "auto <wait>",
-    "fb=false <wait>",
-    "install <wait>", 
+    "<esc><esc><wait>",
+    "c <wait><wait>",
+    "setparams 'Install'<enter><wait>",
+    "  linuxefi /install.amd/vmlinuz <wait>",
+    "  url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<wait>",
+    "  initrd=/install.amd/initrd.gz<wait>",
+    " --- quiet auto <wait>",
+    "install <wait>",
     "passwd/username=packer <wait>",
     "passwd/user-password=${var.ssh_password} <wait>",
     "passwd/user-password-again=${var.ssh_password} <wait>",
-    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<wait>",
-    "<enter><wait>"
+    "<enter><wait>",
+    "boot <enter><wait>",
+    "<wait><enter>"
   ]
   guest_os_type        = "Debian11_64"
   cpus                 = "${var.cpus}"
@@ -88,10 +93,15 @@ source "virtualbox-iso" "base-debian-amd64" {
     # enable recording video of install process, for debug and build record
     [ "modifyvm", "{{.Name}}", "--recording", "on" ],
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
-    [ "modifyvm", "{{.Name}}", "--firmware", "efi"],
-    ["modifyvm", "{{.Name}}", "--vram", "16"]
+        ["modifyvm", "{{.Name}}", "--boot1", "dvd"],
+        ["modifyvm", "{{.Name}}", "--boot2", "disk"],
+        ["modifyvm", "{{.Name}}", "--chipset", "ich9"],
+        ["modifyvm", "{{.Name}}", "--firmware", "efi"],
+        ["modifyvm", "{{.Name}}", "--vram", "16"]
+    
   ]
 }
+#    [ "modifyvm", "{{.Name}}", "--firmware", "efi"],
 
 # Build a golden image by connecting a compute source with a provisioner
 
