@@ -55,14 +55,26 @@ variable "ssh_password" {
 source "virtualbox-iso" "base-debian-amd64" {
   boot_command         = [
     "<esc><wait>",
-    "auto <wait>",
-    "fb=false <wait>",
-    "install <wait>", 
+    "c <wait>",
+    "set default=0 <enter><wait>",
+    "linux /install.amd/vmlinuz <wait>",
+    "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file} <wait>",
     "passwd/username=packer <wait>",
     "passwd/user-password=${var.ssh_password} <wait>",
     "passwd/user-password-again=${var.ssh_password} <wait>",
-    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<wait>",
-    "<enter><wait>"
+    "debian-installer/language=en debian-installer/country=US <wait>",
+    "console-setup/ask_detect=false <wait>",
+    "console-setup/layoutcode=us <wait>",
+    "keyboard-configuration/layoutcode=us <wait>",
+    "keyboard-configuration/xkb-keymap=us <wait>",
+    "debian-installer/keymap=skip-config <wait>",
+    "debian-installer/locale=en_US.UTF-8 <wait>",
+    "localechooser/preferred-locale=en_US.UTF8 <wait>",
+    "netcfg/get_hostname=golden <wait>",
+    "netcfg/get_domain=local <wait>",
+    "quiet ---<enter><wait>",
+    "initrd /install.amd/initrd.gz<wait><enter><wait>",
+    "boot<wait><enter>"
   ]
   guest_os_type        = "Debian11_64"
   cpus                 = "${var.cpus}"
@@ -88,7 +100,7 @@ source "virtualbox-iso" "base-debian-amd64" {
     # enable recording video of install process, for debug and build record
     [ "modifyvm", "{{.Name}}", "--recording", "on" ],
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
-    [ "modifyvm", "{{.Name}}", "--firmware", "efi"],
+    [ "modifyvm", "{{.Name}}", "--firmware", "efi" ],
     ["modifyvm", "{{.Name}}", "--vram", "16"]
   ]
 }
