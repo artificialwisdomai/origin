@@ -1,0 +1,11 @@
+- name: Download Homebrew installation script
+  get_url:
+    url: https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+    dest: /tmp/install
+    mode: 0755
+- name: Install Homebrew
+  shell: NONINTERACTIVE=1 /tmp/install
+- name: Update Homebrew
+  community.general.homebrew:
+    state: present
+    update_homebrew: yes
