@@ -15,4 +15,4 @@ jobs:
       - id: yaml-lint
         uses: ibiqlik/action-yamllint@v3
         with:
-          config_data: ${{ github.workspace }}/.github/workflows/lint_yaml_config.yml
+          config_data: ${{ github.workspace }}/.github/config/lint_yaml_config.yml
