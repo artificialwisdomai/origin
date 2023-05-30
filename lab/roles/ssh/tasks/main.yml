@@ -1,0 +1,21 @@
+---
+- name: Create a directory if it does not exist
+  become: yes
+  become_user: "{{ item }}"
+  ansible.builtin.file:
+    path: /home/{{ item }}/.ssh
+    state: directory
+    mode: '0700'
+  with_items:
+    - lsdake
+    - sdake
+    - rstarmer
+
+- name: Pull all users latest keys
+  become: yes
+  become_user: "{{ item }}"
+  ansible.builtin.command: curl -L https://github.com/{{ item }}.keys -o /home/{{ item }}/.ssh/authorized_keys
+  with_items:
+    - lsdake
+    - sdake
+    - rstarmer

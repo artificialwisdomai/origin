@@ -1,0 +1,16 @@
+---
+- name: Install command line tools
+  community.general.homebrew:
+    name: "{{ item }}"
+  with_items:
+    - lsd
+    - bat
+    - procs
+    - dust
+    - hyperfine
+    - htop
+    - bandwhich
+    - hexyl
+    - duf
+    - starship
+    - nmap
