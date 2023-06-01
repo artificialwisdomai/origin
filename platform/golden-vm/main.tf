@@ -15,14 +15,14 @@ provider "oci" {
 }
 
 data "oci_core_images" "debian_golden" {
-  compartment_id     = var.compartment_id
-  display_name       = var.image_display_name
+  compartment_id     = "${var.compartment_id}"
+  display_name       = "${var.image_display_name}"
 }
 
 resource "oci_core_instance" "golden_vm" {
-  compartment_id     = var.compartment_id
-  availability_domain = "zyFb:PHX-AD-1"
-  shape = "VM.Standard2.1"
+  compartment_id     = "${var.compartment_id}"
+  availability_domain = "${var.availability_domain}"
+  shape = "${var.instance_shape}"
   display_name = "golden-vm"
   
   create_vnic_details {
@@ -36,7 +36,7 @@ resource "oci_core_instance" "golden_vm" {
   }
 
   metadata = { 
-    ssh_authorized_keys = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJUyyIZadahSWvpaHL1pUjSmr/VXP0VBNnuHc+CSMpiJ rstarmer\nssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMAVBP8UBLoYgIcAyFq5Q84m22+30PWq3kALB0bpXroV artificialwisdom"
+    ssh_authorized_keys = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJUyyIZadahSWvpaHL1pUjSmr/VXP0VBNnuHc+CSMpiJ rstarmer\nssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIK3yb3nTxhMJHLyHx7lnjZANGsqCW5OBb49eR+aAzlS sdake-1\nssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJfejZLH4u9kS7qIIskMS+IhyH9nSkX4PlziPiFifzs3 sdake-3"
   }
 }
 

@@ -8,6 +8,17 @@ variable namespace {
     default = "axhocnnse6ez"
 }
 
+variable availability_domain {
+    type = string
+    default = "zyFb:PHX-AD-1"
+    #default = "zyFb:PHX-AD-3"
+}
+variable instance_shape {
+    type = string
+    # default = "VM.Standard2.1"
+    default = "BM.GPU.A10.4"
+}
+
 variable bucket_name {
     type = string
     default = "debian-golden"

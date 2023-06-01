@@ -31,9 +31,23 @@
     upgrade: true
 
 # Fix grub config to support tty at boot
+- name: add iscsi packages
+  ansible.builtin.apt:
+    name: open-iscsi
+    state: present
 
 - name: Update grub2 config to support tty at boot
   ansible.builtin.lineinfile:
     path: /etc/default/grub
-    line: 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX console=ttyS0"'
-  notify: update grub
+    line: 'GRUB_CMDLINE_LINUX=$GRUB_CMDLINE_LINUX crashkernel=auto ip=dhcp LANG=en_US.UTF-8 console=tty0 console=ttyS0 iommu=on netroot=iscsi:@169.254.0.2::::iqn.2015-02.oracle.boot:uefi iscsi_initiator=iqn.2015-02.oracle.boot:instance biosdevname=0'
+
+- name: Re-install grub2 efi
+  ansible.builtin.shell: grub-install --target=x86_64-efi --bootloader-id=debian --recheck --no-floppy
+
+# This may technically be redundant to the next command
+- name: create grub.cfg boot entry
+  ansible.builtin.shell: grub-mkconfig -o /boot/grub/grub.cfg -o /boot/efi/EFI/debian/grub.cfg
+
+- name: update grub
+  ansible.builtin.command: update-grub
+
