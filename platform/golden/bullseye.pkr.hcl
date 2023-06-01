@@ -105,10 +105,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   skip_export          = "false"
   vboxmanage = [
     # enable recording video of install process, for debug and build record
-    [ "modifyvm", "{{.Name}}", "--recording", "on" ],
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
-    [ "modifyvm", "{{.Name}}", "--firmware", "EFI" ],
-    ["modifyvm", "{{.Name}}", "--vram", "16"]
   ]
 }
 
@@ -118,12 +115,16 @@ build {
   sources = ["source.virtualbox-iso.base-debian-amd64"]
   provisioner "ansible" {
     playbook_file = "./provisioners/01_update_packer_user/packer.yml"
-    ansible_env_vars = [
-      "ANSIBLE_HOST_KEY_CHECKING=False",
-      "ANSIBLE_SSH_ARGS='-oForwardAgent=yes -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa'"
-    ]
-    extra_arguments = [ "--scp-extra-args", "'-O'" ]
     user = "packer"
+    ansible_ssh_extra_args = [
+      "-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=ssh-rsa"
+    ]
+    use_sftp = true
+#    ansible_env_vars = [
+#      "ANSIBLE_HOST_KEY_CHECKING=False",
+#      "ANSIBLE_SSH_ARGS='-oForwardAgent=yes -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa'"
+#    ]
+#    extra_arguments = [ "--scp-extra-args", "'-O'" ]
   }
 # shell provisioner to test wether ansible is setting the same things the commands do.
 #  provisioner "shell" {
