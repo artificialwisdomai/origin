@@ -36,17 +36,22 @@
     name: open-iscsi
     state: present
 
+- name: update grub2 to ensure the network is activated early
+  ansible.builtin.lineinfile:
+    path: /etc/default/grub
+    line: 'GRUB_PRELOAD_MODULES="net_bootp"'
+
 - name: Update grub2 config to support tty at boot
   ansible.builtin.lineinfile:
     path: /etc/default/grub
-    line: 'GRUB_CMDLINE_LINUX=$GRUB_CMDLINE_LINUX crashkernel=auto ip=dhcp LANG=en_US.UTF-8 console=tty0 console=ttyS0 iommu=on netroot=iscsi:@169.254.0.2::::iqn.2015-02.oracle.boot:uefi iscsi_initiator=iqn.2015-02.oracle.boot:instance biosdevname=0'
+    line: 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX ip=dhcp console=tty0 console=ttyS0 netroot=iscsi:@169.254.0.2::::iqn.2015-02.oracle.boot:uefi iscsi_initiator=iqn.2015-02.oracle.boot:instance biosdevname=0"'
 
 - name: Re-install grub2 efi
   ansible.builtin.shell: grub-install --target=x86_64-efi --bootloader-id=debian --recheck --no-floppy
 
-# This may technically be redundant to the next command
-- name: create grub.cfg boot entry
-  ansible.builtin.shell: grub-mkconfig -o /boot/grub/grub.cfg -o /boot/efi/EFI/debian/grub.cfg
+# # This may technically be redundant to the next command
+# - name: create grub.cfg boot entry
+#   ansible.builtin.shell: grub-mkconfig -o /boot/grub/grub.cfg -o /boot/efi/EFI/debian/grub.cfg
 
 - name: update grub
   ansible.builtin.command: update-grub
