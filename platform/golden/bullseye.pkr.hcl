@@ -100,7 +100,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   ssh_wait_timeout     = "30m"
   firmware             = "efi"
   # don't remove the built VM from VirtualBox after export
-  keep_registered      = "false"
+  keep_registered      = "true"
   # don't export the built VM
   skip_export          = "false"
   vboxmanage = [
@@ -115,25 +115,11 @@ build {
   sources = ["source.virtualbox-iso.base-debian-amd64"]
   provisioner "ansible" {
     playbook_file = "./provisioners/01_update_packer_user/packer.yml"
-    user = "packer"
     ansible_ssh_extra_args = [
       "-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=ssh-rsa"
     ]
     use_sftp = true
-#    ansible_env_vars = [
-#      "ANSIBLE_HOST_KEY_CHECKING=False",
-#      "ANSIBLE_SSH_ARGS='-oForwardAgent=yes -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa'"
-#    ]
-#    extra_arguments = [ "--scp-extra-args", "'-O'" ]
+    user = "packer"
   }
-# shell provisioner to test wether ansible is setting the same things the commands do.
-#  provisioner "shell" {
-#      inline = [ 
-#        "sudo echo GRUB_TERMINAL='console' | sudo tee -a /etc/default/grub",
-#        "sudo echo GRUB_DISABLE_LINUX_UUID=true | sudo tee -a /etc/default/grub",
-#        "sudo echo GRUB_CMDLINE_LINUX='' | sudo tee -a /etc/default/grub",
-#        "sudo grub-install --target=x86_64-efi --bootloader-id=debian --recheck",
-#        "sudo grub-mkconfig -o /boot/grub/grub.cfg -o /boot/efi/EFI/debian/grub.cfg",
-#        "sudo update-grub" ]
-#  }
+
 }
