@@ -5,57 +5,42 @@
   ansible.builtin.user:
     name: packer
     password: '*'
-
-#  update authorized keys from @sdake and @rstarmer
 - name: Set authorized keys for packer user - sdake
   ansible.posix.authorized_key:
     user: packer
     state: present
     key: "{{ lookup('url', 'https://github.com/sdake.keys', split_lines=False) }}"
-
 - name: Set authorized keys for packer user - rstarmer
   ansible.posix.authorized_key:
     user: packer
     state: present
     key: "{{ lookup('url', 'https://github.com/rstarmer.keys', split_lines=False) }}"
-
-# Update apt package cache and installed packages to latest versions
 - name: update apt packages
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
     upgrade: true
-
-# Fix grub config to support tty at boot
 - name: add iscsi packages
   ansible.builtin.apt:
     name: open-iscsi
     state: present
 # Potential Fixes from https://github.com/oracle-quickstart/oci-byo-image/blob/master/scripts/debian_10.6/OCI.sh
-
-# add libpamd
 - name: add libpam
   ansible.builtin.apt:
     name: libpam-systemd
     state: present
-
-# fix /etc/network/interfaces replacing en[sp][0-9]* with eth0
 - name: fix /etc/network/interfaces
   ansible.builtin.replace:
     path: /etc/network/interfaces
     regexp: 'en[sp][0-9]*'
     replace: 'eth0'
-
-# add pre-up delay to network interfaces to support dhclient
 - name: add pre-up delay to network interfaces
   ansible.builtin.lineinfile:
     path: /etc/network/interfaces
     line: 'pre-up sleep 2'
-
 - name: Update grub2 config to support tty at boot
   ansible.builtin.lineinfile:
     path: /etc/default/grub
     line: 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX ip=dhcp console=tty0 console=ttyS0 nvme.shutdown_timeout=10 libiscsi.debug_libiscsi_eh=1 netroot=iscsi:@169.254.0.2::::iqn.2015-02.oracle.boot:uefi iscsi_initiator=iqn.2015-02.oracle.boot:instance iommu=on net.ifnames=0 biosdevname=0"'
-
 - name: update grub
   ansible.builtin.command: update-grub
