@@ -1,29 +1,25 @@
 ---
 # Fix user setup for packer user
-
 #  lock password to avoid password logins
-
 - name: Lock packer user password to prevent password reset or login
   ansible.builtin.user:
     name: packer
     password: '*'
 
 #  update authorized keys from @sdake and @rstarmer
-
 - name: Set authorized keys for packer user - sdake
   ansible.posix.authorized_key:
     user: packer
     state: present
     key: "{{ lookup('url', 'https://github.com/sdake.keys', split_lines=False) }}"
 
-- name: Set authorized keys for packer user - sdake
+- name: Set authorized keys for packer user - rstarmer
   ansible.posix.authorized_key:
     user: packer
     state: present
     key: "{{ lookup('url', 'https://github.com/rstarmer.keys', split_lines=False) }}"
 
 # Update apt package cache and installed packages to latest versions
-
 - name: update apt packages
   ansible.builtin.apt:
     update_cache: true
@@ -35,7 +31,6 @@
   ansible.builtin.apt:
     name: open-iscsi
     state: present
-
 # Potential Fixes from https://github.com/oracle-quickstart/oci-byo-image/blob/master/scripts/debian_10.6/OCI.sh
 
 # add libpamd
@@ -64,4 +59,3 @@
 
 - name: update grub
   ansible.builtin.command: update-grub
-
