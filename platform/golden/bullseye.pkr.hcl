@@ -53,16 +53,30 @@ variable "ssh_password" {
 }
 
 source "virtualbox-iso" "base-debian-amd64" {
+  # boot instructions/commands to send to grub/bootloader to pass preseed
   boot_command         = [
     "<esc><wait>",
-    "auto <wait>",
-    "fb=false <wait>",
-    "install <wait>", 
-    "passwd/username=packer <wait>",
-    "passwd/user-password=${var.ssh_password} <wait>",
-    "passwd/user-password-again=${var.ssh_password} <wait>",
-    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<wait>",
-    "<enter><wait>"
+    "c <wait>",
+    "set default=0 <enter><wait>",
+    "linux /install.amd/vmlinuz ",
+    "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file} ",
+    "passwd/username=packer ",
+    "passwd/user-password=${var.ssh_password} ",
+    "passwd/user-password-again=${var.ssh_password} ",
+    "debian-installer/language=en debian-installer/country=US ",
+    "console-setup/ask_detect=false ",
+    "console-setup/layoutcode=us ",
+    "keyboard-configuration/layoutcode=us ",
+    "keyboard-configuration/xkb-keymap=us ",
+    "debian-installer/keymap=skip-config ",
+    "debian-installer/locale=en_US.UTF-8 ",
+    "localechooser/preferred-locale=en_US.UTF8 ",
+    "netcfg/get_hostname=golden ",
+    "netcfg/get_domain=local ",
+    "grub-installer/bootdev=/dev/sda ",
+    "quiet ---<enter><wait>",
+    "initrd /install.amd/initrd.gz<enter><wait>",
+    "boot<enter>"
   ]
   guest_os_type        = "Debian11_64"
   cpus                 = "${var.cpus}"
@@ -76,7 +90,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   skip_nat_mapping     = false
   iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
-  iso_interface        = "virtio"
+  iso_interface        = "sata"
   nic_type             = "virtio"
   hard_drive_interface = "virtio"
   rtc_time_base        = "UTC"
@@ -84,29 +98,28 @@ source "virtualbox-iso" "base-debian-amd64" {
   ssh_username         = "packer"
   ssh_password         = "${var.ssh_password}"
   ssh_wait_timeout     = "30m"
+  firmware             = "efi"
+  # don't remove the built VM from VirtualBox after export
+  keep_registered      = "true"
+  # don't export the built VM
+  skip_export          = "false"
   vboxmanage = [
     # enable recording video of install process, for debug and build record
-    [ "modifyvm", "{{.Name}}", "--recording", "on" ],
-    # enable proxy access across NAT network interface.
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
   ]
 }
 
-# Build a golden image by connecting a compute source with a provisioner
-
+## Build a golden image by connecting a compute source with a provisioner
+#
 build {
   sources = ["source.virtualbox-iso.base-debian-amd64"]
-
-# Use Ansible (needs to be on the "packer" host) to provision the instance
   provisioner "ansible" {
     playbook_file = "./provisioners/01_update_packer_user/packer.yml"
-    ansible_env_vars = [
-      "ANSIBLE_HOST_KEY_CHECKING=False",
-      "ANSIBLE_SSH_ARGS='-oForwardAgent=yes -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa'"
+    ansible_ssh_extra_args = [
+      "-o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedAlgorithms=ssh-rsa"
     ]
-    # Add scp-extra-args -O to address inconsistencies with SFTP protocol
-    extra_arguments = [ "--scp-extra-args", "'-O'" ]
-    # Set username to install user 'packer'
-    user="packer"
+    use_sftp = true
+    user = "packer"
   }
+
 }
