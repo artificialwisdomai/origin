@@ -1,3 +1,5 @@
+// this component is a button that when clicked, sends the user's message from the chat input to the chatbot & the output area
+
 import React, {useEffect} from "react";
 
 export default function SendChatInput({onSend}) {
@@ -7,3 +9,5 @@ export default function SendChatInput({onSend}) {
         </button>
     );
 }
+
+// TODO: add functionality (send input to backend)

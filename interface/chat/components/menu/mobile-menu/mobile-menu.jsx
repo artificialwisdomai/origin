@@ -1,6 +1,6 @@
-export default function MobileMenu() {
+// This component is the replacement for the sidebar on mobile devices
 
-// TODO: implement the menu for mobile users
+export default function MobileMenu() {
 
     return (
         <div className="dropdown dropdown-end">
@@ -12,3 +12,5 @@ export default function MobileMenu() {
         </div>
     );
 }
+
+// TODO: implement the menu

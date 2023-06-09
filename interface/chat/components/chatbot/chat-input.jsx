@@ -1,3 +1,5 @@
+// This component creates the user's text input box for sending messages to the chatbot
+
 export default function ChatInput() {
     return (
         <div className="flex pl-2 py-2 w-4/5">

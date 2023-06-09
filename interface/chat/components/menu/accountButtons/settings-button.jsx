@@ -1,3 +1,5 @@
+// this component is a button that when clicked, allows the user to access their chatbot settings (i.e color theme, icons, font, etc)
+
 export default function Settingsbutton() {
     return (
         <button className="flex btn btn-primary group text-center w-full p-1 my-2 bg-gradient-to-tl from-primary to-primary-light text-accent border-none hover:bg-gradient-to-tl hover:from-primary-dark hover:to-primary hover:text-accent">
