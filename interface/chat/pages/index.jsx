@@ -1,4 +1,5 @@
-// index.html
+// This is the index page
+
 import Layout from '../components/layout';
 import Chatbot from '../components/containers/chatbot-container';
 import Sidebar from '../components/containers/sidebar-container';
@@ -15,11 +16,7 @@ export default function HomePage() {
           <div className = "flex">
             <Layout />
           </div>
-
-
           <Header />
-
-
           <div className = "flex h-[92.5%] max-h-[92.5%]">
             <Sidebar />
             <Chatbot />

@@ -1,3 +1,6 @@
+// this component is a button that when clicked, allows the user to sign up for an account
+// if the user is already logged in, then this will be replaced with an account/profile button
+
 export default function SignupButton() {
     return (
         <button className="flex btn btn-secondary group w-4/5 p-1 my-1 bg-gradient-to-tl from-secondary-dark to-secondary-light text-accent border-none hover:bg-gradient-to-tl hover:from-secondary-darker hover:to-secondary">

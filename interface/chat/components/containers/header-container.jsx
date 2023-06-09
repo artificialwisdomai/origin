@@ -1,3 +1,5 @@
+// This component creates the header of the page
+
 import MobileMenu from "../menu/mobile-menu/mobile-menu";
 
 export default function Header() {

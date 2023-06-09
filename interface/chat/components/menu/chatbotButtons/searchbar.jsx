@@ -1,3 +1,5 @@
+// this component allows the user to search through their previous chats
+
 export default function Searchbar() {
     return (
         <form className="flex max-w-xs w-4/5 h-5/6 items-center">   
@@ -15,3 +17,5 @@ export default function Searchbar() {
         </form>
     );
 }
+
+//TODO: add functionality; allow user to search by different parameters (i.e title, date, etc)

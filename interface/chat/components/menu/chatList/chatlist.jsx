@@ -1,3 +1,6 @@
+// This component is a list of all of the user's saved chats
+// At first it's empty, but as the user creates more chats, they will be added to the list
+
 export default function Chatlist() {
     return (
         <div className="flex w-4/5 h-full p-1 bg-gradient-to-tl from-primary to-primary-light overflow-hidden">
@@ -7,3 +10,5 @@ export default function Chatlist() {
         </div>
     );
 }
+
+// TODO: add functionality, add behavior for if the user is not logged in

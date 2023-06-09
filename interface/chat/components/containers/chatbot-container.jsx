@@ -1,32 +1,30 @@
-import ChatOutput from "../chatbot/chat-output";
+// This component is the container for the chatbot part of the webpage
+
+import ChatArea from "../chatbot/chat-area";
 import ChatInput from "../chatbot/chat-input";
 import SendChatInput from "../menu/chatbotButtons/send-chat-input";
 
-import ClearButton from "../menu/accountButtons/clear-button";
+import ClearButton from "../menu/chatbotButtons/clear-button.jsx"; 
 
 import React, {useState} from "react";
 
 export default function Chatbot() {
-    // these have to be here or else it breaks :)
-    let formJson = null;
-    let currtext = null;
 
-    function handleSubmit(e) {
-            // prevents the browser from reloading the page
+    function handleSubmit(e) { 
+        // prevents the browser from reloading the page
         e.preventDefault();
     
-            // reads the form data
+        // reads the form data
         const form = e.target;
         const formData = new FormData(form);
-
         const currtext = formData.get("inputArea");
 
-            // if input is empty, nothing happens
+        // if input is empty, nothing happens
         if (currtext === "") {
             return;
         }
 
-            // creates a new chat bubble w/ the input text inside of it, and puts it into the chat area
+        // creates a new chat bubble w/ the input text inside of it, and puts it into the chat area
         let newChatBubbleContainer = document.createElement("div");
         newChatBubbleContainer.id = "chatBubbleContainer";
         newChatBubbleContainer.className = "chat chat-end w-1/2 p-2 m-2 w-auto";
@@ -39,26 +37,19 @@ export default function Chatbot() {
         newChatBubbleContainer.appendChild(newChatBubble);
         chatArea.appendChild(newChatBubbleContainer);
         
-            // clears the input area
+        // clears the input area
         inputArea.value = "";
 
-            // auto-scrolls to the bottom of the chat area
+        // auto-scrolls to the bottom of the chat area
         chatArea.scrollTop = chatArea.scrollHeight;
-        
-        
-        // You can pass formData as a fetch body directly:
-            //fetch('/some-api', { method: form.method, body: formData });
-    
-        // Or you can work with it as a plain object:
-            //const formJson = Object.fromEntries(formData.entries());
-            //console.log(formJson);
     }
 
+    // this is the layout of the page when it first loads
     return (
         <form onSubmit={handleSubmit} className="w-full lg:w-4/5 h-full overflow-clip bg-gradient-to-b from-neutral-light to-neutral">
             <div id="output" className="flex flex-wrap justify-center h-2/3 lg:h-4/5">
                 <div className="flex w-full h-full flex-wrap justify-center items-center overflow-hidden bg-gradient-to-t from-black to-neutral-dark">
-                    <ChatOutput />
+                    <ChatArea />
                 </div>                
             </div>
 
