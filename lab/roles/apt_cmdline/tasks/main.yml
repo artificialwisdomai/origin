@@ -7,7 +7,6 @@
     state: present
   with_items:
     - acl
-    - fish
     - git
     - curl
     - mlocate
