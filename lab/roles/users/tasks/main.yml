@@ -1,11 +1,10 @@
----
-- name: Set shell to fish for selected engineering
-  become: yes
-  ansible.builtin.user:
-    shell: /usr/bin/fish
-    name: "{{ item }}"
-    groups: sudo
-    append: yes
-    state: present
-  with_items:
-    - sdake
+#---
+#- name: Set shell to fish for selected engineering
+#  become: yes
+#  ansible.builtin.user:
+#    shell: /usr/bin/fish
+#    name: "{{ item }}"
+#    groups: sudo
+#    append: yes
+#    state: present
+#  with_items:
