@@ -1,9 +1,9 @@
-variable "config_file" {
+variable "preseed_file" {
   type    = string
   default = "preseed-debian-11.cfg"
 }
 
-variable "config_dir" {
+variable "preseed_dir" {
   type    = string
   default = "cfg"
 }
@@ -40,7 +40,7 @@ variable "iso_checksum_type" {
 
 variable "iso_url" {
   type    = string
-  default = "https://cdimage.debian.org/debian-cd/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso"
+  default = "https://cdimage.debian.org/cdimage/archive/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso"
 }
 
 variable "image_name" {
@@ -48,30 +48,19 @@ variable "image_name" {
   default = "golden"
 }
 
-variable "ssh_password" {
-  type    = string
-}
-
 source "virtualbox-iso" "base-debian-amd64" {
-  boot_command         = [
-    "<esc><wait>",
-    "auto <wait>",
-    "fb=false <wait>",
-    "install <wait>", 
-    "passwd/username=packer <wait>",
-    "passwd/user-password=${var.ssh_password} <wait>",
-    "passwd/user-password-again=${var.ssh_password} <wait>",
-    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.config_file}<wait>",
-    "<enter><wait>"
-  ]
+  # The Debian boot screen is well documented in 5.1.7 The Boot Screen
+  # https://www.debian.org/releases/stable/i386/ch05s01.en.html#boot-screen
+  boot_command = ["<down>e<down><down><down><end>priority=critical auto=true fb=false preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.preseed_file}<leftCtrlOn>x<leftCtrlOff>"]
   guest_os_type        = "Debian11_64"
+  guest_additions_mode = "disable"
   cpus                 = "${var.cpus}"
   memory               = "${var.memory}"
   disk_size            = "${var.disk_size}"
   headless             = "${var.headless}"
   output_directory     = "build"
-  output_filename      = "${var.image_name}.raw"
-  http_directory       = "${path.root}/${var.config_dir}"
+  output_filename      = "${var.image_name}"
+  http_directory       = "${path.root}/${var.preseed_dir}"
   communicator         = "ssh"
   skip_nat_mapping     = false
   iso_checksum         = "${var.iso_checksum_type}:${var.iso_checksum}"
@@ -81,13 +70,14 @@ source "virtualbox-iso" "base-debian-amd64" {
   hard_drive_interface = "virtio"
   rtc_time_base        = "UTC"
   shutdown_command     = "sudo -S shutdown -P now"
+  ssh_password         = "insecure"
   ssh_username         = "packer"
-  ssh_password         = "${var.ssh_password}"
-  ssh_wait_timeout     = "30m"
+  ssh_wait_timeout     = "10m"
+  firmware             = "efi"
+  keep_registered      = "true"
+  skip_export          = "false"
   vboxmanage = [
-    # enable recording video of install process, for debug and build record
     [ "modifyvm", "{{.Name}}", "--recording", "on" ],
-    # enable proxy access across NAT network interface.
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
   ]
 }
@@ -96,17 +86,4 @@ source "virtualbox-iso" "base-debian-amd64" {
 
 build {
   sources = ["source.virtualbox-iso.base-debian-amd64"]
-
-# Use Ansible (needs to be on the "packer" host) to provision the instance
-  provisioner "ansible" {
-    playbook_file = "./provisioners/01_update_packer_user/packer.yml"
-    ansible_env_vars = [
-      "ANSIBLE_HOST_KEY_CHECKING=False",
-      "ANSIBLE_SSH_ARGS='-oForwardAgent=yes -oHostKeyAlgorithms=+ssh-rsa -oPubkeyAcceptedKeyTypes=ssh-rsa'"
-    ]
-    # Add scp-extra-args -O to address inconsistencies with SFTP protocol
-    extra_arguments = [ "--scp-extra-args", "'-O'" ]
-    # Set username to install user 'packer'
-    user="packer"
-  }
 }
