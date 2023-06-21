@@ -2,9 +2,10 @@
 - name: Install apt-based command line tools
   become: yes
   become_user: root
-  ansible.builtin.apt:
-    name: "{{ item }}"
-    state: present
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: true
   with_items:
     - acl
     - git

@@ -1,21 +1,12 @@
 ---
-- name: Create a directory if it does not exist
+- name: Set authorized keys taken from url
   become: yes
-  become_user: "{{ item }}"
-  ansible.builtin.file:
-    path: /home/{{ item }}/.ssh
-    state: directory
-    mode: '0700'
+  authorized_key:
+    user: "{{ item }}"
+    state: "present"
+    key: "https://github.com/{{ item }}.keys"
   with_items:
     - lsdake
     - sdake
     - rstarmer
-
-- name: Pull all users latest keys
-  become: yes
-  become_user: "{{ item }}"
-  ansible.builtin.command: curl -L https://github.com/{{ item }}.keys -o /home/{{ item }}/.ssh/authorized_keys
-  with_items:
-    - lsdake
-    - sdake
-    - rstarmer
+    - MostAwesomeDude

@@ -8,8 +8,8 @@
     PATH: /home/linuxbrew/.linuxbrew/bin:{{ ansible_env.PATH }}
 
   roles:
-      - { role: apt_cmdline }
-      - { role: brew_update }
-      - { role: brew_cmdline }
-      - { role: users }
-      - { role: ssh }
+    - apt_cmdline
+    - brew_update
+    - brew_cmdline
+    - users
+    - ssh

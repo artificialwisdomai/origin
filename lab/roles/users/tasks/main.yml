@@ -1,10 +1,16 @@
-#---
-#- name: Set shell to fish for selected engineering
-#  become: yes
-#  ansible.builtin.user:
-#    shell: /usr/bin/fish
-#    name: "{{ item }}"
-#    groups: sudo
-#    append: yes
-#    state: present
-#  with_items:
+---
+- name: Add user with a locked password
+  become: yes
+  become_user: root
+  user:
+    user: "{{ item }}"
+    password: "!"
+    groups: sudo
+    append: yes
+    state: present
+    update_password: "on_create"
+  with_items:
+    - rstarmer
+    - sdake
+    - lsdake
+    - MostAwesomeDude
