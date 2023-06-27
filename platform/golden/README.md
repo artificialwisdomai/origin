@@ -4,7 +4,7 @@ Artificial Wisdom™ golden images for immutable infrastructure.
 ## Dependencies
 
 - [Debian Fasttrack](https://fasttrack.debian.net/)
-- [Current Bullseye](https://cdimage.debian.org/debian-cd/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso)
+- [Archive Bullseye](https://cdimage.debian.org/cdimage/archive/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso)
 - [Packer](https://developer.hashicorp.com/packer)
 - [VirtualBox](https://wiki.debian.org/VirtualBox#Debian_10_.22Buster.22_and_Debian_11_.22Bullseye.22.html)
 - [VirtualBox ISO Builder](https://developer.hashicorp.com/packer/plugins/builders/virtualbox/iso)
