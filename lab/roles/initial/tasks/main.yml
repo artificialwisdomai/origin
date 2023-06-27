@@ -1,0 +1,13 @@
+---
+- name: Install fish shell & starship
+  community.general.homebrew:
+    name: "{{ item }}"
+  with_items:
+    - fish
+    - starship
+
+- name: Ensure homebrew fish is in allowed shells
+  become: yes
+  lineinfile:
+    path: /etc/shells
+    line: "/home/linuxbrew/.linuxbrew/bin"

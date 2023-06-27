@@ -1,0 +1,15 @@
+---
+- hosts: all
+  vars:
+    home_dir: "{{ lookup('env', 'HOME') }}"
+    username: "{{ lookup('env', 'USER') }}"
+
+  environment:
+    PATH: /home/linuxbrew/.linuxbrew/bin:{{ ansible_env.PATH }}
+
+  roles:
+      - { role: apt_cmdline }
+      - { role: brew_update }
+      - { role: brew_cmdline }
+      - { role: users }
+      - { role: ssh }
