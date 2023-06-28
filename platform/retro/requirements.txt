@@ -1,0 +1,11 @@
+autofaiss
+faiss-cpu
+numpy
+retro-pytorch
+sacremoses
+packaging
+importlib-metadata
+huggingface
+huggingface-hub
+transformers
+#https://github.com/kyamagu/faiss-wheels/releases/download/v1.7.3/faiss_gpu-1.7.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
