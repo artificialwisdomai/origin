@@ -1,0 +1,6 @@
+# The Public Python Index does not have a correct build of the GPU
+# implemenation of the faiss package.
+
+https://objectstorage.us-phoenix-1.oraclecloud.com/p/Za23_RqaQasdw5ZRBp8YRbkhKjDZxnDjhhzm2k4_WW004B0SM4i9Juj1Ny2Ux40A/n/axhocnnse6ez/b/awiz-pypa/o/awiz-autofaiss/awiz_autofaiss-2.15.8-py3-none-any.whl
+https://objectstorage.us-phoenix-1.oraclecloud.com/p/Za23_RqaQasdw5ZRBp8YRbkhKjDZxnDjhhzm2k4_WW004B0SM4i9Juj1Ny2Ux40A/n/axhocnnse6ez/b/awiz-pypa/o/awiz-retro-pytorch/awiz_retro_pytorch-0.3.8-py3-none-any.whl
+https://objectstorage.us-phoenix-1.oraclecloud.com/p/Za23_RqaQasdw5ZRBp8YRbkhKjDZxnDjhhzm2k4_WW004B0SM4i9Juj1Ny2Ux40A/n/axhocnnse6ez/b/awiz-pypa/o/awiz-faiss/awiz_faiss-1.7.4-py3-none-any.whl
