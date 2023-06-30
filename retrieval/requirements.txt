@@ -1,0 +1,19 @@
+packaging
+dataclasses
+fire
+numpy
+pandas
+pyarrow
+tqdm
+fsspec
+embedding_reader
+huggingface_hub
+regex
+protobuf
+rich
+sacremoses
+safetensors
+importlib_metadata
+tokenizers
+-r requirements-override.txt
+-r requirements-torch.txt
