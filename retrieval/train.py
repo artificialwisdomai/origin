@@ -14,8 +14,39 @@ from rich.progress import (
     TimeElapsedColumn,
     TimeRemainingColumn,
 )
-
 from retro_pytorch import RETRO, TrainingWrapper
+from rich.console import Console
+from rich.style import Style
+from rich.theme import Theme
+
+###
+# Artificial Wisdom™ Triadic Color scheme
+
+COLOR_TEXT = "#00EA8C"
+COLOR_EXTRA = "#EA8C00"
+COLOR_EXTRENUOUS = "#8C00EA"
+
+theme = Theme(
+    {
+        "aw.a": Style.parse(COLOR_TEXT),
+        "aw.b": Style.parse(COLOR_EXTRA),
+        "aw.c": Style.parse(COLOR_EXTRENUOUS),
+        "repr.ellipsis": Style.parse(COLOR_TEXT),
+        "repr.filename": Style.parse(COLOR_TEXT),
+        "repr.path": Style.parse(COLOR_TEXT),
+        "progress.data.speed": Style.parse(COLOR_TEXT),
+        "progress.description": Style.parse(COLOR_TEXT),
+        "progress.download": Style.parse(COLOR_TEXT),
+        "progress.elapsed": Style.parse(COLOR_TEXT),
+        "progress.filesize": Style.parse(COLOR_TEXT),
+        "progress.filesize.total": Style.parse(COLOR_TEXT),
+        "progress.percentage": Style.parse(COLOR_TEXT),
+        "progress.remaining": Style.parse(COLOR_TEXT),
+        "progress.spinner": Style.parse(COLOR_TEXT),
+    }
+)
+
+console = Console(theme=theme)
 
 ###
 # instantiate RETRO, fit it into the TrainingWrapper with correct settings
@@ -49,8 +80,9 @@ wrapper = TrainingWrapper(
     retro=retro,
     knn=2,
     chunk_size=64,
-    documents_path="/models/RedPajama-Data-1T-Sample",
-    glob="**/*.jsonl",
+    documents_path="/home/sdake/en",
+#    models/RedPajama-Data-1T-Sample",
+    glob="**/*.md",
     chunks_memmap_path="./chunks/train.chunks.dat",
     seqs_memmap_path="./chunks/train.seq.dat",
     doc_ids_memmap_path="./chunks/train.doc_ids.dat",
@@ -67,16 +99,22 @@ retro.train()
 optim = wrapper.get_optimizer(lr=3e-4, wd=0.01)
 
 progress_bar = Progress(
+    TextColumn(" ", style=COLOR_EXTRA),
+    SpinnerColumn(spinner_name="aesthetic", style=COLOR_TEXT),
+    TextColumn("•", style=COLOR_EXTRA),
     TextColumn("[progress.description]{task.description}"),
+    TextColumn("•", style=COLOR_EXTRA),
     TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-    SpinnerColumn(),
-    BarColumn(),
-    TextColumn("•"),
-    TextColumn("{task.fields[loss]}"),
-    TextColumn("•"),
+    TextColumn("•", style=COLOR_EXTRA),
+    BarColumn(style=COLOR_TEXT, complete_style=COLOR_EXTRA),
+    TextColumn("•", style=COLOR_EXTRA),
+    TextColumn("{task.fields[loss]}", style=COLOR_TEXT),
+    TextColumn("•", style=COLOR_EXTRA),
     TimeElapsedColumn(),
-    TextColumn("•"),
+    TextColumn("•", style=COLOR_EXTRA),
     TimeRemainingColumn(),
+    TextColumn("•", style=COLOR_EXTRA),
+    console=console,
 )
 
 loss = 0.00
@@ -87,17 +125,16 @@ EPOCH_MAX = 15
 
 with progress_bar:
     progress_bar.console.print(
-        "[link=https://github.com/artificialwisdomai/origin]Artificial Wisdom™[/] Retreival Transformer Training",
-        style="#008080",
+        "[link=https://github.com/artificialwisdomai/origin]Artificial Wisdom™[/link] NLP BluBox",
+        style=COLOR_EXTRENUOUS,
     )
     progress_bar.console.print(
-        "• retrieval_model=artificialwisdomai/retroformer • foundation_model=mosaicml/mpt30b •",
-        style="#008080",
+        " [aw.a]•[/aw.a] [aw.b]retrieval_model[/aw.b][aw.a]=[/aw.a][aw.b]artificialwisdomai[/aw.b][aw.a]/[/aw.a][aw.b]retroformer [aw.a]•[/aw.a] [aw.b]foundation_model[/aw.b][aw.a]=[/aw.a][aw.b]mosaicml[/aw.b][aw.a]/[/aw.a][aw.b]mpt30b[/aw.b] [aw.a]•[/aw.a] "
     )
     for epoch in range(EPOCH_MAX):
         dataloader = iter(wrapper.get_dataloader(batch_size=4, shuffle=True))
         task_id = progress_bar.add_task(
-            description="Epoch {}".format(epoch), loss="0.00", total=len(dataloader)
+            description="Epoch {}".format(epoch), loss="loss=nil", total=len(dataloader)
         )
         for seq, retrieved in dataloader:
             seq, retrieved = seq.cuda(), retrieved.cuda()
@@ -117,5 +154,5 @@ with progress_bar:
                 },
                 "model.pt{}".format(epoch),
             )
-            progress_bar.update(task_id, loss="loss={:2.2f}".format(loss))
+            progress_bar.update(task_id, loss="[aw.a]loss[/aw.a][aw.b]=[/aw.b][aw.a]{:2.2f}[/aw.a]".format(loss))
             progress_bar.advance(task_id)
