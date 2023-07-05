@@ -105,5 +105,17 @@ with progress_bar:
             loss.backward()
             optim.step()
             optim.zero_grad()
+
+            # TODO(sdake): Unclear this meets specifications. I have not yet
+            # successfully restored a checkpoint.
+            torch.save(
+                {
+                    "epoch": epoch,
+                    "model_state_dict": retro.state_dict(),
+                    "optimizer_state_dict": optim.state_dict(),
+                    "loss": loss,
+                },
+                "model.pt{}".format(epoch),
+            )
             progress_bar.update(task_id, loss="loss={:2.2f}".format(loss))
             progress_bar.advance(task_id)
