@@ -9,14 +9,14 @@ curl https://pyenv.run | bash
 
 cat >> $HOME/.profile <<EOF
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
+command -v pyenv >/dev/null || export PATH="\$PYENV_ROOT/bin:\$PATH"
+eval "\$(pyenv init -)"
 EOF
 
 cat >> $HOME/.bashrc <<EOF
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+command -v pyenv >/dev/null || export PATH="\$PYENV_ROOT/bin:\$PATH"
+eval "\$(pyenv init -)"
+eval "\$(pyenv virtualenv-init -)"
 EOF
 
