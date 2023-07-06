@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.scrollbar {
+    @apply overflow-y-scroll;
+    @apply overflow-x-clip;
+    @apply scrollbar-thin;
+}
+
+.scrollbar-primary {
+    @apply scrollbar-thumb-primary;
+    @apply scrollbar-track-primary-darker;
+}
+
+/* COLOR LIST!
+'teal': {
+    light: '#9ee0d9',
+    DEFAULT: '#038E7D',
+    dark: '#1b666a',
+    darker: '#163e41',
+  },
+
+    // Oranges
+  'orange': {
+    light: '#f79e4a',
+    DEFAULT: '#EE792F',
+    dark: '#f35512',
+    darker: '#e03c06',
+  },
+
+    // Neutrals
+  'white': '#ffffff',
+  'gray': {
+    light: '#585f5f',
+    DEFAULT: '#373e3e',
+    dark: '#090b0b',
+  },
+  'black': '#000000',
+*/
