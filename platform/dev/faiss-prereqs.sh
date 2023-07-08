@@ -17,6 +17,7 @@ sudo -E apt install /tmp/cuda-keyring_1.1-1_all.deb
 
 sudo -E apt update
 sudo -E apt install cuda -y
+sudo -E apt install cuda-toolkit -y
 
 # Get Intel OneAPI for BLAS support
 # From: https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/2023-0/apt.html
@@ -31,8 +32,7 @@ echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt
 
 sudo -E apt update
 sudo -E apt install intel-basekit -y
-sudo -E apt install cuda-toolkit -y
-sudo -E apt install nvidia-cuda-toolkit -y
+#sudo -E apt install nvidia-cuda-toolkit -y
 
 # ensure we're using the latest cmake
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
