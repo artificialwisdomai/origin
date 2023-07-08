@@ -11,8 +11,24 @@ source /opt/intel/oneapi/setvars.sh
 #export CXX=g++-12
 # Configure using cmake
 
-LD_LIBRARY_PATH=/usr/local/lib MKLROOT=/opt/intel/oneapi/mkl/2023.1.0/ CXX=g++-11 cmake -B build -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=ON -DFAISS_ENABLE_GPU=OFF              -DFAISS_OPT_LEVEL=axv2              -DFAISS_ENABLE_C_API=ON              -DCMAKE_BUILD_TYPE=Release              -DBLA_VENDOR=Intel10_64_dyn -Wno-dev .
-#cmake -B build . -DBUILD_SHARED_LIBS=ON -DFAISS_ENABLE_GPU=ON -DFAISS_ENABLE_PYTHON=ON -DFAISS_ENABLE_RAFT=OFF -DBUILD_TESTING=ON -DBUILD_SHARED_LIBS=ON -DFAISS_ENABLE_C_API=ON -DCMAKE_BUILD_TYPE=Release -DFAISS_OPT_LEVEL=avx2 -Wno-dev
+LD_LIBRARY_PATH=/usr/local/lib MKLROOT=/opt/intel/oneapi/mkl/2023.1.0/ CXX=g++-11 cmake -B build \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_TESTING=ON \
+	-DFAISS_ENABLE_GPU=ON \
+	-DFAISS_OPT_LEVEL=axv2 \
+	-DFAISS_ENABLE_C_API=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBLA_VENDOR=Intel10_64_dyn -Wno-dev .
+#cmake -B build . \
+        -DBUILD_SHARED_LIBS=ON \
+	-DFAISS_ENABLE_GPU=ON \
+	-DFAISS_ENABLE_PYTHON=ON \
+	-DFAISS_ENABLE_RAFT=OFF \
+	-DBUILD_TESTING=ON \
+	-DBUILD_SHARED_LIBS=ON \
+	-DFAISS_ENABLE_C_API=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DFAISS_OPT_LEVEL=avx2 -Wno-dev
 
 # Now build faiss
 
