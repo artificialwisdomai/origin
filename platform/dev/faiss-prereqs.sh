@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Get Python 3.10 and create a pyenv virtualenv and set it as local
 pyenv install 3.10
 pyenv virtualenv 3.10 aw
@@ -7,7 +9,12 @@ pyenv local aw
 
 # Add a couple Python prerequisites
 pip install -U pip setuptools wheel
-pip install numpy swig
+pip install numpy swig torch
+
+# Verify python and pytorch work
+
+python3 -c 'import torch; print(f"Is CUDA Available: {torch.cuda.is_available()}")'
+
 
 export DEBIAN_FRONTEND=noninteractive
 
