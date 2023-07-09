@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+sudo apt-get update && sudo apt-get dist-upgrade -y
+
 sudo mkdir /models
 sudo mkfs.xfs /dev/nvme0n1
 echo '/dev/nvme0n1  /models xfs defaults  0  2' | sudo tee -a /etc/fstab
