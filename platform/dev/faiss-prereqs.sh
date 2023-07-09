@@ -2,29 +2,12 @@
 
 set -e
 
-# Get Python 3.10 and create a pyenv virtualenv and set it as local
-pyenv install 3.10
-pyenv virtualenv 3.10 aw
-pyenv local aw
 
 # Add a couple Python prerequisites
 pip install -U pip setuptools wheel
 pip install numpy swig torch
 
-# Verify python and pytorch work
-
-python3 -c 'import torch; print(f"Is CUDA Available: {torch.cuda.is_available()}")'
-
-
 export DEBIAN_FRONTEND=noninteractive
-
-# Get CUDA and install it
-sudo -E curl -Lo /tmp/cuda-keyring_1.1-1_all.deb https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb
-sudo -E apt install /tmp/cuda-keyring_1.1-1_all.deb
-
-sudo -E apt update
-sudo -E apt install cuda -y
-sudo -E apt install cuda-toolkit -y
 
 # Get Intel OneAPI for BLAS support
 # From: https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/2023-0/apt.html
@@ -39,7 +22,11 @@ echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt
 
 sudo -E apt update
 sudo -E apt install intel-basekit -y
-#sudo -E apt install nvidia-cuda-toolkit -y
+
+## Get CUDA and install it
+
+curl -sLO https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run
+sudo bash $PWD/cuda_*run --silent --toolkit --driver --kernelobjects
 
 # ensure we're using the latest cmake
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
@@ -47,5 +34,9 @@ wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | 
 echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
 
 sudo -E apt-get update
-sudo -E apt-get install cmake -y
+sudo -E apt-get install cmake cuda-toolkit -y
+
+#Verify python and pytorch work
+
+python3 -c 'import torch; print(f"Is CUDA Available: {torch.cuda.is_available()}")'
 
