@@ -21,18 +21,22 @@ echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt
 
 
 sudo -E apt update
-sudo -E apt install intel-basekit -y
+sudo -E apt install dkms intel-basekit -y
 
 ## Get CUDA and install it
 
 curl -sLO https://developer.download.nvidia.com/compute/cuda/12.2.0/local_installers/cuda_12.2.0_535.54.03_linux.run
-sudo bash $PWD/cuda_*run --silent --toolkit --driver --kernelobjects
+sudo bash $PWD/cuda_*run --silent --toolkit --driver --no-man-page
 
 # ensure we're using the latest cmake
 wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null
 
 echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null
 
+# add the cuda tools to build against
+
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo -E apt-get update
 sudo -E apt-get install cmake cuda-toolkit -y
 
