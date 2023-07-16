@@ -1,5 +1,30 @@
-#! Set up an Ubuntu 22.04 machine to build FAISS
+# Set up an Ubuntu 22.04 machine to build FAISS
 
+## Setup for build in Ubuntu 22.04 with podman
+
+Add podman
+
+```sh
+sudo apt install podman -y
+```
+
+Run build in podman:
+
+```sh
+podman run --rm -it -v ${PWD}/dev/origin/:/origin ubuntu:22.04 /bin/bash /origin/build.sh
+```
+
+This should produce two files:
+
+* python*.whl
+
+  a python wheel for faiss deployment
+
+* faiss-libs.tgz
+
+  a set of libraries for FAISS.  Note Intel libraries are still required as well.
+
+## Setup for Ubuntu 22.04 bare metal in OCI
 Assumptions:
 
 /dev/nvme0n1 exists and can be reformatted
