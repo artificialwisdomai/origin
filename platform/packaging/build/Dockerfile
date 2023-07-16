@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:11
+FROM docker.io/library/debian:12
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,7 +9,7 @@ RUN apt-get install -y --no-install-recommends \
     cmake git gpg wget
 
 # Phase 2: Install non-free components.
-RUN sed -i -e 's/main/main contrib non-free/g' /etc/apt/sources.list
+RUN sed -i -e 's/main/main contrib non-free/g' /etc/apt/sources.list.d/debian.sources
 
 # Add nVidia CUDA repository.
 RUN wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb
@@ -31,8 +31,8 @@ WORKDIR /build
 
 RUN virtualenv /build/local
 
-RUN wget https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.3.tar.gz
-RUN tar zxvf v1.7.3.tar.gz > /dev/null
+RUN wget https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.4.tar.gz
+RUN tar zxvf v1.7.4.tar.gz > /dev/null
 
 ENV CUDACXX=/usr/local/cuda/bin/nvcc
 COPY run-cmake.sh /build
