@@ -1,3 +1,3 @@
-*                                                                @rstarmer @sdake
-/.gitattributes                                                  @artificialwisdomai/maintainers
-/.gitignore                                                      @artificialwisdomai/maintainers
+*                                                                @artificialwisdomai/leadership
+/platform/golden                                                 @artificialwisdomai/maintainers
+/platform/packaging                                              @artificialwisdomai/maintainers
