@@ -6,33 +6,37 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
     python3-dev python3-numpy-dev swig python3-virtualenv \
-    cmake git gpg wget
+    cmake git gpg default-jre
 
 # Phase 2: Install non-free components.
-RUN sed -i -e 's/main/main contrib non-free/g' /etc/apt/sources.list.d/debian.sources
 
-# Add nVidia CUDA repository.
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb
+# Configure Intel repo and non-free/contrib Debian repos.
+ADD debian.sources oneAPI.list /etc/apt/sources.list.d/
+
+# Set up build directory.
+RUN mkdir /build
+WORKDIR /build
+
+# Add nVidia CUDA repo and keyring.
+ADD https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb /build/
 RUN dpkg -i cuda-keyring_1.1-1_all.deb
 
-# Add Intel repository.
-RUN wget -O- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
-  | gpg --dearmor | tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
-RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" \
-  >> /etc/apt/sources.list.d/oneAPI.list
+# Add Intel keyring.
+ADD https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB /build/
+RUN < GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
 
+# Do a big install.
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
     cuda intel-basekit
 
 # Phase 3: Prepare the build tree with CMake.
-RUN mkdir /build
-WORKDIR /build
+ADD https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.4.tar.gz /build/
+# XXX For whatever reason, Podman *doesn't* automatically unpack the source
+# tarball. This is fine, but at odds with Docker's behavior.
+RUN tar zxf v1.7.4.tar.gz
 
 RUN virtualenv /build/local
-
-RUN wget https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.4.tar.gz
-RUN tar zxvf v1.7.4.tar.gz > /dev/null
 
 ENV CUDACXX=/usr/local/cuda/bin/nvcc
 COPY run-cmake.sh /build
