@@ -3,10 +3,10 @@ FROM docker.io/library/debian:12
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Phase 1: Install free components.
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-    python3-dev python3-numpy-dev swig python3-virtualenv \
-    cmake git gpg default-jre
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3-dev python3-numpy-dev swig python3-virtualenv \
+        cmake git gpg default-jre
 
 # Phase 2: Install non-free components.
 
@@ -14,7 +14,6 @@ RUN apt-get install -y --no-install-recommends \
 ADD debian.sources oneAPI.list /etc/apt/sources.list.d/
 
 # Set up build directory.
-RUN mkdir /build
 WORKDIR /build
 
 # Add nVidia CUDA repo and keyring.
@@ -26,9 +25,8 @@ ADD https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 RUN < GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
 
 # Do a big install.
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-    cuda intel-basekit
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends cuda intel-basekit
 
 # Phase 3: Prepare the build tree with CMake.
 ADD https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.4.tar.gz /build/
