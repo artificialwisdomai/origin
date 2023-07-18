@@ -12,6 +12,7 @@ to deploy a node.
 | wise-a30x1.sh | Start a VMM for one NVIDIA A30. |
 | wise-a30x2.sh | Start a VMM for two NVIDIA A30. |
 | wise-a40x2.sh | Start a VMM For two NVIDIA A40. |
+| create-cloudinit-config.sh | Build a cloudinit configuration volume. |
 
 # Dependencies
 
@@ -19,3 +20,4 @@ to deploy a node.
 | --- | --- | --- |
 | [cloud-hypervisor](https://github.com/artificialwisdomai/bandaid-blobs) | Modern cloud hypervisor (VMM) | [Linux Foundation](https://www.cloudhypervisor.org/) |
 | [virtiofsd-latest](https://github.com/artificialwisdomai/bandaid-blobs) | VirtIO Filesystem backend | [docs](https://virtio-fs.gitlab.io/) |
+| [cloudinit](https://github.com/canonical/cloud-init) | Configures a cloud instance during runtime | [docs](https://cloud-init.io/) |
