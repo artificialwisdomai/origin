@@ -1,0 +1,13 @@
+#cloud-config
+---
+users:
+  - name: wise
+    ssh_import_id:
+      - gh:sdake
+      - gh:rstarmer
+      - gh:MostAwesomeDude
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: false
+    inactive: false
+    shell: /bin/bash
+ssh_pwauth: true
