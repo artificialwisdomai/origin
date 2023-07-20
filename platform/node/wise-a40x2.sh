@@ -15,18 +15,6 @@
 
 ###
 #
-# Mount the /opt filesystem after booting
-#
-# NB: Within virtual environment, mount the host filesystem.
-# NB: This is good enough for now. This approach weakens security.
-#
-# mkdir -p $HOME/repos
-# sudo mount -t virtiofs homefs repos
-# sudo mount -t virtiofs modelsfs models
-
-
-###
-#
 # The choices are:
 #
 # One A30 -> 0000:24:00.0
@@ -64,7 +52,7 @@ sudo -E install -d -m 0755 -o "${USER}" -g "${USER}" "/var/run/artificial_wisdom
 
 mac="c2:67:4f:53:29:${id}"
 kernel_img="/var/lib/artificial_wisdom/hypervisor-fw"
-config_img="/var/lib/artificial_wisdom/cloudinit-config.img"
+config_img="/var/lib/artificial_wisdom/cloudinit-config-wise-a40x2.img"
 disk_img="/var/lib/artificial_wisdom/${id}/baseline.img"
 virtiofs_sock="/var/run/artificial_wisdom/${id}/virtiofs.sock"
 api_sock="/var/run/artificial_wisdom/${id}/api.sock"
@@ -157,28 +145,16 @@ sudo chown "$UID:$UID" "$tapdevice"
 
 ###
 #
-# Export /opt/share into the virtual machine
+# wise-mounts builds the mount directory at
 #
-# share /opt submounts:
+# /run/artificial_wisdom/${id}-mounts/
 #
-# (rm -f?) 61/repos(rw,virtiofs->virtioblk): $HOME/repos persistent storage
-#
-# 61/cache(rw,virtiofs->virtioblk): $HOME/.cache persistent storage
-# 61/home(rw,virtiofs->virtioblk): TODO(sdake): $HOME/
-# models(rw->ro,virtiofs->virtioblk): model persistent storage
-# datasets(rw->ro,virtiofs->virtioblk): dataset persistent storage
-
-sudo mkdir -p /opt/share/{61-cache,61-home,models,datasets}
-sudo mount -o bind cache /opt/share/61-cache
-sudo mount -o bind home /opt/share/61-home
-sudo mount -o bind models /opt/share/models
-sudo mount -o bind datasets /opt/share/datasets
-sudo mount -o bind repos /opt/share/repos
+# contains submounts dataset, models, cache, home, repos
 
 /usr/local/bin/virtiofsd-latest \
     --sandbox=none \
     --announce-submounts \
-    --shared-dir=/opt/share \
+    --shared-dir=/run/artificial_wisdom/61-mounts/ \
     --socket-path="${virtiofs_sock}" \
     --cache=never \
     --thread-pool-size=4 &
@@ -203,14 +179,12 @@ sleep 2
 ###
 #
 # Start the hypervisor
-#
-# 48G feels like the bare minimum memory.
 
 /usr/local/bin/cloud-hypervisor \
 	--api-socket "${api_sock}" \
 	--kernel "${kernel_img}" \
 	--disk path="${disk_img},direct=on" \
-        --disk path="${config_img},readonly=on,direct=on,iommu=on" \
+        --disk path="${config_img},readonly=on,direct=on" \
 	--serial tty \
 	--console pty \
 	--cpus "boot=32" \
@@ -223,20 +197,6 @@ sleep 2
         --memory "size=256G,hugepages=on,hugepage_size=2M" \
         --device path="/sys/bus/pci/devices/0000:61:00.0" \
         --device path="/sys/bus/pci/devices/0000:a1:00.0"
-
-
-###
-#
-# Examples of different operations:
-#Use multiple VFIO passthrough devices
-# Use mediated bus device 
-# Use multiple filesystems
-#
-#      --device path="/sys/bus/pci/devices/0000:31:00.0" --device path="/sys/bus/pci/devices/0000:ca:00.0"
-#      --device path=/sys/bus/mdev/devices/1ee73476-2869-49c7-92ce-3c3733ff0eca
-#	--memory "size=256G,shared=on,hugepage_size=2M" \
-#	--fs tag=homefs,socket="${repos_sock}",num_queues=1,queue_size=1024 \
-#	--fs tag=modelsfs,socket="${models_sock}",num_queues=1,queue_size=1024 \
 
 
 ###
