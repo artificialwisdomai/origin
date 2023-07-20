@@ -34,18 +34,18 @@ sudo mount -o bind,ro /opt/share/datasets /var/run/artificial_wisdom/61-mounts/d
 
 # Cache
 
-sudo mount -o bind,ro /var/lib/artificial_wisdom/01-state/cache /var/run/artificial_wisdom/01-mounts/cache
-sudo mount -o bind,ro /var/lib/artificial_wisdom/24-state/cache /var/run/artificial_wisdom/24-mounts/cache
-sudo mount -o bind,ro /var/lib/artificial_wisdom/61-state/cache /var/run/artificial_wisdom/61-mounts/cache
+sudo mount -o bind /var/lib/artificial_wisdom/01-state/cache /var/run/artificial_wisdom/01-mounts/cache
+sudo mount -o bind /var/lib/artificial_wisdom/24-state/cache /var/run/artificial_wisdom/24-mounts/cache
+sudo mount -o bind /var/lib/artificial_wisdom/61-state/cache /var/run/artificial_wisdom/61-mounts/cache
 
 # Home
 
-sudo mount -o bind,ro /var/lib/artificial_wisdom/01-state/home /var/run/artificial_wisdom/01-mounts/home
-sudo mount -o bind,ro /var/lib/artificial_wisdom/24-state/home /var/run/artificial_wisdom/24-mounts/home
-sudo mount -o bind,ro /var/lib/artificial_wisdom/61-state/home /var/run/artificial_wisdom/61-mounts/home
+sudo mount -o bind /var/lib/artificial_wisdom/01-state/home /var/run/artificial_wisdom/01-mounts/home
+sudo mount -o bind /var/lib/artificial_wisdom/24-state/home /var/run/artificial_wisdom/24-mounts/home
+sudo mount -o bind /var/lib/artificial_wisdom/61-state/home /var/run/artificial_wisdom/61-mounts/home
 
 # Repos
 
-sudo mount -o bind,ro /var/lib/artificial_wisdom/01-state/repos /var/run/artificial_wisdom/01-mounts/repos
-sudo mount -o bind,ro /var/lib/artificial_wisdom/24-state/repos /var/run/artificial_wisdom/24-mounts/repos
-sudo mount -o bind,ro /var/lib/artificial_wisdom/61-state/repos /var/run/artificial_wisdom/61-mounts/repos
+sudo mount -o bind /var/lib/artificial_wisdom/01-state/repos /var/run/artificial_wisdom/01-mounts/repos
+sudo mount -o bind /var/lib/artificial_wisdom/24-state/repos /var/run/artificial_wisdom/24-mounts/repos
+sudo mount -o bind /var/lib/artificial_wisdom/61-state/repos /var/run/artificial_wisdom/61-mounts/repos
