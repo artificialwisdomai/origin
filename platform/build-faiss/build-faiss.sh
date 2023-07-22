@@ -10,8 +10,9 @@ source /opt/intel/oneapi/setvars.sh
 #export CC=gcc-12
 #export CXX=g++-12
 # Configure using cmake
+#export CXX=g++-11
 
-LD_LIBRARY_PATH=/usr/local/lib MKLROOT=/opt/intel/oneapi/mkl/2023.1.0/ CXX=g++-11 cmake -B build \
+LD_LIBRARY_PATH=/usr/local/lib MKLROOT=/opt/intel/oneapi/mkl/2023.2.0/ cmake -B build \
 	-DBUILD_SHARED_LIBS=ON \
 	-DBUILD_TESTING=ON \
 	-DFAISS_ENABLE_GPU=ON \
