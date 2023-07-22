@@ -80,7 +80,7 @@ wrapper = TrainingWrapper(
     retro=retro,
     knn=2,
     chunk_size=64,
-    documents_path="/home/sdake/en",
+    documents_path="./en",
 #    models/RedPajama-Data-1T-Sample",
     glob="**/*.md",
     chunks_memmap_path="./chunks/train.chunks.dat",
@@ -132,7 +132,7 @@ with progress_bar:
         " [aw.a]•[/aw.a] [aw.b]retrieval_model[/aw.b][aw.a]=[/aw.a][aw.b]artificialwisdomai[/aw.b][aw.a]/[/aw.a][aw.b]retroformer [aw.a]•[/aw.a] [aw.b]foundation_model[/aw.b][aw.a]=[/aw.a][aw.b]mosaicml[/aw.b][aw.a]/[/aw.a][aw.b]mpt30b[/aw.b] [aw.a]•[/aw.a] "
     )
     for epoch in range(EPOCH_MAX):
-        dataloader = iter(wrapper.get_dataloader(batch_size=4, shuffle=True))
+        dataloader = iter(wrapper.get_dataloader(batch_size=2, shuffle=True))
         task_id = progress_bar.add_task(
             description="Epoch {}".format(epoch), loss="loss=nil", total=len(dataloader)
         )
