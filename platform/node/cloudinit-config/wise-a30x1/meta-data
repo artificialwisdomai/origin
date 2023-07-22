@@ -1,0 +1,4 @@
+#cloud-config
+---
+instance-id: wise-a30x1
+local-hostname: wise-a30x1
