@@ -72,7 +72,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   shutdown_command     = "sudo -S shutdown -P now"
   ssh_password         = "insecure"
   ssh_username         = "packer"
-  ssh_wait_timeout     = "10m"
+  ssh_wait_timeout     = "15m"
   firmware             = "efi"
   keep_registered      = "true"
   skip_export          = "false"
