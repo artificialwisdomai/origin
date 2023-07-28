@@ -1,6 +1,7 @@
 ###
 # Train a retrieval transformer with a dataset
 
+from pathlib import Path
 import os
 import time
 import torch
@@ -49,20 +50,20 @@ theme = Theme(
 console = Console(theme=theme)
 
 ###
+#
 # instantiate RETRO, fit it into the TrainingWrapper with correct settings
 
 retro = RETRO(
-    max_seq_len=2048,
-    enc_dim=896,
-    enc_depth=3,
-    dec_dim=768,
-    dec_depth=12,
-    dec_cross_attn_layers=(1, 3, 6, 9),
-    heads=8,
-    dim_head=64,
-    dec_attn_dropout=0.25,
-    dec_ff_dropout=0.25,
-    use_deepnet=True,
+    max_seq_len = 2048,                      # max sequence length
+    enc_dim = 896,                           # encoder model dimension
+    enc_depth = 3,                           # encoder depth
+    dec_dim = 768,                           # decoder model dimensions
+    dec_depth = 12,                          # decoder depth
+    dec_cross_attn_layers = (1, 3, 6, 9),    # decoder cross attention layers (with causal chunk cross attention)
+    heads = 8,                               # attention heads
+    dim_head = 64,                           # dimension per head
+    dec_attn_dropout = 0.25,                 # decoder attention dropout
+    dec_ff_dropout = 0.25                    # decoder feedforward dropout
 ).cuda()
 
 ###
@@ -76,26 +77,26 @@ retro = RETRO(
 # I have used:
 # https://github.com/istio/istio.io/tree/master/content/en
 # https://huggingface.co/datasets/togethercomputer/RedPajama-Data-1T-Sample
+# instantiate RETRO, fit it into the TrainingWrapper with correct settings
+
+
 wrapper = TrainingWrapper(
     retro=retro,
     knn=2,
     chunk_size=64,
-    documents_path="/home/sdake/en",
-#    models/RedPajama-Data-1T-Sample",
-    glob="**/*.md",
-    chunks_memmap_path="./chunks/train.chunks.dat",
-    seqs_memmap_path="./chunks/train.seq.dat",
-    doc_ids_memmap_path="./chunks/train.doc_ids.dat",
+    documents_path=Path('/home/wise/repos/istio.io/content/en'),
+ #    models/RedPajama-Data-1T-Sample",
+    glob='**/*.md',
+    chunks_memmap_path=Path('./chunks/train.chunks.dat'),
+    seqs_memmap_path=Path('./chunks/train.seq.dat'),
+    doc_ids_memmap_path=Path('./chunks/train.doc_ids.dat'),
     max_chunks=1_000_000,
-    max_seqs=100_000,
+    max_seqs=2_000_000,
     knn_extra_neighbors=100,
-    processed_stats_json_path="./processed-stats.json",
-    # TODO(sdake): Poor constraints enforcement creates a charlie foxtrot here
-    max_index_memory_usage="100m",
-    current_memory_available="1G",
+    processed_stats_json_path=Path('./chunks/processed-stats.json'),
+    faiss_index_filename=Path('./chunks/faiss-idx'),
 )
 
-retro.train()
 optim = wrapper.get_optimizer(lr=3e-4, wd=0.01)
 
 progress_bar = Progress(
@@ -139,12 +140,13 @@ with progress_bar:
         for seq, retrieved in dataloader:
             seq, retrieved = seq.cuda(), retrieved.cuda()
             loss = retro(seq, retrieved, return_loss=True)
+            loss = loss.mean()
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(retro.parameters(), 1.)
             optim.step()
             optim.zero_grad()
 
-            # TODO(sdake): Unclear this meets specifications. I have not yet
-            # successfully restored a checkpoint.
+            #https://pytorch.org/tutorials/beginner/saving_loading_models.html#save
             torch.save(
                 {
                     "epoch": epoch,
@@ -152,7 +154,8 @@ with progress_bar:
                     "optimizer_state_dict": optim.state_dict(),
                     "loss": loss,
                 },
-                "model.pt{}".format(epoch),
+                "checkpoint-model.pt{}".format(epoch),
             )
-            progress_bar.update(task_id, loss="[aw.a]loss[/aw.a][aw.b]=[/aw.b][aw.a]{:2.2f}[/aw.a]".format(loss))
+            torch.save(retro, 'model.pt{}'.format(epoch))
+            progress_bar.update(task_id, loss="[aw.a]loss[/aw.a][aw.b]=[/aw.b][aw.a]{:2.2f}[/aw.a]".format(loss.item(), 4))
             progress_bar.advance(task_id)
