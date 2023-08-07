@@ -1,0 +1,11 @@
+---
+- hosts: all
+  vars:
+    home_dir: "{{ lookup('env', 'HOME') }}"
+    username: "{{ lookup('env', 'USER') }}"
+
+  roles:
+    - install_virtualbox
+    - install_packer
+    - install_origin
+    - build_baseline

@@ -1,0 +1,2 @@
+[lab]
+env ansible_connection=ssh ansible_ssh_user=wise ansible_host=192.168.34.103
