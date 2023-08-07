@@ -1,0 +1,7 @@
+---
+- name: Install Debian Packaging tool debspawn
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: debspawn
+    state: present

@@ -1,0 +1,29 @@
+---
+- name: Install gpg
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: gpg
+    state: present
+    
+- name: Install Packer gpg key
+  become: yes
+  become_user: root
+  ansible.builtin.apt_key:
+    url: "https://apt.releases.hashicorp.com/gpg"
+    keyring: "/usr/share/keyrings/hashicorp.gpg"
+    state: present
+
+- name: Install Packer apt repository
+  become: yes
+  become_user: root
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com bullseye main"
+    update_cache: yes
+    state: present
+
+- name: Install Packer tooling
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: packer

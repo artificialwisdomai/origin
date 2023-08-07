@@ -1,0 +1,14 @@
+---
+- name: Install git
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: git
+    state: present
+    
+- name: Clone origin main branch
+  ansible.builtin.git:
+    accept_newhostkey: true
+    depth: 1
+    repo: "https://github.com/artificialwisdomai/origin"
+    dest: "/home/wise/origin"

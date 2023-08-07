@@ -1,0 +1,29 @@
+---
+- name: Install gpg
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: gpg
+    state: present
+    
+- name: Install VirtualBox gpg key
+  become: yes
+  become_user: root
+  ansible.builtin.apt_key:
+    url: "https://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc"
+    keyring: "/usr/share/keyrings/oracle-virtualbox-2016.gpg"
+    state: present
+
+- name: Install VirtualBox apt repository
+  become: yes
+  become_user: root
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib"
+    update_cache: yes
+    state: present
+
+- name: Install VirtualBox tooling
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: virtualbox-7.0
