@@ -1,3 +1,16 @@
+variable "purpose" {
+  type      = string
+  default   = "baseline"
+}
+
+locals {
+  tag = formatdate("YYYYMMDD", timestamp())
+  vm_name = "${local.tag}.${var.purpose}"
+  vdi_image = "build/${local.vm_name}.vdi"
+  raw_image = "build/${local.vm_name}.raw"
+  zst_image = "build/${local.vm_name}.raw.zst"
+}
+
 variable "preseed_file" {
   type    = string
   default = "preseed-debian-11.cfg"
@@ -13,6 +26,10 @@ variable "cpus" {
   default = "4"
 }
 
+###
+# NB: Any generated image must be smaller then this image size
+# if this image is used to host the generated image.
+#
 variable "disk_size" {
   type    = string
   default = "200000"
@@ -43,10 +60,6 @@ variable "iso_url" {
   default = "https://cdimage.debian.org/cdimage/archive/11.7.0/amd64/iso-cd/debian-11.7.0-amd64-netinst.iso"
 }
 
-variable "image_name" {
-  type    = string
-  default = "golden"
-}
 
 source "virtualbox-iso" "base-debian-amd64" {
   # The Debian boot screen is well documented in 5.1.7 The Boot Screen
@@ -59,7 +72,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   disk_size            = "${var.disk_size}"
   headless             = "${var.headless}"
   output_directory     = "build"
-  output_filename      = "${var.image_name}"
+  output_filename      = "${local.vm_name}"
   http_directory       = "${path.root}/${var.preseed_dir}"
   communicator         = "ssh"
   skip_nat_mapping     = false
@@ -76,14 +89,23 @@ source "virtualbox-iso" "base-debian-amd64" {
   firmware             = "efi"
   keep_registered      = "true"
   skip_export          = "false"
+  format               = "ova"
+  vm_name              = "${local.vm_name}"
   vboxmanage = [
     [ "modifyvm", "{{.Name}}", "--recording", "on" ],
     [ "modifyvm", "{{.Name}}", "--nat-localhostreachable1", "on" ],
   ]
 }
 
-# Build a golden image by connecting a compute source with a provisioner
-
 build {
   sources = ["source.virtualbox-iso.base-debian-amd64"]
+
+  post-processors {
+    post-processor "shell-local" {
+      inline = [ "vbox-img convert --srcformat vdi --srcfilename ${local.vdi_image} --dstformat RAW --dstfilename ${local.raw_image}" ]
+    }
+    post-processor "shell-local" {
+      inline = [ "zstd --compress --format=zstd ${local.raw_image} -o ${local.zst_image}" ]
+    }
+  }
 }
