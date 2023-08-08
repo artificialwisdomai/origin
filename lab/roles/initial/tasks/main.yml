@@ -1,0 +1,19 @@
+---
+###
+#
+# These tasks are not included in the playbook. This is dead code, although
+# it is not in any git repository to be found via git history. I will commit
+# it, then remove the file, so this implementation is recorded in git.
+
+- name: Install fish shell & starship
+  community.general.homebrew:
+    name: "{{ item }}"
+  with_items:
+    - fish
+    - starship
+
+- name: Ensure homebrew fish is in allowed shells
+  become: yes
+  lineinfile:
+    path: /etc/shells
+    line: "/home/linuxbrew/.linuxbrew/bin"

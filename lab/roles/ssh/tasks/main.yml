@@ -1,0 +1,12 @@
+---
+- name: Set authorized keys taken from url
+  become: yes
+  authorized_key:
+    user: "{{ item }}"
+    state: "present"
+    key: "https://github.com/{{ item }}.keys"
+  with_items:
+    - lsdake
+    - sdake
+    - rstarmer
+    - MostAwesomeDude

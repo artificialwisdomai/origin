@@ -1,0 +1,16 @@
+---
+- name: Add user with a locked password
+  become: yes
+  become_user: root
+  user:
+    user: "{{ item }}"
+    password: "!"
+    groups: sudo
+    append: yes
+    state: present
+    update_password: "on_create"
+  with_items:
+    - rstarmer
+    - sdake
+    - lsdake
+    - MostAwesomeDude

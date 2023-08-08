@@ -1,0 +1,16 @@
+---
+- name: Install apt-based command line tools
+  become: yes
+  become_user: root
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: true
+  with_items:
+    - acl
+    - git
+    - curl
+    - mlocate
+    - apt-file
+    - numactl
+    - libhugetlbfs-bin

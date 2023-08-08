@@ -1,0 +1,4 @@
+[lab]
+beast-04 ansible_host=192.168.34.24
+beast-05 ansible_host=192.168.34.25
+beast-06 ansible_host=192.168.34.26
