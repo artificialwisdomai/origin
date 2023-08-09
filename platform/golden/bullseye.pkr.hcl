@@ -4,11 +4,12 @@ variable "purpose" {
 }
 
 locals {
-  tag = formatdate("YYYYMMDD", timestamp())
-  vm_name = "${local.tag}.${var.purpose}"
+  version = formatdate("YYYYMMDDhhmmss", timestamp())
+  vm_name = "${local.version}.${var.purpose}"
   vdi_image = "build/${local.vm_name}.vdi"
   raw_image = "build/${local.vm_name}.raw"
   zst_image = "build/${local.vm_name}.raw.zst"
+  oci_artifact = "${var.purpose}.raw.zst"
 }
 
 variable "preseed_file" {
@@ -106,6 +107,9 @@ build {
     }
     post-processor "shell-local" {
       inline = [ "zstd --compress --format=zstd ${local.raw_image} -o ${local.zst_image}" ]
+    }
+    post-processor "shell-local" {
+      inline= [ "oci artifacts generic artifact upload-by-path --repository-id ocid1.artifactrepository.oc1.phx.0.amaaaaaamsjifnaarolagsfeinzfliwqcoekkfqu3tfqevcnmchdaagxlola --artifact-path ${local.oci_artifact} --artifact-version ${local.version} --content-body ${local.zst_image}" ]
     }
   }
 }
