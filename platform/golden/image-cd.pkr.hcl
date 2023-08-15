@@ -14,7 +14,7 @@ locals {
 
 variable "preseed_file" {
   type    = string
-  default = "preseed-debian-11.cfg"
+  default = "preseed-debian-bullseye.cfg"
 }
 
 variable "preseed_dir" {
