@@ -6,4 +6,4 @@ mkdir -p ${PWD}/packer_logs
 # pass an additional flag `-var ssh_password=${SSH_PASSWORD} to use.
 # to simplify development this is disabled at the moment.
 
-PACKER_LOG_PATH=${PWD}/packer_logs/log.txt PACKER_LOG=1 packer build -force -on-error=abort bullseye.pkr.hcl
+PACKER_LOG_PATH=${PWD}/packer_logs/log.txt PACKER_LOG=1 packer build -force -on-error=abort -var-file=bullseye.pkrvars.hcl image-cd.pkr.hcl
