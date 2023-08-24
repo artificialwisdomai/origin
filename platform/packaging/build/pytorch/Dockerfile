@@ -75,7 +75,6 @@ RUN apt -y install libzstd-dev
 RUN apt -y install libjpeg-dev
 RUN apt -y install libpng-dev
 
-COPY sources.list /etc/apt/
 #RUN /usr/sbin/update-ccache-symlinks
 RUN mkdir -p /opt/ccache
 #RUN ccache --set-config=cache_dir=/opt/ccache
