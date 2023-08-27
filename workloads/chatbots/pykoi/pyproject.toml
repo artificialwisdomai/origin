@@ -7,16 +7,26 @@ license = "ASL2"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
-pykoi = "^0.0.5"
+#pykoi = "^0.0.5"
 torch = "^2.0.0"
+pykoi = { path = "/home/ubuntu/repos/pykoi/", develop = false }
+
 
 [tool.poetry.dev-dependencies]
 
+#[[tool.poetry.source]]
+#name = "torch"
+#url = "https://download.pytorch.org/whl/cu121"
+#priority = "primary"
+
+
 [[tool.poetry.source]]
-name = "torch"
-url = "https://download.pytorch.org/whl/cu121"
-priority = "explicit"
+name = "PyPI"
+priority = "primary"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+workload = "llama2pi.__main__:main"

@@ -1,0 +1,13 @@
+[Unit]
+Description=llama2pi service
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/repos/origin/workloads/chatbots/pykoi
+ExecStart=/home/ubuntu/.local/bin/poetry run workload
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
