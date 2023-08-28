@@ -4,4 +4,4 @@ Artificial Wisdom™ Cloud Platform
 
 # License
 
-Licensed under the [Apache License, Version 2.0.](./LICENSE).
+All content within this repository is licensed under the [Apache License, Version 2.0.](https://opensource.org/license/apache-2-0/).
