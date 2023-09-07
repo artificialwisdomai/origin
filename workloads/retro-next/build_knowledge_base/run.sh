@@ -1,0 +1,1 @@
+docker buildx run artificialwisdomai/build_knowledge_base:latest
