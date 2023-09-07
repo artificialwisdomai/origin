@@ -1,0 +1,8 @@
+[
+    {
+        "chunks": "chunks.npy",
+        "seq2chunk": "seq2chunk.npy",
+        "chunk2seq": "chunk2seq.npy",
+        "embeddings": "chunks.embeddings.npy"
+    }
+]
