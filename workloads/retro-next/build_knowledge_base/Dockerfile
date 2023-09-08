@@ -33,3 +33,8 @@ COPY 0002_save_index_spec.sh ${SRC_PATH}
 COPY 0003_train_index.sh ${SRC_PATH}
 COPY 0004_build_index.sh ${SRC_PATH}
 COPY 0005_generate_neighbors.sh ${SRC_PATH}
+
+# The retro implmentation REQUIRES gpus. Unfortunately, that means
+# installing cuda in this workflow
+
+# RUN nvidia-smi -L
