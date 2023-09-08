@@ -1,5 +1,6 @@
 FROM debian:bookworm
 
+ENV DEBIAN_FRONTEND=noninteractive
 ENV VENV_PATH /workspace/venv
 ENV INDEX_PATH /workspace/target/index
 ENV DATASET_PATH /workspace/dataset
