@@ -35,13 +35,21 @@ variable "disk_size" {
   default = "200000"
 }
 
+###
+#
+# Please note target_path is relative to ${PWD}
+
+variable "target_path" {
+  type    = string
+  default = "build/"
+}
 
 locals {
   version = formatdate("YYYYMMDDhhmmss", timestamp())
   vm_name = "${local.version}.${var.distro_version}.${var.purpose}"
-  vdi_image = "build/${local.vm_name}.vdi"
-  raw_image = "build/${local.vm_name}.raw"
-  zst_image = "build/${local.vm_name}.raw.zst"
+  vdi_image = "${var.target_path}/${local.vm_name}.vdi"
+  raw_image = "${var.target_path}/${local.vm_name}.raw"
+  zst_image = "${var.target_path}/${local.vm_name}.raw.zst"
   oci_artifact = "${var.purpose}.raw.zst"
   preseed_file = "preseed-debian-${var.distro_version}.cfg"
   preseed_dir = "cfg"
@@ -60,7 +68,7 @@ source "virtualbox-iso" "base-debian-amd64" {
   memory               = "${local.memory}"
   disk_size            = "${var.disk_size}"
   headless             = "${local.headless}"
-  output_directory     = "build"
+  output_directory     = "${var.target_path}"
   output_filename      = "${local.vm_name}"
   http_directory       = "${path.root}/${local.preseed_dir}"
   communicator         = "ssh"
