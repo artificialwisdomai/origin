@@ -95,7 +95,17 @@ source "virtualbox-iso" "base-debian-amd64" {
 }
 
 build {
-  sources = ["source.virtualbox-iso.base-debian-amd64"]
+  sources = [
+    "source.virtualbox-iso.base-debian-amd64"
+  ]
+
+  provisioner "ansible" {
+    playbook_file = "provisioners/playbook.yml"
+    ansible_env_vars = [
+      "ANSIBLE_NOCOLOR=True"
+    ]
+    user = "packer"
+  }
 
   post-processors {
     post-processor "shell-local" {
