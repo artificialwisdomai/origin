@@ -1,0 +1,12 @@
+---
+- hosts: all
+  any_errors_fatal: true
+  become: true
+  vars:
+    home_dir: "{{ lookup('env', 'HOME') }}"
+    username: "{{ lookup('env', 'USER') }}"
+
+  roles:
+    - override_kernel_parameters
+    - install_cuda_118
+    - override_cuda_driver_parameters
