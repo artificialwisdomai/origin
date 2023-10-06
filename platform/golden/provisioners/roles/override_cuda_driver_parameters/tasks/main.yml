@@ -1,0 +1,5 @@
+---
+- name: Install CUDA module configueation
+  copy:
+    src=dropin-profile-all-for-cuda.cfg
+    dest=/etc/modprobe.d/00_cuda.cfg
