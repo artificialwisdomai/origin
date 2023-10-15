@@ -5,13 +5,16 @@ FROM docker.io/library/debian:bookworm as bookworm_faiss
 # https://github.com/artificialwisdomai/origin/wiki/Build-FAISS-from-source
 
 ENV DEBIAN_FRONTEND  noninteractive
-ENV FAISS_VERSION    1.7.4
+ENV FAISS_VERSION    v1.7.4
 ENV VENV_PATH        /workspace/v-faiss
 ENV PYTHON_VENV      ${VENV_PATH}/bin/python
 ENV PIP_VENV         ${VENV_PATH}/bin/pip
 ENV PATH             ${PATH}:/workspace/v-faiss/bin:/usr/local/cuda/bin
 ENV MKLROOT          /opt/intel/oneapi/mkl/2023.2.0
 ENV MKLLIBS          ${MKLROOT}/lib/intel64
+ENV CUDA_VERSION     12.2.2
+ENV ZSTD_CLEVEL      18
+ENV ZSTD_NBTHREADS   16
 
 RUN apt update
 RUN apt install -y build-essential
@@ -26,12 +29,16 @@ RUN apt install -y cmake
 RUN apt install -y gpg
 RUN apt install -y ninja-build
 RUN apt install -y curl
+RUN apt install -y zstd
 
 ###
 #
+# TODO: move this comment to an issue tracker, where alteast it will be tracked and can then
+# be removed from the code. I am fairly certain we will launch with CUDA 12.2.2.
+#
 # NVIDIA CUDA-11.8's nvcc (parallel C compiler) does not integrate with gcc-12. For the moment
 # use gcc-11. CUDA-12.2 is compatible, so using that for now. Using gcc-11 is quite a challenge
-# https://github.com/facebookresearch/maskrcnn-benchmark/issues/25#issuecomment-433382510
+# https://github.com/facebookresearch/maskrcnn-benchmark/issues/25#issuecomment-433382510.
 
 #RUN apt install -y gcc-11
 #RUN apt install -y g++-11
@@ -45,6 +52,7 @@ RUN mkdir -p /workspace/build/
 RUN mkdir -p /workspace/target/
 
 COPY debian.sources /etc/apt/sources.list.d/
+COPY faiss-1.7.4-install.patch /workspace/build/
 
 ###
 #
@@ -71,6 +79,9 @@ RUN apt install -y intel-oneapi-mkl-devel
 RUN curl -sLO https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.4.tar.gz
 RUN tar -xf v1.7.4.tar.gz
 
+WORKDIR /workspace/faiss-1.7.4/
+RUN patch -p1 --input=/workspace/build/faiss-1.7.4-install.patch
+
 ###
 #
 # Install faiss build depenendencies
@@ -79,10 +90,6 @@ RUN python3 -m venv ${VENV_PATH}
 RUN ${PIP_VENV} install numpy
 RUN ${PIP_VENV} install swig
 RUN ${PIP_VENV} install wheel
-
-WORKDIR /workspace/faiss-1.7.4/
-
-#RUN ln -s /opt/intel/oneapi/mkl/latest /opt/intel/mkl
 
 ###
 #
@@ -105,10 +112,15 @@ RUN cmake --fresh \
       -D FAISS_ENABLE_PYTHON:BOOL=ON \
       -D BLA_VENDOR:STRING=Intel10_64_dyn \
       -D MKL_LIBRARIES:PATH=${MKLLIBS} \
-      -D CMAKE_INSTALL_PREFIX:PATH=/workspace/install \
+      -D CMAKE_INSTALL_PREFIX:PATH=/opt/meta/faiss \
       -D CMAKE_BUILD_TYPE:STRING=Release \
       -W no-dev \
       faiss-1.7.4
+
+###
+#
+# Build faiss, swigfaiss, swigfaiss_avx2, and then install the python callback
+# Next, build a faiss wheel from the compiled source.
 
 RUN make -j$(nproc) -C _build faiss
 RUN make -j$(nproc) -C _build swigfaiss
@@ -120,14 +132,30 @@ RUN ${PYTHON_VENV} setup.py bdist_wheel
 
 ###
 #
+# Output this as an artifact with the rest of the binaries.
+#
 # Output files to /workspace/target.
-# These files are then copied to a new scratch.
+#
+# - intel-mkl-2023.2.0.zst
+# - faiss-v1.7.4.zst
+# - ld-so-conf-intel-mkl.conf
+# - ld-so-conf-meta-faiss.conf
+# - faiss-v1.7.4-py3-none-any.whl
 
-WORKDIR /workspace/install
-RUN echo "/opt/intel/oneapi/mkl/2023.2.0/lib/intel64" > /workspace/target/ld-so-conf-intel.conf
-RUN tar -cf /workspace/target/intel-mkl-2023.2.0.tar.gz /opt/intel/oneapi/mkl/2023.2.0/lib/intel64
-RUN tar -cf /workspace/target/faiss.tar.gz *
+WORKDIR /workspace/target
+RUN echo "/opt/intel/oneapi/mkl/2023.2.0/lib/intel64" > /workspace/target/ld-so-conf-intel-mkl.conf
+RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
+RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/intel-mkl-2023.2.0.tar.zst /opt/intel/oneapi/mkl/2023.2.0/lib/intel64
+RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/faiss-v1.7.4.zst /opt/meta/faiss
+
 RUN cp -aR /workspace/faiss-1.7.4/_build/faiss/python/dist/*whl /workspace/target
+
+###
+#
+# Output file layers that contain the files /workspace/target are then copied into a new
+# scratch bookworm_faiss to build the final results from the build image.
+#
+# And then placed in ${PWD}/target
 
 FROM scratch
 COPY --from=bookworm_faiss /workspace/target /
