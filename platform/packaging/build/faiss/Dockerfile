@@ -10,11 +10,15 @@ ENV VENV_PATH        /workspace/v-faiss
 ENV PYTHON_VENV      ${VENV_PATH}/bin/python
 ENV PIP_VENV         ${VENV_PATH}/bin/pip
 ENV PATH             ${PATH}:/workspace/v-faiss/bin:/usr/local/cuda/bin
-ENV MKLROOT          /opt/intel/oneapi/mkl/2023.2.0
-ENV MKLLIBS          ${MKLROOT}/lib/intel64
+ENV MKL_ROOT         /opt/intel/oneapi/mkl/2023.2.0/lib/intel64
 ENV CUDA_VERSION     12.2.2
 ENV ZSTD_CLEVEL      18
 ENV ZSTD_NBTHREADS   16
+
+###
+#
+# Static link MKL
+ENV MKL_LIBRARIES    "-Wl,--start-group;${MKL_ROOT}/libmkl_intel_ilp64.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
 
 RUN apt update
 RUN apt install -y build-essential
@@ -27,7 +31,6 @@ RUN apt install -y ninja-build
 RUN apt install -y git
 RUN apt install -y cmake
 RUN apt install -y gpg
-RUN apt install -y ninja-build
 RUN apt install -y curl
 RUN apt install -y zstd
 
@@ -101,6 +104,7 @@ RUN ${PIP_VENV} install wheel
 #      -DCMAKE_INSTALL_LIBDIR=lib \
 
 RUN cmake --fresh \
+      -S /workspace/faiss-1.7.4 \
       -B _build \
       -D Python_EXECUTABLE=${PYTHON_VENV} \
       -D BUILD_SHARED_LIBS:BOOL=ON \
@@ -110,12 +114,11 @@ RUN cmake --fresh \
       -D FAISS_ENABLE_GPU:BOOL=ON \
       -D FAISS_ENABLE_RAFT:BOOL=OFF \
       -D FAISS_ENABLE_PYTHON:BOOL=ON \
-      -D BLA_VENDOR:STRING=Intel10_64_dyn \
-      -D MKL_LIBRARIES:PATH=${MKLLIBS} \
+      -D BLA_VENDOR:STRING=Intel10_64ilp \
+      -D MKL_LIBRARIES:STRING=${MKL_LIBRARIES} \
       -D CMAKE_INSTALL_PREFIX:PATH=/opt/meta/faiss \
       -D CMAKE_BUILD_TYPE:STRING=Release \
-      -W no-dev \
-      faiss-1.7.4
+      -W no-dev
 
 ###
 #
@@ -134,19 +137,27 @@ RUN ${PYTHON_VENV} setup.py bdist_wheel
 #
 # Output this as an artifact with the rest of the binaries.
 #
-# Output files to /workspace/target.
-#
-# - intel-mkl-2023.2.0.zst
-# - faiss-v1.7.4.zst
-# - ld-so-conf-intel-mkl.conf
+# Generate files in /workspace/target:
+# - faiss-v1.7.4.tar.zst
 # - ld-so-conf-meta-faiss.conf
 # - faiss-v1.7.4-py3-none-any.whl
+#
+# Optional:
+# - intel-mkl-2023.2.0.tar.zst
+# - ld-so-conf-intel-mkl.conf
+
 
 WORKDIR /workspace/target
-RUN echo "/opt/intel/oneapi/mkl/2023.2.0/lib/intel64" > /workspace/target/ld-so-conf-intel-mkl.conf
+###
+#
+# Intel MKL is statically linked into libfaiss for now
+#
+# Therefore; disable output of intel mkl for now.
+#RUN echo "/opt/intel/oneapi/mkl/2023.2.0/lib/intel64" > /workspace/target/ld-so-conf-intel-mkl.conf
+#RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/intel-oneapi-2023.2.0.tar.zst /opt/intel/oneapi
+
 RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
-RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/intel-mkl-2023.2.0.tar.zst /opt/intel/oneapi/mkl/2023.2.0/lib/intel64
-RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/faiss-v1.7.4.zst /opt/meta/faiss
+RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/faiss-v1.7.4.tar.zst /opt/meta/faiss
 
 RUN cp -aR /workspace/faiss-1.7.4/_build/faiss/python/dist/*whl /workspace/target
 
