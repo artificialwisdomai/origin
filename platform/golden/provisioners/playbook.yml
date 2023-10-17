@@ -7,7 +7,6 @@
     username: "{{ lookup('env', 'USER') }}"
 
   roles:
-    - override_kernel_parameters
     - install_cuda_122
     - override_cuda_driver_parameters
     - install_docker
