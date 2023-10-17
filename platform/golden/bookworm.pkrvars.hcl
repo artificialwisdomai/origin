@@ -13,10 +13,10 @@ guest_os_type = "Debian12_64"
 #
 # Image properties
 
-disk_size = "1250000"
+disk_size = "1000000"
 
 ###
 #
 # Environment configuration
 
-target_path = "/mnt/repos/target"
+target_path = "/mnt"
