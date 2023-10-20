@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "wisdomctl"
+version = "0.1.0"
+description = "Wisdom Cloud API client"
+authors = ["Corbin <cds@corbinsimpson.com>"]
+license = "ASL 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+ocifs = "^1.2.1"
+
+[tool.poetry.scripts]
+wisdomctl = "wisdomctl:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
