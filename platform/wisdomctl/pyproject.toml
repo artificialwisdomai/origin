@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 ocifs = "^1.2.1"
+click = "^8.1.7"
 
 [tool.poetry.scripts]
 wisdomctl = "wisdomctl:main"
