@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "wisdomctl"
 version = "0.1.0"
-description = "Wisdom Cloud API client"
-authors = ["Corbin <cds@corbinsimpson.com>"]
+description = "Artificial Wisdom™ Cloud Platform CLI"
+authors = ["Corbin <corbin@computelify.com>"]
 license = "ASL 2.0"
 readme = "README.md"
 

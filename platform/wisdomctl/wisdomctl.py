@@ -5,8 +5,6 @@ import click
 @click.group()
 def cli(): pass
 
-REMOTE = click.argument("remote")
-
 MB = 1024 ** 2
 def slowCopy(src, dest):
     while True:
@@ -15,7 +13,7 @@ def slowCopy(src, dest):
         dest.write(hunk)
 
 @cli.command()
-@REMOTE
+@click.argument("remote")
 @click.argument("local", type=click.File("wb"))
 def getFromSource(remote, local):
     fs = OCIFileSystem(config="~/.oci/config", profile="DEFAULT")
@@ -23,7 +21,7 @@ def getFromSource(remote, local):
 
 @cli.command()
 @click.argument("local", type=click.File("rb"))
-@REMOTE
+@click.argument("remote")
 def sendToSource(local, remote):
     fs = OCIFileSystem(config="~/.oci/config", profile="DEFAULT")
     with fs.open(remote, "wb") as handle: slowCopy(local, handle)
