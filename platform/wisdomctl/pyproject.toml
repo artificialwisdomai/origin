@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.10"
 ocifs = "^1.2.1"
 click = "^8.1.7"
+pyarrow = "^13.0.0"
 
 [tool.poetry.scripts]
 wisdomctl = "wisdomctl:main"
