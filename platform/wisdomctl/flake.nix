@@ -11,15 +11,27 @@
   outputs = { self, nixpkgs, flake-utils, poetry2nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        # see https://github.com/nix-community/poetry2nix/tree/master#api for more functions and examples.
-        inherit (poetry2nix.legacyPackages.${system}) mkPoetryApplication;
         pkgs = import nixpkgs {
           inherit system;
+          # overlays = [
+          #   poetry2nix.overlay
+          #   (final: prev: {
+          #     wisdomctl = prev.poetry2nix.mkPoetryApplication {
+          #       projectDir = ./.;
+          #     };
+          #   })
+          # ];
         };
+        py = pkgs.python310.withPackages (ps: [
+          ps.click ps.ocifs ps.pyarrow
+          # Soft dependencies from pyarrow
+          ps.pandas
+        ]);
       in
       {
+        # packages.default = pkgs.wisdomctl;
         devShells.default = pkgs.mkShell {
-          packages = [ pkgs.poetry ];
+          packages = [ pkgs.poetry py ];
         };
       });
 }
