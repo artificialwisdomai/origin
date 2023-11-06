@@ -55,7 +55,8 @@ RUN mkdir -p /workspace/build/
 RUN mkdir -p /workspace/target/
 
 COPY debian.sources /etc/apt/sources.list.d/
-COPY faiss-1.7.4-install.patch /workspace/build/
+COPY faiss-1.7.4-runpath-origin.patch /workspace/build/
+COPY faiss-1.7.4-setuppy-include-binaries.patch /workspace/build/
 
 ###
 #
@@ -83,7 +84,9 @@ RUN curl -sLO https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.4
 RUN tar -xf v1.7.4.tar.gz
 
 WORKDIR /workspace/faiss-1.7.4/
-RUN patch -p1 --input=/workspace/build/faiss-1.7.4-install.patch
+RUN patch -p1 --input=/workspace/build/faiss-1.7.4-runpath-origin.patch
+RUN patch -p1 --input=/workspace/build/faiss-1.7.4-setuppy-include-binaries.patch
+
 
 ###
 #
