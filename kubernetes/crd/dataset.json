@@ -15,9 +15,18 @@
 						"spec": {
 							"type": "object",
 							"properties": {
-								"source": { "type": "string" },
-								"filename": { "type": "string" },
-								"bucket": { "type": "string" }
+								"source": {
+									"type": "string",
+									"description": "The original path to the dataset on HF Hub"
+								},
+								"filename": {
+									"type": "string",
+									"description": "The filename of the Feather data in OCI"
+								},
+								"bucket": {
+									"type": "string",
+									"description": "The OCI bucket where Feather data is stored"
+								}
 							}
 						}
 					}

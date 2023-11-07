@@ -31,7 +31,15 @@
         ]);
       in
       {
-        packages.default = py;
+        packages = {
+          default = py;
+          oci = pkgs.ociTools.buildContainer {
+            args = [ (pkgs.writeScript "run.sh" ''
+              #!${pkgs.bash}/bin/bash
+              exec ${py}/bin/python ${./dataset-controller.py}
+            '').outPath ];
+          };
+        };
         devShells.default = pkgs.mkShell {
           packages = [ py ];
         };
