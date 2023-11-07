@@ -1,6 +1,6 @@
 == Dataset Controller ==
 
-A simple controller for `datasets.new.artificial.cloud` custom objects.
+A simple controller for `datasets.new.artificialwisdom.cloud` custom objects.
 
 This controller looks up datasets on HF Hub using HF Datasets, and then uploads
 them to OCI in Feather format. (Or at least, that's the plan.)
