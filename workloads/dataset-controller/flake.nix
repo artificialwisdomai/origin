@@ -41,7 +41,7 @@
           };
         };
         devShells.default = pkgs.mkShell {
-          packages = [ py ];
+          packages = [ py pkgs.python310Packages.pyflakes ];
         };
       });
 }
