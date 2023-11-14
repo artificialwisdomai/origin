@@ -31,3 +31,11 @@ Then also add it to the container environment:
     export KUBECONFIG=/app/kube/k3s.yaml
     export OCI_CONFIG=/app/oci
     podman run --env-host -v /etc/rancher/k3s:/app/kube:ro -v ~/.oci:/app/oci:ro --net host $IMAGE
+
+=== Phases ===
+
+The phases are:
+
+* UnknownSource: The source isn't recognized.
+* NotPresent: The dataset hasn't been downloaded yet.
+* Ready: The dataset is ready for use.
