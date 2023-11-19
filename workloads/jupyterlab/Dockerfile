@@ -1,12 +1,12 @@
 FROM docker.io/library/debian:bookworm
 
-LABEL maintainer="Artificial Wisdom Cloud <hello@artificialwisdom.ai>"
+LABEL maintainer="Artificial Wisdom Cloud <hello@artificialwisdom.cloud>"
 
 ENV SHELL=/bin/bash
 
 ###
 #
-# Cargo Copy Cult from: 
+# Cargo Copy Cult from:
 # /docker-stacks/images/docker-stacks-foundation
 
 ENV                      JUPYTERLAB_USER=jupyterlab
@@ -27,8 +27,11 @@ ENV CUDA_VERSION         12.2.2
 ENV ZSTD_CLEVEL          18
 ENV ZSTD_NBTHREADS       16
 
-#ENV PATH                 ${PATH}:${VENV_PATH}/bin
-ENV HOME                 /home/wtf
+ENV PATH                 ${PATH}:${VENV_PATH}/bin
+
+###
+#
+# TODO(sdake): SECURITY
 
 USER root
 
@@ -82,16 +85,10 @@ WORKDIR /workspace
 RUN mkdir -p /workspace/build/
 RUN mkdir -p /workspace/target/
 
-#        -D, --defaults 
-#        -d, --home-dir HOME_DIR
-#        -c, --comment COMMENT
-
-
 ###
 #
-# These next two blocks, pytorch instal and m package install, may not be needed.
+# These next two blocks, pytorch install and m package install, may not be needed.
 # They *were* needed when I was installing this stuff manually.
-
 
 ###
 #
@@ -119,10 +116,13 @@ RUN ${PIP_VENV} install jupyterlab_midnightsea_theme
 ###
 #
 # Language servers
-# not certain on the 5.0.0 - from the docs.
 
 RUN ${PIP_VENV} install jupyterlab-lsp==5.0.0
 RUN ${PIP_VENV} install jedi-language-server
+
+###
+#
+# These language servers look interesting, more study is needed.
 #RUN npm install --save-dev bash-language-server
 #RUN npm install --save-dev dockerfile-language-server-nodejs
 #RUN npm install --save-dev pyright
