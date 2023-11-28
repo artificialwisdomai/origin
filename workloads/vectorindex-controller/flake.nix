@@ -8,11 +8,28 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs { inherit system; };
+        sentence-transformers = pkgs.python310.pkgs.buildPythonPackage rec {
+          pname = "sentence-transformers";
+          version = "2.2.2";
+
+          src = pkgs.fetchPypi {
+            inherit pname version;
+            sha256 = "sha256-28YBY7J94hB2yaMNJLW3tvoFFB1ozyVT+pp3v3mikTY=";
+          };
+
+          propagatedBuildInputs = with pkgs.python310.pkgs; [
+            huggingface-hub nltk scikit-learn scipy sentencepiece tokenizers torch torchvision tqdm transformers
+          ];
+
+          doCheck = false;
+        };
         py = pkgs.python310.withPackages (ps: with ps; [
           # Cloud-native: Access to k8s API, M&M
           kubernetes prometheus_client
           # FAISS
           faiss
+          # Sentence Transformers
+          sentence-transformers
           # Access to Feather files in OCI buckets
           ocifs pyarrow
           # Soft dependencies from pyarrow
