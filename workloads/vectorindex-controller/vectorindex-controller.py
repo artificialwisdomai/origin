@@ -34,14 +34,31 @@ def updateObject(obj):
 
 def setPhase(obj, phase): obj.setdefault("status", {})["phase"] = phase
 
-def defaultHandler(obj):
-    dataset = obj["spec"]["dataset"]
+def getDataSet(name, ns):
+    return crds.get_namespaced_custom_object(DOMAIN, "v1", ns, "datasets", name)
+
+def awaitingDataSet(obj):
+    ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
+    if ds["status"].get("phase") == "Ready":
+        setPhase(obj, "BuildingIndex")
+        updateObject(obj)
+
+def buildingIndex(obj):
+    ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
     factory = obj["spec"]["factory"]
-    print("Dataset:", dataset, "Factory:", factory)
     index = faiss.index_factory(128, factory)
     print("Index:", index)
 
+def defaultHandler(obj):
+    ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
+    print("DataSet:", ds)
+    if ds["status"].get("phase") == "Ready": setPhase(obj, "BuildingIndex")
+    else: setPhase(obj, "AwaitingDataSet")
+    updateObject(obj)
+
 dispatch = {
+    "AwaitingDataSet": awaitingDataSet,
+    "BuildingIndex": buildingIndex,
 }
 
 while True:
