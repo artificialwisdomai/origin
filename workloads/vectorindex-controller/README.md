@@ -12,3 +12,4 @@ The phases are:
 
 * AwaitingDataSet: The corresponding `DataSet` object is not yet `Ready`.
 * BuildingIndex: The index is being constructed.
+* Ready: The index is constructed and saved to disk.

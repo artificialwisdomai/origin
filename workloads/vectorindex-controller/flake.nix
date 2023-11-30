@@ -24,6 +24,8 @@
           doCheck = false;
         };
         py = pkgs.python310.withPackages (ps: with ps; [
+          # Debugging
+          tqdm
           # Cloud-native: Access to k8s API, M&M
           kubernetes prometheus_client
           # FAISS

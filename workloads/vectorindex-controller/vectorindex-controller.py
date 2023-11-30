@@ -1,7 +1,17 @@
 import os
 
+import numpy as np
+
+from tqdm import tqdm
+
 from kubernetes import config, client, watch
 from prometheus_client import Counter, start_http_server
+
+from ocifs import OCIFileSystem
+
+import pyarrow.feather
+
+from sentence_transformers import SentenceTransformer
 
 import faiss
 
@@ -15,12 +25,25 @@ MAIN_LOOP_ITERATIONS = Counter("main_loop_iterations",
 OBJECTS_PROCESSED = Counter("objects_processed",
                             "Number of objects processed")
 
+fs = OCIFileSystem(config=os.environ["OCI_CONFIG"], profile="DEFAULT")
+
 if "KUBERNETES_PORT" in os.environ:
     config.load_incluster_config()
 else:
     config.load_kube_config()
 
 start_http_server(8000)
+
+# Sentence embedding setup
+
+embedder = SentenceTransformer("all-miniLM-L6-v2")
+EMBEDDING_WIDTH = 384
+
+def normedEmbeds(arr):
+    # https://github.com/facebookresearch/faiss/wiki/MetricType-and-distances
+    rv = np.array(arr, dtype="float32")
+    faiss.normalize_L2(rv)
+    return rv
 
 # Controller: API, handlers, event loop
 
@@ -37,6 +60,11 @@ def setPhase(obj, phase): obj.setdefault("status", {})["phase"] = phase
 def getDataSet(name, ns):
     return crds.get_namespaced_custom_object(DOMAIN, "v1", ns, "datasets", name)
 
+def bucketPath(obj):
+    filename = obj["spec"]["filename"]
+    bucket = obj["spec"]["bucket"]
+    return f"oci://{bucket}/{filename}"
+
 def awaitingDataSet(obj):
     ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
     if ds["status"].get("phase") == "Ready":
@@ -46,8 +74,21 @@ def awaitingDataSet(obj):
 def buildingIndex(obj):
     ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
     factory = obj["spec"]["factory"]
-    index = faiss.index_factory(128, factory)
-    print("Index:", index)
+    index = faiss.index_factory(EMBEDDING_WIDTH, factory)
+    print("DataSet and factory are valid!")
+    with fs.open(bucketPath(ds), "rb") as handle:
+        df = pyarrow.feather.read_feather(handle)
+    print("Opened Feather data!")
+    for row in tqdm(df.iterrows(), total=df.size):
+        # XXX quirk of test data?
+        batch = row[1].to_list()[0]
+        embeddings = normedEmbeds(embedder.encode(batch))
+        index.add(embeddings)
+    # XXX the rest of the handler is untested!
+    with fs.open(bucketPath(obj), "wb") as handle:
+        faiss.write_index(index, handle)
+    setPhase(obj, "Ready")
+    updateObject(obj)
 
 def defaultHandler(obj):
     ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
