@@ -5,7 +5,7 @@ metadata:
 spec:
     group: new.artificialwisdom.cloud
     versions:
-    - name: v1
+      - name: v1
         storage: true
         served: true
         schema:
@@ -27,6 +27,12 @@ spec:
                             factory:
                                 type: string
                                 description: "The index factory; see https://github.com/facebookresearch/faiss/wiki/The-index-factory"
+                            filename:
+                                type: string
+                                description: "The filename of the FAISS index in OCI"
+                            bucket:
+                                type: string
+                                description: "The OCI bucket where FAISS indices are stored"
     scope: Namespaced
     names:
         plural: vectorindices
