@@ -1,0 +1,85 @@
+[tool.poetry]
+name = "mouseion"
+version = "0.1.0"
+authors = [
+    "Corbin Simpson <corbin@computelify.com>",
+    "Robert Starmer <rstarmer@computelify.com>",
+    "Steven Dake <steve@computelify.com>",
+]
+
+#authors = [
+#    {name = "Corbin Simpson", email = "corbin@computelify.com"},
+#    {name = "Robert Starmer", email = "robert@computelify.com"},
+#    {name = "Steven Dake", email = "steve@computelify.com"},
+#]
+#maintainers = [
+#    {name = "Corbin Simpson", email = "corbin@computelify.com"},
+#    {name = "Robert Starmer", email = "robert@computelify.com"},
+#    {name = "Steven Dake", email = "steve@computelify.com"},
+#]
+description = "[RALM]: Introducing the Mouseion retrieval augmented language model library"
+readme = "README.md"
+license = "Apache-2.0"
+keywords = [
+    "retrieval",
+    "augmentation",
+    "language",
+    "model",
+    "Mouseion",
+    "Artificial",
+    "Wisdom",
+    "Intelligence",
+]
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+]
+
+packages = [
+    { include = "mouseion" },
+    { include = "scripts" },
+]
+
+[project.urls]
+homepage = "https://artificialwisdom.cloud/"
+documentation = "https://artificialwisdom.cloud/docs/"
+repository = "https://github.com/artificialwisdomai/origin.git"
+issues = "https://github.com/artificialwisdomai/origin/issues"
+
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+
+#ptyhon = ">=3.11,<=3.13"
+# This is aggrivating and explained within a link.
+#python = ">=3.11,<3.13"
+numpy = "^1.26.1"
+# Upstream faiss-gpu is not compiled properly and is not the most recent stable release.
+# There are many reasons for this, most chiefly that PyPi has a limit on file size that faiss exceeds.
+#faiss-gpu = "^1.0.0"
+
+# And unfortnately, it is not currently possible to push an url reference to pypi.
+faiss = {file = "/home/wise/faiss-1.7.4-py3-none-any.whl"}
+#faiss = {url = "https://github.com/artificialwisdomai/apt.oifv.ai/raw/main/whl/faiss-1.7.4-py3-none-any.whl"}
+
+# TODO(sdake) The name step2 is terrible. During reviews, please suggest an improvementl.
+tqdm = "^4.66.1"
+[tool.poetry.scripts]
+#step2 = "mouseion.scripts.train_and_build_index:main"
+step2 = "scripts.s2_train_and_build_index:main"
+
+#train_and_build_index.py = "scripts.train_and_build_index:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+#
+# Full documentation:
+#
+# One of hundreds of reasons top pins are bad: https://iscinumpy.dev/post/bound-version-constraints/#pinning-the-python-version-is-special
+# https://python-poetry.org/docs/pyproject/
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#writing-pyproject-toml
+#
+###

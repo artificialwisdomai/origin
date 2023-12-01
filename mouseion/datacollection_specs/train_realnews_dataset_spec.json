@@ -1,0 +1,202 @@
+{
+	"shards": [
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/00_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/00_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/00_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/00_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/01_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/01_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/01_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/01_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/02_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/02_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/02_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/02_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/03_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/03_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/03_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/03_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/04_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/04_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/04_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/04_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/05_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/05_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/05_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/05_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/06_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/06_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/06_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/06_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/07_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/07_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/07_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/07_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/08_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/08_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/08_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/08_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/09_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/09_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/09_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/09_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/10_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/10_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/10_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/10_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/11_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/11_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/11_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/11_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/12_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/12_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/12_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/12_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/13_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/13_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/13_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/13_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/14_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/15_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/15_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/15_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/15_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/16_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/16_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/16_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/16_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/17_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/17_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/17_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/17_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/18_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/18_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/18_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/18_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/19_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/19_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/19_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/19_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/20_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/20_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/20_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/20_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/21_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/21_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/21_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/21_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/22_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/22_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/22_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/22_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/23_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/23_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/23_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/23_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/24_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/24_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/24_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/24_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/25_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/25_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/25_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/25_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/26_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/26_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/26_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/26_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/27_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/27_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/27_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/27_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/28_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/28_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/28_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/28_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/29_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/29_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/29_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/29_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/30_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/30_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/30_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/30_train_realnews.embeddings.npy"
+	},
+	{
+		"chunks": "/home/wise/knowledge.d/realnews.d/train.realnews.d/31_train_realnews.chunk2seq.npy",
+		"chunk2seq": "/home/wise/knowledge.d/realnews.d/train.realnews.d/31_train_realnews.chunks.npy",
+		"seq2chunk": "/home/wise/knowledge.d/realnews.d/train.realnews.d/31_train_realnews.seq2chunk.npy",
+		"embeddings": "/home/wise/knowledge.d/realnews.d/train.realnews.d/31_train_realnews.embeddings.npy"
+	}
+    ]
+}
