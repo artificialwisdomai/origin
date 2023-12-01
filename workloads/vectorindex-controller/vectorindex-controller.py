@@ -1,4 +1,5 @@
 import os
+from tempfile import NamedTemporaryFile
 
 import numpy as np
 
@@ -65,6 +66,13 @@ def bucketPath(obj):
     bucket = obj["spec"]["bucket"]
     return f"oci://{bucket}/{filename}"
 
+MB = 1024 ** 2
+def slowCopy(src, dest):
+    while True:
+        hunk = src.read(MB)
+        if not hunk: break
+        dest.write(hunk)
+
 def awaitingDataSet(obj):
     ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
     if ds["status"].get("phase") == "Ready":
@@ -84,11 +92,14 @@ def buildingIndex(obj):
         batch = row[1].to_list()[0]
         embeddings = normedEmbeds(embedder.encode(batch))
         index.add(embeddings)
-    # XXX the rest of the handler is untested!
-    with fs.open(bucketPath(obj), "wb") as handle:
-        faiss.write_index(index, handle)
+    with NamedTemporaryFile(mode="rb") as temp:
+        faiss.write_index(index, temp.name)
+        with fs.open(bucketPath(obj), "wb") as handle:
+            slowCopy(temp, handle)
     setPhase(obj, "Ready")
     updateObject(obj)
+
+def ready(obj): pass
 
 def defaultHandler(obj):
     ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
@@ -100,6 +111,7 @@ def defaultHandler(obj):
 dispatch = {
     "AwaitingDataSet": awaitingDataSet,
     "BuildingIndex": buildingIndex,
+    "Ready": ready,
 }
 
 while True:
