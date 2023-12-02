@@ -20,7 +20,7 @@ def get_mouseion_source_path() -> pathlib.Path:
     """
     Get Mousieon source path.
     """
-    return get_base_path / "mouseon"
+    return get_base_path / "mouseion"
 
 def build_workload(base_path: pathlib.Path) -> list:
     """
