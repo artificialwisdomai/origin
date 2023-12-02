@@ -10,7 +10,9 @@ ENV VENV_PATH        /workspace/v-faiss
 ENV PYTHON_VENV      ${VENV_PATH}/bin/python
 ENV PIP_VENV         ${VENV_PATH}/bin/pip
 ENV PATH             ${PATH}:/workspace/v-faiss/bin:/usr/local/cuda/bin
-ENV MKL_ROOT         /opt/intel/oneapi/mkl/2023.2.0/lib/intel64
+ENV MKL_VERSION      2024.0
+ENV MKL_MODEL        ilp64
+ENV MKL_ROOT         /opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64
 ENV CUDA_VERSION     12.2.2
 ENV ZSTD_CLEVEL      18
 ENV ZSTD_NBTHREADS   16
@@ -18,7 +20,7 @@ ENV ZSTD_NBTHREADS   16
 ###
 #
 # Static link MKL
-ENV MKL_LIBRARIES    "-Wl,--start-group;${MKL_ROOT}/libmkl_intel_ilp64.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
+ENV MKL_LIBRARIES    "-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
 
 RUN apt update
 RUN apt install -y build-essential
@@ -53,10 +55,11 @@ RUN apt install -y zstd
 WORKDIR /workspace
 RUN mkdir -p /workspace/build/
 RUN mkdir -p /workspace/target/
+RUN mkdir -p /workspace/faiss-${FAISS_VERSION}/
 
 COPY debian.sources /etc/apt/sources.list.d/
-COPY faiss-1.7.4-runpath-origin.patch /workspace/build/
-COPY faiss-1.7.4-setuppy-include-binaries.patch /workspace/build/
+COPY faiss-${FAISS_VERSION}-runpath-origin.patch /workspace/
+COPY faiss-${FAISS_VERSION}-setuppy-include-binaries.patch /workspace/
 
 ###
 #
@@ -69,7 +72,7 @@ RUN dpkg -i /workspace/cuda-keyring_1.1-1_all.deb
 #
 # Provide Intel OneAPI MKL via network for installation
 #
-# https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/2023-2/apt.html
+# https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/${MKL_VERSION}/apt.html
 # NB. we don't need the all of Intel's oneApi, we only need MKL.
 
 RUN curl -sL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
@@ -80,12 +83,12 @@ RUN apt install -y cuda-toolkit-12-2
 RUN apt install -y intel-oneapi-mkl
 RUN apt install -y intel-oneapi-mkl-devel
 
-RUN curl -sLO https://github.com/facebookresearch/faiss/archive/refs/tags/v1.7.4.tar.gz
-RUN tar -xf v1.7.4.tar.gz
+RUN curl -sLO https://github.com/facebookresearch/faiss/archive/refs/tags/${FAISS_VERSION}.tar.gz
+RUN tar xf /workspace/${FAISS_VERSION}.tar.gz --directory=/workspace/faiss-${FAISS_VERSION} --strip-components=1
 
-WORKDIR /workspace/faiss-1.7.4/
-RUN patch -p1 --input=/workspace/build/faiss-1.7.4-runpath-origin.patch
-RUN patch -p1 --input=/workspace/build/faiss-1.7.4-setuppy-include-binaries.patch
+WORKDIR /workspace/faiss-${FAISS_VERSION}/
+RUN patch --strip=1 --input=/workspace/faiss-${FAISS_VERSION}-runpath-origin.patch
+RUN patch --strip=1 --input=/workspace/faiss-${FAISS_VERSION}-setuppy-include-binaries.patch
 
 
 ###
@@ -97,6 +100,7 @@ RUN ${PIP_VENV} install numpy
 RUN ${PIP_VENV} install swig
 RUN ${PIP_VENV} install wheel
 
+
 ###
 #
 # This is needed to use the Ninja generator
@@ -107,7 +111,7 @@ RUN ${PIP_VENV} install wheel
 #      -DCMAKE_INSTALL_LIBDIR=lib \
 
 RUN cmake --fresh \
-      -S /workspace/faiss-1.7.4 \
+      -S /workspace/faiss-${FAISS_VERSION} \
       -B _build \
       -D Python_EXECUTABLE=${PYTHON_VENV} \
       -D BUILD_SHARED_LIBS:BOOL=ON \
@@ -123,6 +127,7 @@ RUN cmake --fresh \
       -D CMAKE_BUILD_TYPE:STRING=Release \
       -W no-dev
 
+
 ###
 #
 # Build faiss, swigfaiss, swigfaiss_avx2, and then install the python callback
@@ -133,8 +138,9 @@ RUN make -j$(nproc) -C _build swigfaiss
 RUN make -j$(nproc) -C _build swigfaiss_avx2
 RUN make -j$(nproc) -C _build install
 
-WORKDIR /workspace/faiss-1.7.4/_build/faiss/python
+WORKDIR /workspace/faiss-${FAISS_VERSION}/_build/faiss/python
 RUN ${PYTHON_VENV} setup.py bdist_wheel
+
 
 ###
 #
@@ -160,9 +166,9 @@ WORKDIR /workspace/target
 #RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/intel-oneapi-2023.2.0.tar.zst /opt/intel/oneapi
 
 RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
-RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/faiss-v1.7.4.tar.zst /opt/meta/faiss
+RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/faiss-${FAISS_VERSION}.tar.zst /opt/meta/faiss
 
-RUN cp -aR /workspace/faiss-1.7.4/_build/faiss/python/dist/*whl /workspace/target
+RUN cp -aR /workspace/faiss-${FAISS_VERSION}/_build/faiss/python/dist/*whl /workspace/target
 
 ###
 #
