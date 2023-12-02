@@ -18,15 +18,15 @@ description = "A library for efficient similarity search and clustering of dense
 optional = false
 python-versions = "*"
 files = [
-    {file = "faiss-1.7.4-py3-none-any.whl", hash = "sha256:025a0eca98614d1400f2a625ade28fdb7814881043e8dfc72882f57823246e46"},
+    {file = "faiss-1.7.4-py3-none-any.whl", hash = "sha256:2c964aca1373743e257407e0d825dcb73e1d54e7274682c6ac678982a90d792b"},
 ]
 
 [package.dependencies]
 numpy = "*"
 
 [package.source]
-type = "file"
-url = "../../faiss-1.7.4-py3-none-any.whl"
+type = "url"
+url = "https://github.com/artificialwisdomai/apt.oifv.ai/raw/main/whl/faiss-1.7.4-py3-none-any.whl"
 
 [[package]]
 name = "numpy"
@@ -96,4 +96,4 @@ telegram = ["requests"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11,<3.13"
-content-hash = "7b32e366ea79b07fe0ff4c030fca6d516c36f1966b382025034e24ab91e292be"
+content-hash = "52c022b541d27b0e55f8cbfff893b6fe7beecbf531d7947e1a3129691e5aff5e"
