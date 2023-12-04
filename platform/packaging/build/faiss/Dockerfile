@@ -64,14 +64,15 @@ RUN apt install -y zstd
 #RUN ln -s /usr/bin/gcc-11 gcc
 #RUN ln -s /usr/bin/g++-11 g++
 
-WORKDIR /workspace
+WORKDIR /workspace/sources/
+RUN mkdir -p /workspace/sources/faiss-${FAISS_VERSION}/
 RUN mkdir -p /workspace/build/
 RUN mkdir -p /workspace/target/
-RUN mkdir -p /workspace/faiss-${FAISS_VERSION}/
+RUN mkdir -p /workspace/patches/
 
 COPY debian.sources /etc/apt/sources.list.d/
-COPY faiss-${FAISS_VERSION}-runpath-origin.patch /workspace/
-COPY faiss-${FAISS_VERSION}-setuppy-include-binaries.patch /workspace/
+COPY faiss-${FAISS_VERSION}-runpath-origin.patch /workspace/patches/
+COPY faiss-${FAISS_VERSION}-setuppy-include-binaries.patch /workspace/patches/
 
 ###
 #
@@ -95,12 +96,12 @@ RUN apt install -y cuda-toolkit-12-2
 RUN apt install -y intel-oneapi-mkl
 RUN apt install -y intel-oneapi-mkl-devel
 
-RUN curl -sLO https://github.com/facebookresearch/faiss/archive/refs/tags/${FAISS_VERSION}.tar.gz
-RUN tar xf /workspace/${FAISS_VERSION}.tar.gz --directory=/workspace/faiss-${FAISS_VERSION} --strip-components=1
+RUN curl -L https://github.com/facebookresearch/faiss/archive/refs/tags/${FAISS_VERSION}.tar.gz -O /workspace/sources/faiss-${FAISS_VERSION}.tar.gz
+#RUN curl -sLO https://github.com/facebookresearch/faiss/archive/refs/tags/${FAISS_VERSION}.tar.gz
+RUN tar xf /workspace/sources/${FAISS_VERSION}.tar.gz --directory=/workspace/sources/faiss-${FAISS_VERSION} --strip-components=1
 
-WORKDIR /workspace/faiss-${FAISS_VERSION}/
-RUN patch --strip=1 --input=/workspace/faiss-${FAISS_VERSION}-runpath-origin.patch
-RUN patch --strip=1 --input=/workspace/faiss-${FAISS_VERSION}-setuppy-include-binaries.patch
+RUN patch --strip=1 --directory="/workspace/sources/faiss-${FAISS_VERSION}" --input="/workspace/patches/faiss-${FAISS_VERSION}-runpath-origin.patch"
+RUN patch --strip=1 --directory="/workspace/patches/faiss-${FAISS_VERSION}" --input="/workspace/patches/faiss-${FAISS_VERSION}-setuppy-include-binaries.patch"
 
 
 ###
@@ -124,8 +125,8 @@ RUN ${PIP_VENV} install wheel
 #      -DCMAKE_INSTALL_LIBDIR=lib \
 
 RUN cmake --fresh \
-      -S /workspace/faiss-${FAISS_VERSION} \
-      -B _build \
+      -S /workspace/source/faiss-${FAISS_VERSION} \
+      -B /workspace/build/faiss-${FAISS_VERSON} \
       -D Python_EXECUTABLE=${PYTHON_VENV} \
       -D BUILD_SHARED_LIBS:BOOL=ON \
       -D BUILD_TESTING:BOOL=OFF \
@@ -146,12 +147,13 @@ RUN cmake --fresh \
 # Build faiss, swigfaiss, swigfaiss_avx2, and then install the python callback
 # Next, build a faiss wheel from the compiled source.
 
+WORKDIR "/workspace/build/faiss-${FAISS_VERSION}"
 RUN make --jobs=$(nproc) --directory="_build" faiss
 RUN make --jobs=$(nproc) --directory="_build" swigfaiss
 RUN make --jobs=$(nproc) --directory="_build" swigfaiss_avx2
 RUN make --jobs=$(nproc) --directory="_build" install
 
-WORKDIR "/workspace/faiss-${FAISS_VERSION}/_build/faiss/python"
+WORKDIR "/workspace/build/faiss-${FAISS_VERSION}/_build/faiss/python"
 RUN "${PYTHON_VENV}" -m build --wheel --no-isolation
 
 
@@ -181,7 +183,8 @@ WORKDIR /workspace/target
 RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
 RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/faiss-${FAISS_VERSION}.tar.zst /opt/meta/faiss
 
-RUN cp -aR /workspace/faiss-${FAISS_VERSION}/_build/faiss/python/dist/*whl /workspace/target
+RUN cp -aR /workspace/build/faiss-${FAISS_VERSION}/_build/faiss/python/dist/*whl /workspace/target
+
 
 ###
 #
