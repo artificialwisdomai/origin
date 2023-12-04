@@ -1,26 +1,37 @@
+# syntax=docker/dockerfile:1
 FROM docker.io/library/debian:bookworm as bookworm_faiss
+
+LABEL "com.computelify.vendor"="Computelify, Inc."
+LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
+LABEL "version"="1.0"
+LABEL "description"="This text illustrates that label-values can span multiple lines."
+
 
 ###
 #
 # https://github.com/artificialwisdomai/origin/wiki/Build-FAISS-from-source
 
-ENV DEBIAN_FRONTEND  noninteractive
-ENV FAISS_VERSION    v1.7.4
-ENV VENV_PATH        /workspace/v-faiss
-ENV PYTHON_VENV      ${VENV_PATH}/bin/python
-ENV PIP_VENV         ${VENV_PATH}/bin/pip
-ENV PATH             ${PATH}:/workspace/v-faiss/bin:/usr/local/cuda/bin
-ENV MKL_VERSION      2024.0
-ENV MKL_MODEL        ilp64
-ENV MKL_ROOT         /opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64
-ENV CUDA_VERSION     12.2.2
-ENV ZSTD_CLEVEL      18
-ENV ZSTD_NBTHREADS   16
+ENV DEBIAN_FRONTEND  "noninteractive"
+ENV FAISS_VERSION    "v1.7.4"
+ENV CUDA_VERSION     "12.2.2"
+ENV PATH             "${PATH}:/workspace/v/bin:/usr/local/cuda/bin"
+ENV VENV_PATH        "/workspace/v"
+ENV PYTHON_VENV      "${VENV_PATH}/bin/python"
+ENV PIP_VENV         "${VENV_PATH}/bin/pip"
+ENV MKL_VERSION      "2024.0"
+ENV MKL_MODEL        "ilp64"
+ENV MKL_ROOT         "/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
+
+ENV ZSTD_CLEVEL      "18"
+ENV ZSTD_NBTHREADS   "16"
+
 
 ###
 #
 # Static link MKL
+
 ENV MKL_LIBRARIES    "-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
+
 
 RUN apt update
 RUN apt install -y build-essential
@@ -35,6 +46,7 @@ RUN apt install -y cmake
 RUN apt install -y gpg
 RUN apt install -y curl
 RUN apt install -y zstd
+
 
 ###
 #
@@ -98,6 +110,7 @@ RUN patch --strip=1 --input=/workspace/faiss-${FAISS_VERSION}-setuppy-include-bi
 RUN python3 -m venv ${VENV_PATH}
 RUN ${PIP_VENV} install numpy
 RUN ${PIP_VENV} install swig
+RUN ${PIP_VENV} install build
 RUN ${PIP_VENV} install wheel
 
 
@@ -106,7 +119,7 @@ RUN ${PIP_VENV} install wheel
 # This is needed to use the Ninja generator
 # Unfortunately, I was not able to get the later make operations to work with ninja
 #
-#      -D CMAKE_ARGS:STRING="-d stats" \
+#      -D CMAKE_ENVS:STRING="-d stats" \
 #      -G Ninja \
 #      -DCMAKE_INSTALL_LIBDIR=lib \
 
@@ -133,13 +146,13 @@ RUN cmake --fresh \
 # Build faiss, swigfaiss, swigfaiss_avx2, and then install the python callback
 # Next, build a faiss wheel from the compiled source.
 
-RUN make -j$(nproc) -C _build faiss
-RUN make -j$(nproc) -C _build swigfaiss
-RUN make -j$(nproc) -C _build swigfaiss_avx2
-RUN make -j$(nproc) -C _build install
+RUN make --jobs=$(nproc) --directory="_build" faiss
+RUN make --jobs=$(nproc) --directory="_build" swigfaiss
+RUN make --jobs=$(nproc) --directory="_build" swigfaiss_avx2
+RUN make --jobs=$(nproc) --directory="_build" install
 
-WORKDIR /workspace/faiss-${FAISS_VERSION}/_build/faiss/python
-RUN ${PYTHON_VENV} setup.py bdist_wheel
+WORKDIR "/workspace/faiss-${FAISS_VERSION}/_build/faiss/python"
+RUN "${PYTHON_VENV}" -m build --wheel --no-isolation
 
 
 ###
@@ -156,7 +169,6 @@ RUN ${PYTHON_VENV} setup.py bdist_wheel
 # - ld-so-conf-intel-mkl.conf
 
 
-WORKDIR /workspace/target
 ###
 #
 # Intel MKL is statically linked into libfaiss for now
@@ -165,6 +177,7 @@ WORKDIR /workspace/target
 #RUN echo "/opt/intel/oneapi/mkl/2023.2.0/lib/intel64" > /workspace/target/ld-so-conf-intel-mkl.conf
 #RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/intel-oneapi-2023.2.0.tar.zst /opt/intel/oneapi
 
+WORKDIR /workspace/target
 RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
 RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/faiss-${FAISS_VERSION}.tar.zst /opt/meta/faiss
 
