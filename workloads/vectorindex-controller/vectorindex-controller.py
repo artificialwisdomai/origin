@@ -38,7 +38,7 @@ start_http_server(8000)
 # Sentence embedding setup
 
 embedder = SentenceTransformer("all-miniLM-L6-v2")
-EMBEDDING_WIDTH = 384
+EMBEDDING_DIMENSION = 384
 
 def normedEmbeds(arr):
     # https://github.com/facebookresearch/faiss/wiki/MetricType-and-distances
@@ -66,7 +66,8 @@ def bucketPath(obj):
     bucket = obj["spec"]["bucket"]
     return f"oci://{bucket}/{filename}"
 
-MB = 1024 ** 2
+# A mibibyte.
+MB = 2 ** 20
 def slowCopy(src, dest):
     while True:
         hunk = src.read(MB)
@@ -82,7 +83,7 @@ def awaitingDataSet(obj):
 def buildingIndex(obj):
     ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
     factory = obj["spec"]["factory"]
-    index = faiss.index_factory(EMBEDDING_WIDTH, factory)
+    index = faiss.index_factory(EMBEDDING_DIMENSION, factory)
     print("DataSet and factory are valid!")
     with fs.open(bucketPath(ds), "rb") as handle:
         df = pyarrow.feather.read_feather(handle)

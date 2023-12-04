@@ -5,34 +5,34 @@ metadata:
 spec:
     group: new.artificialwisdom.cloud
     versions:
-      - name: v1
-        storage: true
-        served: true
-        schema:
-            openAPIV3Schema:
-                type: object
-                properties:
-                    status:
-                        type: object
-                        properties:
-                            phase:
-                                type: string
-                                description: "The phase state of the index."
-                    spec:
-                        type: object
-                        properties:
-                            dataset:
-                                type: string
-                                description: "The name of the DataSet used to build the index."
-                            factory:
-                                type: string
-                                description: "The index factory; see https://github.com/facebookresearch/faiss/wiki/The-index-factory"
-                            filename:
-                                type: string
-                                description: "The filename of the FAISS index in OCI"
-                            bucket:
-                                type: string
-                                description: "The OCI bucket where FAISS indices are stored"
+        - name: v1
+          storage: true
+          served: true
+          schema:
+              openAPIV3Schema:
+                  type: object
+                  properties:
+                      status:
+                          type: object
+                          properties:
+                              phase:
+                                  type: string
+                                  description: "The phase state of the index."
+                      spec:
+                          type: object
+                          properties:
+                              dataset:
+                                  type: string
+                                  description: "The name of the DataSet used to build the index."
+                              factory:
+                                  type: string
+                                  description: "The index factory; see https://github.com/facebookresearch/faiss/wiki/The-index-factory"
+                              filename:
+                                  type: string
+                                  description: "The filename of the FAISS index in OCI"
+                              bucket:
+                                  type: string
+                                  description: "The OCI bucket where FAISS indices are stored"
     scope: Namespaced
     names:
         plural: vectorindices
