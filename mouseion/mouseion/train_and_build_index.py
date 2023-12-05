@@ -7,6 +7,12 @@ import pathlib
 
 def main(args):
     """
+    Determine if an output directory exists.
+    """
+    if not pathlib.Path(args.output).is_dir():
+        raise ValueError(f"The output path is invalid {args.output}")
+
+    """
     Combines numpy embeddings from multiple npy files into a FAISS index.
     """
     try:

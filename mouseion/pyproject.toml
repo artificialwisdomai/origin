@@ -57,7 +57,7 @@ faiss = {url = "https://github.com/artificialwisdomai/apt.oifv.ai/raw/main/whl/f
 
 
 [tool.poetry.scripts]
-step2 = "scripts.s2_train_and_build_index:main"
+index = "scripts.train_and_build_index:main"
 
 
 [build-system]

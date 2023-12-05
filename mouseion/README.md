@@ -1,5 +1,5 @@
 
-# Use
+# Usage
 
 There are three steps:
 - convert datasets to numpy arrays
@@ -8,12 +8,16 @@ There are three steps:
 
 ## Train and build the index
 
-Step2 is all that is currently documented or implemented.
+Create an index from embedded dataset:
+
 ```console
-poetry run step2
+poetry run index
 ```
 
-# Install
+# Install Mouseion
+
+When installing Mouseion, we recommend using `poetry`. You are also free to use the
+provided shell scripts. The following steps explain how to install Mouseion using poetry.
 
 ## Update lockfile
 
@@ -36,7 +40,7 @@ poetry install
 ## Removal
 
 ```console
-wise@wise-a40x1-1:~/origin/mouseion$ poetry env list
+wise@wise-a40x1-1:Use~/origin/mouseion$ poetry env list
 mouseion-TcVnHjA0-py3.11 (Activated)
 wise@wise-a40x1-1:~/origin/mouseion$ poetry env remove mouseion-TcVnHjA0-py3.11
 Deleted virtualenv: /home/wise/.cache/pypoetry/virtualenvs/mouseion-TcVnHjA0-py3.11

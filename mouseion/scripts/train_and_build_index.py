@@ -7,8 +7,9 @@
 # Author: Steven Dake <steve@computelify.com>
 # License: ASL2.
 
-import subprocess
 import pathlib
+import os
+import subprocess
 
 def get_base_path() -> pathlib.Path:
     """
@@ -32,16 +33,17 @@ def build_workload(base_path: pathlib.Path) -> list:
     Returns:
         list: The command as a list of arguments.
     """
-    datacollection_specs_path = base_path / "datacollection_specs"
-    realnews_path = base_path / "knowledge.d/realnews.d"
-    mouseion_source_path = base_path / "mouseion"
+    home = os.getenv("HOME")
+    datacollection_specs_path = f"{base_path}/datacollection_specs"
+    realnews_path = f"{home}/knowledge.d/realnews.d"
+    mouseion_source_path = f"{base_path}/mouseion"
 
     # The hyperfine bench tool requires a single string command.
     workload_cmd = (
-        f"python '{mouseion_source_path / 'train_and_build_index.py'}' "
-        f"--spec '{datacollection_specs_path / 'train_realnews_dataset_spec.json'}' "
+        f"python {mouseion_source_path}/train_and_build_index.py "
+        f"--spec {datacollection_specs_path}/train_realnews_dataset_spec.json "
         f"--index-type IVF131072,PQ32 "
-        f"--output '{realnews_path / 'realnews.mouseion'}' "
+        f"--output {realnews_path}/realnews.mouseion "
         f"--use-gpus "
         f"--batch-size 32768"
     )
