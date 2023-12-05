@@ -13,6 +13,7 @@ LABEL "description"="This text illustrates that label-values can span multiple l
 
 ENV DEBIAN_FRONTEND  "noninteractive"
 ENV FAISS_VERSION    "v1.7.4"
+ENV FAISS_EPOCH      "0"
 ENV CUDA_VERSION     "12.2.2"
 ENV VENV_PATH        "/workspace/v"
 ENV PATH             "${PATH}:${VENV_PATH}/bin:/usr/local/cuda/bin"
@@ -24,7 +25,8 @@ ENV MKL_ROOT         "/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
 
 ENV ZSTD_CLEVEL      "18"
 ENV ZSTD_NBTHREADS   "16"
-ENV CUDA_ARCHS       "80;86;89;90"
+#ENV CUDA_ARCHS       "80;86;89;90"
+ENV FAISS_EPOCH      "0"
 
 
 ###
@@ -72,6 +74,7 @@ RUN mkdir -p /workspace/target/
 RUN mkdir -p /workspace/patches/
 
 COPY debian.sources /etc/apt/sources.list.d/
+COPY faiss-${FAISS_VERSION}-introduce-epoch.patch /workspace/patches/
 COPY faiss-${FAISS_VERSION}-runpath-origin.patch /workspace/patches/
 COPY faiss-${FAISS_VERSION}-setuppy-include-binaries.patch /workspace/patches/
 
@@ -99,6 +102,7 @@ RUN apt install -y intel-oneapi-mkl-devel
 
 RUN curl --location "https://github.com/facebookresearch/faiss/archive/refs/tags/${FAISS_VERSION}.tar.gz" --output "/workspace/sources/faiss-${FAISS_VERSION}.tar.gz"
 RUN tar --extract --file="/workspace/sources/faiss-${FAISS_VERSION}.tar.gz" --directory="/workspace/sources/faiss-${FAISS_VERSION}" --strip-components=1
+RUN patch --strip=1 --directory="/workspace/sources/faiss-${FAISS_VERSION}" --input="/workspace/patches/faiss-${FAISS_VERSION}-introduce-epoch.patch"
 RUN patch --strip=1 --directory="/workspace/sources/faiss-${FAISS_VERSION}" --input="/workspace/patches/faiss-${FAISS_VERSION}-runpath-origin.patch"
 RUN patch --strip=1 --directory="/workspace/sources/faiss-${FAISS_VERSION}" --input="/workspace/patches/faiss-${FAISS_VERSION}-setuppy-include-binaries.patch"
 
@@ -113,7 +117,6 @@ RUN ${PIP_VENV} install swig
 RUN ${PIP_VENV} install build
 RUN ${PIP_VENV} install wheel
 
-
 ###
 #
 # This is needed to use the Ninja generator
@@ -126,7 +129,7 @@ RUN ${PIP_VENV} install wheel
 RUN cmake --fresh \
       -S /workspace/sources/faiss-${FAISS_VERSION} \
       -B /workspace/builds/faiss-${FAISS_VERSION} \
-      -D Python_EXECUTABLE=${PYTHON_VENV} \
+      -D Python_EXECUTABLE:STRING=${PYTHON_VENV} \
       -D BUILD_SHARED_LIBS:BOOL=ON \
       -D BUILD_TESTING:BOOL=OFF \
       -D FAISS_OPT_LEVEL:STRING=avx2 \
@@ -138,9 +141,14 @@ RUN cmake --fresh \
       -D MKL_LIBRARIES:STRING=${MKL_LIBRARIES} \
       -D CMAKE_INSTALL_PREFIX:PATH=/opt/meta/faiss \
       -D CMAKE_BUILD_TYPE:STRING=Release \
-      -D CMAKE_CUDA_ARCHITECTURES:STRING=${CUDA_ARCHS} \
+      -D FAISS_EPOCH:STRING=${FAISS_EPOCH} \
       -W no-dev
 
+#      -D CMAKE_PROJECT_VERSION:STRING="1.7.4+0" \
+#      -D CMAKE_PROJECT_VERSION:STRING="1.7.4+0" \
+##      -D FAISS_VERSION:STRING="1.7.4+0" \
+#      -D PROJECT_VERSION:STRING="1.7.4+0" \
+#      -D CMAKE_CUDA_ARCHITECTURES:STRING=${CUDA_ARCHS} \
 
 ###
 #
@@ -154,7 +162,11 @@ RUN make --jobs=$(nproc) --directory="/workspace/builds/faiss-${FAISS_VERSION}" 
 RUN make --jobs=$(nproc) --directory="/workspace/builds/faiss-${FAISS_VERSION}" install
 
 WORKDIR "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python"
+#COPY "pyproject.toml" "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python"
+#COPY setup.cfg "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python"
 RUN "${PYTHON_VENV}" -m build --wheel --sdist --no-isolation
+
+#--config-setting version="1.7.4+0"
 
 
 ###
@@ -181,9 +193,12 @@ RUN "${PYTHON_VENV}" -m build --wheel --sdist --no-isolation
 
 WORKDIR /workspace/target
 RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
-RUN tar --use-compress-program=zstd --absolute-names --create --file="/workspace/target/faiss-${FAISS_VERSION}.tar.zst" /opt/meta/faiss
+RUN tar --use-compress-program=zstd --absolute-names --create --file="/workspace/target/faiss-${FAISS_VERSION}+${FAISS_EPOCH}.tar.zst" /opt/meta/faiss
 
-RUN cp --archive "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python/dist/faiss-1.7.4-py3-none-any.whl" --target-directory="/workspace/target"
+RUN cp --archive "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python/dist/faiss-1.7.4+${FAISS_EPOCH}-py3-none-any.whl" --target-directory="/workspace/target"
+
+#RUN cp "/workspace/builds/faiss-v1.7.4/faiss/python/dist/*whl*" "/workspace/target"
+#RUN cp --archive "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python/dist/faiss-${FAISS_VERSION}+${FAISS_EPOCH}-py3-none-any.whl" --target-directory="/workspace/target"
 
 
 ###
