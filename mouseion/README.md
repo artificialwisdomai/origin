@@ -40,7 +40,7 @@ poetry install
 ## Removal
 
 ```console
-wise@wise-a40x1-1:Use~/origin/mouseion$ poetry env list
+wise@wise-a40x1-1:~/origin/mouseion$ poetry env list
 mouseion-TcVnHjA0-py3.11 (Activated)
 wise@wise-a40x1-1:~/origin/mouseion$ poetry env remove mouseion-TcVnHjA0-py3.11
 Deleted virtualenv: /home/wise/.cache/pypoetry/virtualenvs/mouseion-TcVnHjA0-py3.11
