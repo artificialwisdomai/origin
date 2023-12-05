@@ -20,9 +20,9 @@ ENV PIP_VENV         "${VENV_PATH}/bin/pip"
 ENV MKL_VERSION      "2024.0"
 ENV PATH             "${PATH}:/workspace/v/bin:/usr/local/cuda/bin"
 ENV MKL_ROOT         "/opt/intel/oneapi/mkl/2024.0.0/lib/intel64"
-ENV CUDA_VERSION     "12.2.2
-ENV ZSTD_CLEVEL      "18
-ENV ZSTD_NBTHREADS   "16
+ENV CUDA_VERSION     "12.2.2"
+ENV ZSTD_CLEVEL      "18"
+ENV ZSTD_NBTHREADS   "16"
 ENV MKL_ROOT         "/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
 ENV MKL_MODEL        "ilp64"
 ENV MKL_LIBRARIES    "-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
