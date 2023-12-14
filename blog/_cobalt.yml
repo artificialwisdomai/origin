@@ -1,7 +1,7 @@
-
 site:
   title: Artificial Wisdom
   description: Our musings and thoughts on artificial intelligence, machine learning and all things wise
   base_url: https://blog.artificialwisdom.cloud
 posts:
   rss: rss.xml
+  jsonfeed: atom.json

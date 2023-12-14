@@ -1,0 +1,50 @@
+<h1>GitHub actions to a Blog from Markdown</h1>
+<p>This is a simple Blog model, generated from posts in the <code>posts</code> folder.</p>
+<p>Create a new article in posts/blog-post-slug.md:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">---
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">title: Inference for fun and profit
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">excerpt: Generative AI is all the rage, and for good reason, but actually implementing an inference pipeline has many challenges, not the least of which is getting and serving a model to our peers.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">categories:
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">- hands-on
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">- blog
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">layout: default.liquid
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">is_draft: false
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">---
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Generative AI is all the rage, and for good reason, but actually implementing an 
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">inference pipeline has many challenges, not the least of which is getting and serving
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">a model to our peers.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">Let&#39;s build a simple inference API in a Jupyter notebook to help get us started.
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">```python
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">import transformers
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">import fastapi
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">@app
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">def route(&quot;/&quot;):
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">    print(&quot;Hello World&quot;)
+</span><span style="color:#c0c5ce;">
+</span><span style="color:#c0c5ce;">```
+</span></code></pre>
