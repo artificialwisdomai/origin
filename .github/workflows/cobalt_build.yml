@@ -1,0 +1,29 @@
+name: Build and Deploy Blog
+
+on:
+  push:
+    branches:
+      - gh-pages
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Cobalt
+        run: |
+          curl -L https://github.com/cobalt-org/cobalt.rs/releases/download/v0.17.0/cobalt-v0.17.0-x86_64-unknown-linux-gnu.tar.gz | tar xz
+          sudo mv cobalt /usr/local/bin/
+      - name: Build Site
+        run: |
+          cd blog
+          cobalt build
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./blog/_site
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          keep_files: true
+          commit_message: 'Auto deploy on merge to gh-pages'
+          publish_branch: gh-pages
