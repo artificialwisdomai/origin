@@ -207,12 +207,12 @@ Saving index...
 
 # The final augmented knowledge index
 
-Our [Realnews](link-to-realnews-document-collection-in-oci) document collection:
+Our Realnews {TODO: add link to} document collection:
 
 31,158,659 unique RALM generative documents, consuming 118266 Mibibytes
  1,639,104 unique RALM testing and validation, consuming 6127 Mibibytes
 
-The [Realnews](link-to-augmewnted-knowledge-index-in-oci) augmented knowledge index (AKI).
+The Realnews {TODO: add link}  augmented knowledge index (AKI).
 
  16626 Mib used by similarity index
  50988 Mib used by structured document chunks
