@@ -144,7 +144,7 @@ The resulting `data.spec.json` can now be fed as `--training-dataset-spec` or `-
 
 **Note**: Substantial computational and storage resources are required to prepare MassiveOpenText.
 
-1. Download the uncompressed Pile data file tree from https://mystic.the-eye.eu/public/AI/pile/ and put it in `Pile/`.
+1. Download the uncompressed Pile data file tree from https :// mystic.the-eye.eu/public/AI/pile/ and put it in `Pile/`.
 2. Request and download the RealNews dataset, and put the `realnews.tar.gz` in `RealNews/`.
 3. Tokenize, shard and chunk the data:
 
