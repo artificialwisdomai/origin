@@ -1,9 +1,10 @@
 import argparse
-import faiss
 import json
 import numpy
 import tqdm
 import pathlib
+
+from .indexbuilder import GPUIndexBuilder, IndexBuilder
 
 def main(args):
     """
@@ -33,22 +34,8 @@ def main(args):
     dim = first_shard.shape[1]
     print(f'dimensionality is {dim}')
 
-    index = faiss.index_factory(dim, args.index_type, faiss.METRIC_L2)
-
-    if args.use_gpus:
-        gpu_resources = []
-        for i in range(faiss.get_num_gpus()):
-            res = faiss.StandardGpuResources()
-            res.setTempMemory(2**20)
-            gpu_resources.append(res)
-
-        co = faiss.GpuMultipleClonerOptions()
-        co.useFloat16 = True
-        co.usePrecomputed = True
-        co.shard = True
-        co.resources = gpu_resources
-
-        index = faiss.index_cpu_to_all_gpus(index, co)
+    builder_cls = GPUIndexBuilder if args.use_gpus else IndexBuilder
+    builder = builder_cls(dim, args.index_type)
 
     with tqdm.tqdm(total=total_embeddings, desc="Embeddings") as progress:
         for shard_info in spec["shards"]:
@@ -61,20 +48,16 @@ def main(args):
             shard_size = shard_embeddings.shape[0]
 
             if not is_trained:
-                train_data = shard_embeddings.astype('float32', copy=False)
-                index.train(train_data)
+                builder.train(shard_embeddings)
                 is_trained = True
 
             for i in range(0, shard_size, args.batch_size):
                 end = i + args.batch_size
-                batch = shard_embeddings[i:end].astype('float32', copy=False)
-                index.add(batch)
+                batch = shard_embeddings[i:end]
+                builder.add(batch)
                 progress.update(batch.shape[0])
 
-    if args.use_gpus:
-        index = faiss.index_gpu_to_cpu(index)
-
-    faiss.write_index(index, args.output)
+    builder.write_path(args.output)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
