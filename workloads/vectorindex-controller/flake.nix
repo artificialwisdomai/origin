@@ -23,11 +23,35 @@
 
           doCheck = false;
         };
+        mouseion = pkgs.python310.pkgs.buildPythonPackage rec {
+          pname = "mouseion";
+          version = "0.1.0";
+
+          src = pkgs.fetchFromGitHub {
+            owner = "artificialwisdomai";
+            repo = "origin";
+            rev = "64354d66488f00f27b8e9732dfea41ed01933ee6";
+            sha256 = "sha256-IQkIvoAhfJeFKXM/HheRrSXK/7ndTiZ93JbMbKex90A=";
+          };
+          sourceRoot = "${src.name}/mouseion";
+          format = "pyproject";
+
+          buildInputs = with pkgs.python310.pkgs; [
+            poetry-core
+          ];
+          propagatedBuildInputs = with pkgs.python310.pkgs; [
+            numpy tqdm faiss
+          ];
+
+          doCheck = false;
+        };
         py = pkgs.python310.withPackages (ps: with ps; [
           # Debugging
           tqdm
           # Cloud-native: Access to k8s API, M&M
           kubernetes prometheus_client
+          # mouseion
+          mouseion
           # FAISS
           faiss
           # Sentence Transformers
