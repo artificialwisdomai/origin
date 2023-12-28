@@ -1,8 +1,6 @@
 import os
 from tempfile import NamedTemporaryFile
 
-import numpy as np
-
 from tqdm import tqdm
 
 from kubernetes import config, client, watch
@@ -14,7 +12,7 @@ import pyarrow.feather
 
 from sentence_transformers import SentenceTransformer
 
-import faiss
+from mouseion.indexbuilder import IndexBuilder
 
 # Preamble: configuration, metrics
 
@@ -39,12 +37,6 @@ start_http_server(8000)
 
 embedder = SentenceTransformer("all-miniLM-L6-v2")
 EMBEDDING_DIMENSION = 384
-
-def normedEmbeds(arr):
-    # https://github.com/facebookresearch/faiss/wiki/MetricType-and-distances
-    rv = np.array(arr, dtype="float32")
-    faiss.normalize_L2(rv)
-    return rv
 
 # Controller: API, handlers, event loop
 
@@ -83,7 +75,8 @@ def awaitingDataSet(obj):
 def buildingIndex(obj):
     ds = getDataSet(obj["spec"]["dataset"], obj["metadata"]["namespace"])
     factory = obj["spec"]["factory"]
-    index = faiss.index_factory(EMBEDDING_DIMENSION, factory)
+    # XXX should try to use GPUs when possible/available/instructed
+    builder = IndexBuilder(EMBEDDING_DIMENSION, factory)
     print("DataSet and factory are valid!")
     with fs.open(bucketPath(ds), "rb") as handle:
         df = pyarrow.feather.read_feather(handle)
@@ -91,10 +84,9 @@ def buildingIndex(obj):
     for row in tqdm(df.iterrows(), total=df.size):
         # XXX quirk of test data?
         batch = row[1].to_list()[0]
-        embeddings = normedEmbeds(embedder.encode(batch))
-        index.add(embeddings)
+        builder.add(embedder.encode(batch))
     with NamedTemporaryFile(mode="rb") as temp:
-        faiss.write_index(index, temp.name)
+        builder.write_path(temp.name)
         with fs.open(bucketPath(obj), "wb") as handle:
             slowCopy(temp, handle)
     setPhase(obj, "Ready")
