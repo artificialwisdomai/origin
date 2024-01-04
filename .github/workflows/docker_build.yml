@@ -26,6 +26,6 @@ jobs:
       - name: Build Docker image & Upload to GHCR
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:{{matrix.path}}"
+          context: ${{ format('{0}:{1}', '{{defaultContext}}', matrix.path) }}
           push: ${{ github.event_name == 'push' }}
           tags: ${{ format('origin/{0}:latest', matrix.path) }}
