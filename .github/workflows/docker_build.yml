@@ -13,7 +13,6 @@ jobs:
         path:
           - platform/packaging/build/faiss
           - platform/packaging/build/libtorch
-          - platform/packaging/build/pytorch
           - workloads/dataset-controller
           - workloads/jupyterlab
           - workloads/retro-next/build_knowledge_base
