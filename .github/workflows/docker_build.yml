@@ -8,6 +8,11 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        path:
+          - workloads/dataset-controller
+          - workloads/vectorindex-controller
     runs-on: ubuntu-latest
     steps:
       - name: Add Buildx to Docker
@@ -21,6 +26,6 @@ jobs:
       - name: Build Docker image & Upload to GHCR
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}:workloads/dataset-controller"
+          context: "{{defaultContext}}:{{matrix.path}}"
           push: ${{ github.event_name == 'push' }}
-          tags: origin/workloads/dataset-controller:latest
+          tags: "origin/{{matrix.path}}:latest"
