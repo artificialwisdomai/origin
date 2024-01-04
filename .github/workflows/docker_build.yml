@@ -28,4 +28,4 @@ jobs:
         with:
           context: "{{defaultContext}}:{{matrix.path}}"
           push: ${{ github.event_name == 'push' }}
-          tags: "origin/{{matrix.path}}:latest"
+          tags: ${{ format('origin/{0}:latest', matrix.path) }}
