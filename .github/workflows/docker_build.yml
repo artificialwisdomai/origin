@@ -12,7 +12,6 @@ jobs:
       matrix:
         path:
           - platform/packaging/build/faiss
-          - platform/packaging/build/libtorch
           - workloads/dataset-controller
           - workloads/jupyterlab
           - workloads/retro-next/build_knowledge_base
