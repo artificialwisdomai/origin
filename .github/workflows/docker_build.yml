@@ -11,8 +11,6 @@ jobs:
     strategy:
       matrix:
         path:
-          - platform/Dockerfiles/cloud-hypervisor
-          - platform/Dockerfiles/virtiofsd
           - platform/packaging/build/faiss
           - platform/packaging/build/libtorch
           - platform/packaging/build/pytorch
