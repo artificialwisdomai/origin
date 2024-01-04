@@ -11,7 +11,14 @@ jobs:
     strategy:
       matrix:
         path:
+          - platform/Dockerfiles/cloud-hypervisor
+          - platform/Dockerfiles/virtiofsd
+          - platform/packaging/build/faiss
+          - platform/packaging/build/libtorch
+          - platform/packaging/build/pytorch
           - workloads/dataset-controller
+          - workloads/jupyterlab
+          - workloads/retro-next/build_knowledge_base
           - workloads/vectorindex-controller
     runs-on: ubuntu-latest
     steps:
