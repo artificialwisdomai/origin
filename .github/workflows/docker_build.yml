@@ -33,5 +33,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ format('{0}:{1}', '{{defaultContext}}', matrix.path) }}
-          push: true # ${{ github.event_name == 'push' }}
+          push: ${{ github.event_name == 'push' }}
           tags: ${{ format('ghcr.io/{0}/{1}:latest', github.repository, matrix.path) }}
