@@ -31,4 +31,4 @@ jobs:
         with:
           context: ${{ format('{0}:{1}', '{{defaultContext}}', matrix.path) }}
           push: true # ${{ github.event_name == 'push' }}
-          tags: ${{ format('ghcr.io/artificialwisdom/origin/{0}:latest', matrix.path) }}
+          tags: ${{ format('ghcr.io/{0}/{1}:latest', github.repository, matrix.path) }}
