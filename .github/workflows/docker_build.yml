@@ -17,6 +17,9 @@ jobs:
           - workloads/retro-next/build_knowledge_base
           - workloads/vectorindex-controller
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Add Buildx to Docker
         uses: docker/setup-buildx-action@v3
