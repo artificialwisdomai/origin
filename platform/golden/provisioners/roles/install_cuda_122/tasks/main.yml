@@ -1,0 +1,43 @@
+---
+- name: Install gpg
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: gpg
+    state: present
+
+- name: Enable Debian contrib
+  become: yes
+  become_user: root
+  ansible.builtin.apt_repository:
+    repo: "deb http://http.us.debian.org/debian bookworm main contrib"
+    state: present
+
+- name: Install and enable NVIDIA CUDA repository
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    deb: https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb
+    state: present
+
+- name: Install NVIDIA CUDA Drivers 535
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: cuda-drivers-535
+    state: "present"
+    update_cache: true
+
+- name: Install NVIDIA CUDA 12.2
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: "present"
+    update_cache: true
+  with_items:
+    - cuda-toolkit-12-2
+    - libcublas-12-2
+    - cuda-nsight-12-2
+    - libcufft-12-2
+    - libcudnn8

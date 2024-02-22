@@ -1,0 +1,10 @@
+---
+- name: Install KVM Profile for GRUB
+  copy:
+    src=dropin-profile-kvm-for-grub.cfg
+    dest=/etc/default/grub.d/profile-kvm.cfg
+- name: Update GRUB
+  become: true
+  ansible.builtin.command:
+    cmd: update-grub2
+

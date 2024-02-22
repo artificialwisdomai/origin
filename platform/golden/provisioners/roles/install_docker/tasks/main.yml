@@ -1,0 +1,63 @@
+---
+# https://docs.docker.com/engine/install/debian/
+
+- name: Install gnupg
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: gnupg
+    state: present
+    
+- name: Install ca-certificates
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: ca-certificates
+    state: present
+
+- name: Install curl
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: curl
+    state: present
+
+- name: Install Docker's GPG key
+  become: yes
+  become_user: root
+  ansible.builtin.apt_key:
+    url: "https://download.docker.com/linux/debian/gpg"
+    keyring: "/etc/apt/keyrings/docker.gpg"
+    state: present
+
+- name: Install Docker Engine APT repository
+  become: yes
+  become_user: root
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable"
+    update_cache: yes
+    state: present
+
+- name: Install docker-ce
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: docker-ce
+
+- name: Install docker-ce-cli
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: docker-ce-cli
+
+- name: Install containerd.io
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: containerd.io
+
+- name: Install docker-buildx-plugin
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    name: docker-buildx-plugin

@@ -1,0 +1,12 @@
+---
+- hosts: all
+  any_errors_fatal: true
+  become: true
+  vars:
+    home_dir: "{{ lookup('env', 'HOME') }}"
+    username: "{{ lookup('env', 'USER') }}"
+
+  roles:
+    - install_cuda_122
+    - override_cuda_driver_parameters
+    - install_docker
