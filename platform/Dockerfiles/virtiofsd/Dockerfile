@@ -1,7 +1,7 @@
 FROM docker.io/library/debian:bookworm as toolchain
 
 ENV DEBIAN_FRONTEND           noninteractive
-ENV RUST_VERSION              1.79.0
+ENV RUST_VERSION              1.78.0
 ENV RUST_ARCH                 x86_64
 
 ENV PATH                      "$PATH:/root/.cargo/bin/"
