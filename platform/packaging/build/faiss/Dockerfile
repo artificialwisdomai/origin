@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM docker.io/library/debian:bookworm as bookworm_faiss
+FROM docker.io/library/debian:12 as bookworm_faiss
 LABEL "com.computelify.vendor"="Computelify, Inc."
 LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
 LABEL "version"="1.0"
@@ -17,15 +17,15 @@ ENV FAISS_VERSION    "v1.7.4"
 ENV VENV_PATH        "/workspace/v"
 ENV PYTHON_VENV      "${VENV_PATH}/bin/python"
 ENV PIP_VENV         "${VENV_PATH}/bin/pip"
-ENV MKL_VERSION      "2024.0"
+ENV MKL_VERSION      "2024.1"
 ENV PATH             "${PATH}:/workspace/v/bin:/usr/local/cuda/bin"
 ENV MKL_ROOT         "/opt/intel/oneapi/mkl/2024.0.0/lib/intel64"
 ENV CUDA_VERSION     "12.2.2"
 ENV ZSTD_CLEVEL      "18"
 ENV ZSTD_NBTHREADS   "16"
-ENV MKL_ROOT         "/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
+ENV MKL_ROOT         "/opt/intel/oneapi/mkl/${MKL_VERSION}/lib"
 ENV MKL_MODEL        "ilp64"
-ENV MKL_LIBRARIES    "-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
+ENV MKL_LIBRARIES    "-Wl,--start-group ${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a ${MKL_ROOT}/libmkl_gnu_thread.a ${MKL_ROOT}/libmkl_core.a -Wl,--end-group"
 ENV CUDA_ARCHS       "80;86;89;90"
 
 ###
@@ -80,9 +80,12 @@ RUN dpkg --install "/workspace/sources/cuda-keyring_1.1-1_all.deb"
 # https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/${MKL_VERSION}/apt.html
 #
 # NB. we don't need the all of Intel's oneApi, we only need MKL.
+# Install Intel One API from shell package
+# https://www.intel.com/content/www/us/en/docs/oneapi/installation-guide-linux/2024.1/apt.html
 
-RUN curl --location "https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB" | gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" > /etc/apt/sources.list.d/oneAPI.list
+RUN curl -LOs https://registrationcenter-download.intel.com/akdlm/IRC_NAS/fdc7a2bc-b7a8-47eb-8876-de6201297144/l_BaseKit_p_${MKL_VERSION}.0.596.sh
+RUN bash ./l_BaseKit_p_${MKL_VERSION}.0.596.sh --a --action=install --eula=accept --silent --components=intel.oneapi.lin.mkl.devel:intel.oneapi.lin.tbb.devel
+
 
 ###
 #
@@ -90,8 +93,6 @@ RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https:/
 
 RUN apt update
 RUN apt install -y cuda-toolkit-12-2
-RUN apt install -y intel-oneapi-mkl
-RUN apt install -y intel-oneapi-mkl-devel
 
 ###
 #
@@ -132,6 +133,7 @@ RUN cmake --fresh \
       -B /workspace/builds/faiss-${FAISS_VERSION} \
       -D Python_EXECUTABLE:STRING=${PYTHON_VENV} \
       -D BUILD_SHARED_LIBS:BOOL=ON \
++     -D BLA_STATIC:BOOL=ON \
       -D BUILD_TESTING:BOOL=OFF \
       -D FAISS_OPT_LEVEL:STRING=avx2 \
       -D FAISS_ENABLE_C_API:BOOL=ON \
@@ -186,6 +188,7 @@ RUN "${PYTHON_VENV}" -m build --wheel --sdist --no-isolation
 
 WORKDIR /workspace/target
 RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
+RUN tar --use-compress-program=zstd --absolute-names -cf /workspace/target/intel-oneapi-${MKL_VERSION}.tar.zst /opt/intel/oneapi
 RUN tar --use-compress-program=zstd --absolute-names --create --file="/workspace/target/faiss-${FAISS_VERSION}+${FAISS_EPOCH}.tar.zst" /opt/meta/faiss
 RUN cp --archive "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python/dist/faiss-1.7.4+${FAISS_EPOCH}-py3-none-any.whl" --target-directory="/workspace/target/"
 
