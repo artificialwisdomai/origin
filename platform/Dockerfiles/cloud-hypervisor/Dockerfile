@@ -1,7 +1,7 @@
 FROM docker.io/library/debian:bookworm as build_cloud_hypervisor
 
 ENV DEBIAN_FRONTEND           noninteractive
-ENV RUST_VERSION              1.74.0
+ENV RUST_VERSION              1.78.0
 ENV RUST_ARCH                 x86_64
 ENV CLOUD_HYPERVISOR_VERSION  v39.0
 
