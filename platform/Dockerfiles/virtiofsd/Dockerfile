@@ -1,7 +1,7 @@
 FROM docker.io/library/debian:bookworm as toolchain
 
 ENV DEBIAN_FRONTEND           noninteractive
-ENV RUST_VERSION              1.74.0
+ENV RUST_VERSION              1.79.0
 ENV RUST_ARCH                 x86_64
 
 ENV PATH                      "$PATH:/root/.cargo/bin/"
@@ -169,7 +169,6 @@ RUN tar -xf virtiofsd-${VIRTIOFSD_VERSION}.tar.gz
 
 WORKDIR /workspace/build/"virtiofsd-${VIRTIOFSD_VERSION}"
 RUN cargo build --all-features --bins --future-incompat-report --locked --release --target x86_64-unknown-linux-musl
-
 
 ###
 #
