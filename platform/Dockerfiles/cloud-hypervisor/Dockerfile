@@ -3,7 +3,7 @@ FROM docker.io/library/debian:bookworm as bookworm_cloud_hypervisor
 ENV DEBIAN_FRONTEND           noninteractive
 ENV RUST_VERSION              1.74.0
 ENV RUST_ARCH                 x86_64
-ENV CLOUD_HYPERVISOR_VERSION  v36.0
+ENV CLOUD_HYPERVISOR_VERSION  v39.0
 
 ENV PATH                      "$PATH:/root/.cargo/bin/"
 
