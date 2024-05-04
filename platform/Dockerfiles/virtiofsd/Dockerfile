@@ -101,8 +101,8 @@ RUN rustup target add "${RUST_ARCH}-unknown-linux-musl"
 FROM toolchain as dependencies
 
 ENV DEBIAN_FRONTEND           noninteractive
-ENV LIBCAP_NG_VERSION         v0.8.3
-ENV LIBSECCOMP_VERSION        v2.5.4 
+ENV LIBCAP_NG_VERSION         0.8.5
+ENV LIBSECCOMP_VERSION        2.5.5
 ENV PATH                      "$PATH:/root/.cargo/bin/"
 
 ENV CC                        "musl-gcc"
@@ -114,19 +114,18 @@ ENV CPPFLAGS                  "-isystem /usr/include/x86_64-linux-musl/ -isystem
 # Prepare and build system dependencies
 
 WORKDIR /workspace/build/
-RUN curl -L https://github.com/stevegrubb/libcap-ng/archive/refs/tags/${LIBCAP_NG_VERSION}.tar.gz --output libcap-ng-${LIBCAP_NG_VERSION}.tar.gz
-RUN curl -L https://github.com/seccomp/libseccomp/archive/refs/tags/${LIBSECCOMP_VERSION}.tar.gz --output libseccomp-${LIBSECCOMP_VERSION}.tar.gz
+RUN curl -LOs https://github.com/stevegrubb/libcap-ng/archive/refs/tags/v${LIBCAP_NG_VERSION}.tar.gz
+RUN curl -LOs https://github.com/seccomp/libseccomp/archive/refs/tags/v${LIBSECCOMP_VERSION}.tar.gz
 
-RUN tar -xf libcap-ng-${LIBCAP_NG_VERSION}.tar.gz
-RUN tar -xf libseccomp-${LIBSECCOMP_VERSION}.tar.gz
+RUN tar -xf v${LIBCAP_NG_VERSION}.tar.gz
+RUN tar -xf v${LIBSECCOMP_VERSION}.tar.gz
 
 
 ###
 #
 # Build libseccomp
 
-WORKDIR /workspace/build/libseccomp-2.5.4
-RUN sed -i "/^AC_INIT/ s/0.0.0/${LIBSECCOMP_VERSION}/" configure.ac
+WORKDIR /workspace/build/libseccomp-${LIBSECCOMP_VERSION}
 RUN autoreconf --install --force --verbose --warning=all
 RUN ./configure --enable-shared="no" --enable-static="yes" --enable-silent-rules="no" --prefix="/usr"
 RUN make
@@ -137,8 +136,8 @@ RUN make install
 #
 # Build libcap-ng
 
-WORKDIR /workspace/build/libcap-ng-0.8.3
-RUN sed -i "/^AC_INIT/ s/0.0.0/${LIBCAP_NG_VERSION}/" configure.ac
+WORKDIR /workspace/build/libcap-ng-${LIBCAP_NG_VERSION}
+RUN touch NEWS
 RUN autoreconf --install --force --verbose --warning=all
 RUN ./configure --enable-shared="no" --enable-static="yes" --enable-silent-rules="no" --with-python="no" --with-python3="no" --with-capability_header="/usr/include/linux/capability.h" --prefix="/usr"
 RUN make
@@ -153,7 +152,7 @@ FROM dependencies as application
 ENV PATH                      "$PATH:/root/.cargo/bin/"
 ENV RUST_VERSION              1.74.0
 ENV RUST_ARCH                 x86_64
-ENV VIRTIOFSD_VERSION         v1.8.0
+ENV VIRTIOFSD_VERSION         v1.10.1
 ENV RUSTFLAGS                 "--codegen target-feature=+crt-static --codegen link-self-contained=yes"
 ENV LIBSECCOMP_LINK_TYPE      "static"
 ENV LIBSECCOMP_LIB_PATH       "/usr/lib"
