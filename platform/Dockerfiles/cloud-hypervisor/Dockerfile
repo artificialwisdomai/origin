@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:bookworm as bookworm_cloud_hypervisor
+FROM docker.io/library/debian:bookworm as build_cloud_hypervisor
 
 ENV DEBIAN_FRONTEND           noninteractive
 ENV RUST_VERSION              1.74.0
@@ -67,7 +67,7 @@ WORKDIR /workspace/target
 RUN cp -aR /workspace/build/cloud-hypervisor-${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/cloud-hypervisor /workspace/target/cloud_hypervisor_${CLOUD_HYPERVISOR_VERSION}
 
 FROM scratch
-COPY --from=bookworm_cloud_hypervisor /workspace/target /
+COPY --from=build_cloud_hypervisor /workspace/target /
 
 # TODO: cargo deb will build a debian package for us
 # Although I wish to maintain the capability to have multiple hypervisor versions
