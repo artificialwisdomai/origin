@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM docker.io/library/debian:bookworm as bookworm_faiss
+FROM docker.io/library/debian:12 as build_faiss
 LABEL "com.computelify.vendor"="Computelify, Inc."
 LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
 LABEL "version"="1.0"
@@ -11,6 +11,7 @@ LABEL "description"="This text illustrates that label-values can span multiple l
 # Our build environment variables
 # Learn more: https://github.com/artificialwisdomai/origin/wiki/Build-FAISS-from-source
 
+ENV DEBIAN_VERSION   "12"
 ENV FAISS_EPOCH      "0"
 ENV DEBIAN_FRONTEND  "noninteractive"
 ENV FAISS_VERSION    "v1.7.4"
@@ -198,4 +199,4 @@ RUN cp --archive "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python/dist/fai
 # And then placed in ${PWD}/target
 
 FROM scratch
-COPY --from=bookworm_faiss /workspace/target /
+COPY --from=build_faiss /workspace/target /
