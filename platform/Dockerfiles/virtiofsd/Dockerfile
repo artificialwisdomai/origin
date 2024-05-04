@@ -149,7 +149,7 @@ RUN make install
 #
 # Prepare final application
 
-FROM dependencies as application
+FROM dependencies as build_virtiofsd
 ENV PATH                      "$PATH:/root/.cargo/bin/"
 ENV RUST_VERSION              1.74.0
 ENV RUST_ARCH                 x86_64
@@ -180,7 +180,7 @@ WORKDIR /workspace/target
 RUN cp -aR /workspace/build/virtiofsd-${VIRTIOFSD_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/virtiofsd /workspace/target/virtiofsd_${VIRTIOFSD_VERSION}
 
 FROM scratch
-COPY --from=application /workspace/target /
+COPY --from=build_virtiofsd /workspace/target /
 
 
 ###
