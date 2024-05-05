@@ -1,0 +1,33 @@
+diff -uNr faiss-orig/CMakeLists.txt faiss-next/CMakeLists.txt
+--- faiss-orig/CMakeLists.txt	2023-04-19 13:18:30.000000000 +0000
++++ faiss-next/CMakeLists.txt	2023-12-05 08:06:19.587756715 +0000
+@@ -7,7 +7,7 @@
+ cmake_minimum_required(VERSION 3.23.1 FATAL_ERROR)
+ 
+ project(faiss
+-  VERSION 1.7.4
++  VERSION "1.7.4.${FAISS_EPOCH}"
+   DESCRIPTION "A library for efficient similarity search and clustering of dense vectors."
+   HOMEPAGE_URL "https://github.com/facebookresearch/faiss"
+   LANGUAGES CXX)
+diff -uNr faiss-orig/faiss/python/setup.py faiss-next/faiss/python/setup.py
+--- faiss-orig/faiss/python/setup.py	2023-04-19 13:18:30.000000000 +0000
++++ faiss-next/faiss/python/setup.py	2023-12-05 14:40:15.874463778 +0000
+@@ -43,6 +43,8 @@
+     shutil.copyfile("swigfaiss_avx2.py", "faiss/swigfaiss_avx2.py")
+     shutil.copyfile(swigfaiss_avx2_lib, f"faiss/_swigfaiss_avx2{ext}")
+ 
++faiss_epoch = os.getenv('FAISS_EPOCH')
++
+ long_description="""
+ Faiss is a library for efficient similarity search and clustering of dense
+ vectors. It contains algorithms that search in sets of vectors of any size,
+@@ -53,7 +55,7 @@
+ """
+ setup(
+     name='faiss',
+-    version='1.7.4',
++    version=f'1.7.4+{faiss_epoch}',
+     description='A library for efficient similarity search and clustering of dense vectors',
+     long_description=long_description,
+     url='https://github.com/facebookresearch/faiss',

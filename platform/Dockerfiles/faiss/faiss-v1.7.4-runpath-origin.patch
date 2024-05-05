@@ -1,0 +1,50 @@
+diff --git a/faiss/python/CMakeLists.txt b/faiss/python/CMakeLists.txt
+index 2a7227ea..4ecbf9e2 100644
+--- a/faiss/python/CMakeLists.txt
++++ b/faiss/python/CMakeLists.txt
+@@ -83,9 +83,20 @@ if(NOT FAISS_OPT_LEVEL STREQUAL "avx2")
+ endif()
+ 
+ if(NOT WIN32)
+-  # NOTE: Python does not recognize the dylib extension.
+-  set_target_properties(swigfaiss PROPERTIES SUFFIX .so)
+-  set_target_properties(swigfaiss_avx2 PROPERTIES SUFFIX .so)
++  # If Linux, then set all public PROPERTIES
++  # Enable swifaiss to load the python loader from the directory where _swigfaiss.so lies.
++  set_target_properties(swigfaiss PROPERTIES
++    SUFFIX .so
++    INSTALL_RPATH "$ORIGIN/."
++    BUILD_WITH_INSTALL_RPATH TRUE
++  )
++
++  # Enable swifaiss_avx2 to load the python loader from the directory where _swigfaiss.so lies.
++  set_target_properties(swigfaiss_avx2 PROPERTIES
++    SUFFIX .so
++    INSTALL_RPATH "$ORIGIN/."
++    BUILD_WITH_INSTALL_RPATH TRUE
++  )
+ else()
+   # we need bigobj for the swig wrapper
+   target_compile_options(swigfaiss PRIVATE /bigobj)
+@@ -105,16 +116,21 @@ find_package(OpenMP REQUIRED)
+ 
+ target_link_libraries(swigfaiss PRIVATE
+   faiss
++  faiss_python_callbacks
+   Python::Module
+   Python::NumPy
+   OpenMP::OpenMP_CXX
++  "-Wl,--enable-new-dtags"
+ )
+ 
++# For swigfaiss_avx2
+ target_link_libraries(swigfaiss_avx2 PRIVATE
+   faiss_avx2
++  faiss_python_callbacks
+   Python::Module
+   Python::NumPy
+   OpenMP::OpenMP_CXX
++  "-Wl,--enable-new-dtags"
+ )
+ 
+ # Hack so that python_callbacks.h can be included as
