@@ -20,7 +20,7 @@ ENV PIP_VENV         "${VENV_PATH}/bin/pip"
 ENV MKL_VERSION      "2024.0"
 ENV PATH             "${PATH}:/workspace/v/bin:/usr/local/cuda/bin"
 ENV MKL_ROOT         "/opt/intel/oneapi/mkl/2024.0.0/lib/intel64"
-ENV CUDA_VERSION     "12.2.2"
+ENV CUDA_VERSION     "12-4"
 ENV ZSTD_CLEVEL      "18"
 ENV ZSTD_NBTHREADS   "16"
 ENV MKL_ROOT         "/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
@@ -89,7 +89,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https:/
 # Add complex third party dependencies
 
 RUN apt update
-RUN apt install -y cuda-toolkit-12-2
+RUN apt install -y cuda-toolkit-${CUDA_VERSION}
 RUN apt install -y intel-oneapi-mkl
 RUN apt install -y intel-oneapi-mkl-devel
 
