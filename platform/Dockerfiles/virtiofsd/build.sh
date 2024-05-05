@@ -1,3 +1,4 @@
+VIRTIOFSD_VERSION=1.10.1
 date=$(date '+%Y%m%d%H%M%S')
 VIRTIOFSD_VERSION=v1.10.1
 
