@@ -53,7 +53,7 @@ class ProgressType(Enum):
 
 class HumanReadableProgress(ProgressColumn):
     def render(self, task: RichTask) -> str:
-        progress_type = task.fields.get("type")
+        progress_type = task.fields.get("fields", {}).get("type")
         if progress_type == ProgressType.MIBI_PER_SECOND:
             return DownloadColumn().render(task)
         elif progress_type == ProgressType.ITERATIONS_PER_SECOND:
