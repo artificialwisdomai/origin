@@ -141,7 +141,7 @@ class TaskProcessor:
                 for task_id, process, queue in processes:
                     while not queue.empty():
                         progress_value = queue.get()
-                        progress.update(task_progress_map[task_id], advance=1)
+                        progress.update(task_progress_map[task_id], advance=progress_value)
                         if progress_value >= self.get_task_size(task_id):  # Assuming task is completed when progress reaches size
                             self.completed_tasks.add(task_id)
                             progress.update(task_progress_map[task_id], completed=True)
