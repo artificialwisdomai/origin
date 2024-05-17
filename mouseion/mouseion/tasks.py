@@ -15,7 +15,7 @@ from rich.theme import Theme
 from rich.style import Style
 import logging
 import time
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Manager
 from typing import Callable, List, Optional, Set, Dict
 
 # Define colors for styling
@@ -71,18 +71,20 @@ class Task:
         id: int,
         description: str,
         size: int,
-        process_function: Callable[[int, Queue], float],
+        function: Callable[int, Queue],
         progress_type: ProgressType,
         dependencies: Optional[List[int]] = None,
     ):
         self.id = id
         self.description = description
         self.size = size
-        self.process_function = process_function
+        self.function = function
         self.progress_type = progress_type
         self.dependencies = dependencies if dependencies else []
         self.progress = 0
-        self.queue = Queue()
+        self.progress_queue = Queue()
+        self.manager = Manager()
+        self.result = self.manager.list()
 
     def is_ready(self, completed_tasks: Set[int]) -> bool:
         return all(dep in completed_tasks for dep in self.dependencies)
@@ -124,12 +126,13 @@ class TaskProcessor:
                 fields={'type': task.progress_type}
             ) for task in self.all_tasks}
             processes = []
+
             while self.tasks or processes:
                 # Start ready tasks
                 ready_tasks = [t for t in self.tasks if t.is_ready(self.completed_tasks)]
                 for t in ready_tasks:
-                    process = Process(target=t.process_function, args=(t.size, t.queue))
-                    processes.append((t.id, process, t.queue))
+                    process = Process(target=self.task_wrapper, args=(t.id, t.function, t.size, t.progress_queue))
+                    processes.append((t.id, process, t.progress_queue))
                     process.start()
                     self.tasks.remove(t)
 
@@ -138,16 +141,16 @@ class TaskProcessor:
                     time.sleep(0.1)
 
                 # Update progress and check for completed tasks
-                for task_id, process, queue in processes:
-                    while not queue.empty():
-                        progress_value = queue.get()
+                for task_id, process, progress_queue in processes:
+                    while not progress_queue.empty():
+                        progress_value = progress_queue.get()
                         progress.update(task_progress_map[task_id], advance=progress_value)
-                        if progress_value >= self.get_task_size(task_id):  # Assuming task is completed when progress reaches size
-                            self.completed_tasks.add(task_id)
-                            progress.update(task_progress_map[task_id], completed=True)
+                    if not process.is_alive():
+                        self.completed_tasks.add(task_id)
+                        progress.update(task_progress_map[task_id], completed=True)
 
                 # Clean up completed processes
-                processes = [(task_id, p, q) for task_id, p, q in processes if p.is_alive()]
+                processes = [(task_id, p, pq) for task_id, p, pq in processes if p.is_alive()]
 
     def get_task_size(self, task_id: int) -> int:
         for task in self.all_tasks:
@@ -155,21 +158,33 @@ class TaskProcessor:
                 return task.size
         return 0
 
-def task_load_jsonl(size: int, queue: Queue) -> float:
-    progress = 0
-    for i in range(size):
-        time.sleep(0.3)
-        progress += 1
-        queue.put(progress)
-    return progress
+    def task_wrapper(self, task_id: int, function: Callable[int, Queue], size: int, progress_queue: Queue):
+        result = function(size, progress_queue)
+        for task in self.all_tasks:
+            if task.id == task_id:
+                for r in result:
+                    task.result.append(r)
 
-def task_tokenize(size: int, queue: Queue) -> float:
+    def get_task_result(self, task_id: int) -> List:
+        for task in self.all_tasks:
+            if task.id == task_id:
+                return task.result
+
+def task_load_jsonl(size: int, progress_queue: Queue) -> list:
     progress = 0
     for i in range(size):
         time.sleep(0.3)
         progress += 1
-        queue.put(progress)
-    return progress
+        progress_queue.put(1)
+    return ['testc', 'testd']
+
+def task_tokenize(size: int, progress_queue: Queue) -> list:
+    progress = 0
+    for i in range(size):
+        time.sleep(0.3)
+        progress += 1
+        progress_queue.put(1)
+    return ['testa', 'testb']
 
 if __name__ == "__main__":
     tasks = [
@@ -178,15 +193,14 @@ if __name__ == "__main__":
             description="Load jsonl",
             size=10,
             progress_type=ProgressType.MIBI_PER_SECOND,
-            process_function=task_load_jsonl,
+            function=task_load_jsonl,
         ),
         Task(
             id=1,
             description="Tokenize",
             size=20,
             progress_type=ProgressType.ITERATIONS_PER_SECOND,
-            process_function=task_tokenize,
-            dependencies=0,
+            function=task_tokenize,
         ),
     ]
 
@@ -194,3 +208,5 @@ if __name__ == "__main__":
     processor.add_tasks(tasks)
     processor.process_tasks()
 
+    result = processor.get_task_result(0)
+    print(f"task 0 result {result}")
