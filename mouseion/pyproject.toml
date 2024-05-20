@@ -48,7 +48,14 @@ issues = "https://github.com/artificialwisdomai/origin/issues"
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
 numpy = "^1.26.1"
-tqdm = "^4.66.1"
+rich = "13.7.1"
+sentencepiece = "0.2.0"
+torch = "2.3.0"
+transformers = "4.41.0"
+tokenizers = "0.19.0"
+orjson="3.10.3"
+
+
 faiss = {url = "https://github.com/artificialwisdomai/apt.oifv.ai/raw/main/whl/faiss-1.7.4+0-py3-none-any.whl"}
 # Unfortnately, it is not currently possible to push an url reference to pypi.
 # Upstream faiss-gpu is not compiled properly and is not the most recent stable release.
