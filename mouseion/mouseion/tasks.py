@@ -111,20 +111,23 @@ class TaskProcessor:
         self.completed_tasks: Set[int] = set()
         self.running_tasks: List[Task] = []
 
-        self.console.print(f'[aw.c]Artificial Wisdom™ NLP Tools [/aw.c][aw.b]•[/aw.b] [aw.c]{command}[/aw.c]')
-
+        self.console.print(
+            f"[aw.c]Artificial Wisdom™ NLP Tools [/aw.c][aw.b]•[/aw.b] [aw.c]{command}[/aw.c]"
+        )
 
     def add_tasks(self, tasks: List[Task]) -> None:
         self.all_tasks.extend(tasks)
         for task in tasks:
             self.start_task(task)
 
-
     def start_task(self, task: Task) -> None:
-        process = Process(target=self.task_wrapper, args=(task.id, task.function, task.size, task.progress_queue), kwargs=task.kwargs)
+        process = Process(
+            target=self.task_wrapper,
+            args=(task.id, task.function, task.size, task.progress_queue),
+            kwargs=task.kwargs,
+        )
         self.running_tasks.append((task.id, process, task.progress_queue))
         process.start()
-
 
     def process_tasks(self) -> None:
         with Progress(
@@ -143,18 +146,26 @@ class TaskProcessor:
             TextColumn("•", style="aw.b"),
             console=self.console,
         ) as progress:
-            task_progress_map: Dict[int, int] = {task.id: progress.add_task(
-                f'{task.description}',
-                total=task.size,
-                fields={'type': task.progress_type}
-            ) for task in self.all_tasks}
+            task_progress_map: Dict[int, int] = {
+                task.id: progress.add_task(
+                    f"{task.description}",
+                    total=task.size,
+                    fields={"type": task.progress_type},
+                )
+                for task in self.all_tasks
+            }
             processes = []
 
-            while self.tasks or processes:
+            while processes:
                 # Start ready tasks
-                ready_tasks = [t for t in self.tasks if t.is_ready(self.completed_tasks)]
+                ready_tasks = [
+                    t for t in self.tasks if t.is_ready(self.completed_tasks)
+                ]
                 for t in ready_tasks:
-                    process = Process(target=self.task_wrapper, args=(t.id, t.function, t.size, t.progress_queue))
+                    process = Process(
+                        target=self.task_wrapper,
+                        args=(t.id, t.function, t.size, t.progress_queue),
+                    )
                     processes.append((t.id, process, t.progress_queue))
                     process.start()
                     self.tasks.remove(t)
@@ -167,20 +178,31 @@ class TaskProcessor:
                 for task_id, process, progress_queue in self.running_tasks:
                     while not progress_queue.empty():
                         progress_value = progress_queue.get()
-                        progress.update(task_progress_map[task_id], advance=progress_value)
+                        progress.update(
+                            task_progress_map[task_id], advance=progress_value
+                        )
                     if not process.is_alive():
                         self.completed_tasks.add(task_id)
                         progress.update(task_progress_map[task_id], completed=True)
 
-                self.running_tasks = [(task_id, p, pq) for task_id, p, pq in self.running_tasks if p.is_alive()]
+                self.running_tasks = [
+                    (task_id, p, pq)
+                    for task_id, p, pq in self.running_tasks
+                    if p.is_alive()
+                ]
 
-
-    def task_wrapper(self, task_id: int, function: Callable[..., list], size: int, progress_queue: Queue, **kwargs):
+    def task_wrapper(
+        self,
+        task_id: int,
+        function: Callable[..., list],
+        size: int,
+        progress_queue: Queue,
+        **kwargs,
+    ):
         result = function(size, progress_queue, **kwargs)
         for task in self.all_tasks:
             if task.id == task_id:
                 task.result.extend(result)
-
 
     def get_task_result(self, task_id: int) -> List:
         for task in self.all_tasks:
@@ -194,7 +216,7 @@ def task_load_jsonl(size: int, progress_queue: Queue) -> list:
         time.sleep(0.3)
         progress += 1
         progress_queue.put(1)
-    return ['testc', 'testd']
+    return ["testc", "testd"]
 
 
 def task_tokenize(size: int, progress_queue: Queue) -> list:
@@ -202,6 +224,7 @@ def task_tokenize(size: int, progress_queue: Queue) -> list:
     for i in range(size):
         time.sleep(0.3)
         progress += 1
+
     def get_task_result(self, task_id: int) -> List:
         for task in self.all_tasks:
             if task.id == task_id:
@@ -212,14 +235,14 @@ def task_load_jsonl(size: int, progress_queue: Queue, **kwargs) -> list:
     for i in range(size):
         time.sleep(0.3)
         progress_queue.put(1)
-    return ['testc', 'testd']
+    return ["testc", "testd"]
 
 
 def task_tokenize(size: int, progress_queue: Queue, **kwargs) -> list:
     for i in range(size):
         time.sleep(0.3)
         progress_queue.put(1)
-    return ['testa', 'testb']
+    return ["testa", "testb"]
 
 
 if __name__ == "__main__":
