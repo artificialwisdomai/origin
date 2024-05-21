@@ -14,13 +14,13 @@ LABEL "description"="This text illustrates that label-values can span multiple l
 ENV DEBIAN_VERSION   "12"
 ENV FAISS_EPOCH      "0"
 ENV DEBIAN_FRONTEND  "noninteractive"
-ENV FAISS_VERSION    "v1.7.4"
+ENV FAISS_VERSION    "v1.8.0"
 ENV VENV_PATH        "/workspace/v"
 ENV PYTHON_VENV      "${VENV_PATH}/bin/python"
 ENV PIP_VENV         "${VENV_PATH}/bin/pip"
-ENV MKL_VERSION      "2024.0"
+ENV MKL_VERSION      "2024.1"
 ENV PATH             "${PATH}:/workspace/v/bin:/usr/local/cuda/bin"
-ENV MKL_ROOT         "/opt/intel/oneapi/mkl/2024.0.0/lib/intel64"
+ENV MKL_ROOT         "/opt/intel/oneapi/mkl/2024.1/lib/"
 ENV CUDA_VERSION     "12.2.2"
 ENV ZSTD_CLEVEL      "18"
 ENV ZSTD_NBTHREADS   "16"
@@ -90,7 +90,7 @@ RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https:/
 # Add complex third party dependencies
 
 RUN apt update
-RUN apt install -y cuda-toolkit-12-2
+RUN apt install -y cuda-toolkit-12-4
 RUN apt install -y intel-oneapi-mkl
 RUN apt install -y intel-oneapi-mkl-devel
 
@@ -140,6 +140,7 @@ RUN cmake --fresh \
       -D FAISS_ENABLE_RAFT:BOOL=OFF \
       -D FAISS_ENABLE_PYTHON:BOOL=ON \
       -D BLA_VENDOR:STRING=Intel10_64ilp \
+      -D BLA_STATIC:BOOL=True \
       -D MKL_LIBRARIES:STRING=${MKL_LIBRARIES} \
       -D CMAKE_INSTALL_PREFIX:PATH=/opt/meta/faiss \
       -D CMAKE_BUILD_TYPE:STRING=Release \
@@ -177,18 +178,18 @@ RUN "${PYTHON_VENV}" -m build --wheel --sdist --no-isolation
 # Generate artifacts from build
 #
 # - /workspace/target:
-#   - faiss-v1.7.4.tar.zst
+#   - faiss-v1.8.0.tar.zst
 #   - ld-so-conf-meta-faiss.conf
-#   - faiss-v1.7.4-py3-none-any.whl
+#   - faiss-v1.8.0-py3-none-any.whl
 #
 # - /workspace/target
-#   - intel-mkl-2023.2.0.tar.zst
+#   - intel-mkl-2024.1.0.tar.zst
 #   - ld-so-conf-intel-mkl.conf
 
 WORKDIR /workspace/target
 RUN echo "/opt/meta/faiss/lib" > /workspace/target/ld-so-conf-meta-faiss.conf
 RUN tar --use-compress-program=zstd --absolute-names --create --file="/workspace/target/faiss-${FAISS_VERSION}+${FAISS_EPOCH}.tar.zst" /opt/meta/faiss
-RUN cp --archive "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python/dist/faiss-1.7.4+${FAISS_EPOCH}-py3-none-any.whl" --target-directory="/workspace/target/"
+RUN cp --archive "/workspace/builds/faiss-${FAISS_VERSION}/faiss/python/dist/faiss-1.8.0+${FAISS_EPOCH}-py3-none-any.whl" --target-directory="/workspace/target/"
 
 
 ###

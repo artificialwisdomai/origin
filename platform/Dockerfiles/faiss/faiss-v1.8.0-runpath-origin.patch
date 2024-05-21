@@ -1,0 +1,54 @@
+diff -uNr faiss-1.8.0/faiss/python/CMakeLists.txt faiss-1.8.0-patched/faiss/python/CMakeLists.txt
+--- faiss-1.8.0/faiss/python/CMakeLists.txt	2024-02-29 21:24:50.000000000 +0000
++++ faiss-1.8.0-patched/faiss/python/CMakeLists.txt	2024-05-20 23:38:03.233456150 +0000
+@@ -110,6 +110,28 @@
+   target_compile_options(swigfaiss_avx512 PRIVATE /bigobj)
+ endif()
+ 
++  # If Linux, then set all public PROPERTIES
++  # Enable swifaiss to load the python loader from the directory where _swigfaiss.so lies.
++  set_target_properties(swigfaiss PROPERTIES
++    SUFFIX .so
++    INSTALL_RPATH "$ORIGIN/."
++    BUILD_WITH_INSTALL_RPATH TRUE
++  )
++
++  # Enable swifaiss_avx2 to load the python loader from the directory where _swigfaiss.so lies.
++  set_target_properties(swigfaiss_avx2 PROPERTIES
++    SUFFIX .so
++    INSTALL_RPATH "$ORIGIN/."
++    BUILD_WITH_INSTALL_RPATH TRUE
++  )
++
++  # Enable swifaiss_avx512 to load the python loader from the directory where _swigfaiss.so lies.
++  set_target_properties(swigfaiss_avx512 PROPERTIES
++    SUFFIX .so
++    INSTALL_RPATH "$ORIGIN/."
++    BUILD_WITH_INSTALL_RPATH TRUE
++  )
++
+ if(FAISS_ENABLE_GPU)
+   find_package(CUDAToolkit REQUIRED)
+   if(FAISS_ENABLE_RAFT)
+@@ -124,16 +146,21 @@
+ 
+ target_link_libraries(swigfaiss PRIVATE
+   faiss
++  faiss_python_callbacks
+   Python::Module
+   Python::NumPy
+   OpenMP::OpenMP_CXX
++  "-Wl,--enable-new-dtags"
+ )
+ 
++# For swigfaiss_avx2
+ target_link_libraries(swigfaiss_avx2 PRIVATE
+   faiss_avx2
++  faiss_python_callbacks
+   Python::Module
+   Python::NumPy
+   OpenMP::OpenMP_CXX
++  "-Wl,--enable-new-dtags"
+ )
+ 
+ target_link_libraries(swigfaiss_avx512 PRIVATE
