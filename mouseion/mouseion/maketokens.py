@@ -25,13 +25,11 @@ def function_load_jsonl(size: int, progress_queue: Queue, **kwargs) -> list:
     file = open(file_path)
     progress_queue.put(10000000)
 
-    i = 0
     splits = [[] for _ in range(32)]
 
-    for line in file:
+    for i, line in enumerate(file):
         splits[i % split_count].append(orjson.loads(line))
         progress_queue.put(len(line))
-        i += 1
     return splits
 
 
