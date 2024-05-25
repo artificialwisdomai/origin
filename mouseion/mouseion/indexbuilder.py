@@ -50,14 +50,14 @@ class GPUIndexBuilder(IndexBuilder):
     "An index builder which uses GPU acceleration."
 
     def __init__(self, *args):
-        super(self).__init__(*args)
+        super(GPUIndexBuilder, self).__init__(*args)
 
         co = faiss.GpuMultipleClonerOptions()
         co.useFloat16 = True
         co.usePrecomputed = True
         co.shard = True
-        co.resources = [limitedGPUResource(2**20)
-                        for _ in range(faiss.get_num_cpus())]
+        co.resources = [limitedGPUResource(2**32)
+                        for _ in range(faiss.get_num_gpus())]
 
         self.index = faiss.index_cpu_to_all_gpus(self.index, co)
 

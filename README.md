@@ -110,6 +110,48 @@ to improve the quality and capability of a foundational LLM.
 
 **Deploy.** 👉 Local-first and cloud native, you choose where to operate, on our cloud, or yours!
 
+# Learn Workflow
+
+To learn new information, create several data structures with Mousion.
+
+## Make Tokens
+
+Produce a tokenized dataset, a map of sequence index to token index, a map of token index to sequence index
+and finally embeddings.
+
+```console
+todo in followup PR
+```
+
+## Retrieve Neighbors
+
+```console
+python retrieve_neighbours.py \
+    --query-embeddings $HOME/datasets/arxiv/00_arxiv_train_embeddings.npy \
+    --query-chunk2seq $HOME/datasets/arxiv/00_arxiv_train_chunks_to_sequence.npy \
+    --index $HOME/datasets/realnews/arxiv.index \
+    --index-spec $HOME/train-arxiv.json \
+    --num-neighbours 4 \
+    --neighbors-output $HOME/datasets/arxiv/00_train_arxiv_train_neighbors.npy
+```
+
+## Build Index
+
+Build a faiss index representing the dataset. To build the faiss index, run the command below:
+
+```console
+mkdir -p $HOME/datasets/arxiv
+python '../mouseion/train_and_build_index.py' \
+    --specs 'mousion/datacollection_specstrain-arxiv.json' \
+    --index-type 'IVF16384,PQ32' \
+    --output '$HOME/datasets/arxiv/arxiv.index' \
+    --use-gpus \
+    --batch-size 65536
+```
+
+![mousion_train_index gif](assets/gifs/mousion_train_index.gif)
+
+
 # Build your own AKI (augmented knowledge index)
 
 - Create a `DataLoader()` to read the authoritative documents in your document collection.

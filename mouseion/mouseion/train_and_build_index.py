@@ -4,68 +4,74 @@ import numpy
 import tqdm
 import pathlib
 
-from .indexbuilder import GPUIndexBuilder, IndexBuilder
+from multiprocessing import Queue
+from indexbuilder import GPUIndexBuilder, IndexBuilder
+from tasks import Task, TaskProcessor, ProgressType
 
-def main(args):
+
+def function_train_index(size: int, progress_queue: Queue, **kwargs) -> list:
     """
     Determine if an output directory exists.
     """
-    if not pathlib.Path(args.output).is_dir():
-        raise ValueError(f"The output path is invalid {args.output}")
 
     """
-    Combines numpy embeddings from multiple npy files into a FAISS index.
+    Combines numpy embeddings from multiple numpy files into a FAISS index.
     """
-    try:
-        spec = json.load(args.spec.open("r"))
-    except Exception as e:
-        print(f"Error reading spec file: {e}")
-        return
+    kwarg_output = kwargs['output']
+    kwargs_index_type = kwargs['index_type']
+    kwargs_batch_size = kwargs['batch_size']
+    kwargs_specs = kwargs['specs']
 
-    total_embeddings = sum([numpy.load(shard["embeddings"], mmap_mode="r").shape[0] for shard in spec["shards"]])
-    is_trained = False
+    segments = list()
+    segment = numpy.load(specs[0]['embeddings'])
 
-    try:
-        first_shard = numpy.load(spec["shards"][0]["embeddings"], mmap_mode="r")
-    except Exception as e:
-        print(f"Error loading shard: {e}")
-        return
+    dimension = segment.shape[1]
+    split_size = segment.shape[0]
 
-    dim = first_shard.shape[1]
-    print(f'dimensionality is {dim}')
+    builder_cls = GPUIndexBuilder
+    builder = builder_cls(dimension, kwargs_index_type)
+    builder.train(segment)
 
-    builder_cls = GPUIndexBuilder if args.use_gpus else IndexBuilder
-    builder = builder_cls(dim, args.index_type)
+    shard_total_size=0
+    for i, spec in enumerate(specs):
+        segment = numpy.load(spec['embeddings'])
+        for j in range(0, split_size, kwargs_batch_size):
+            batch = segment[j:j+kwargs_batch_size]
+            builder.add(batch)
+            progress_queue.put(kwargs_batch_size)
+            shard_total_size += kwargs_batch_size
 
-    with tqdm.tqdm(total=total_embeddings, desc="Embeddings") as progress:
-        for shard_info in spec["shards"]:
-            try:
-                shard_embeddings = numpy.load(shard_info["embeddings"], mmap_mode="r")
-            except Exception as e:
-                print(f"Error loading shard: {e}")
-                continue
-
-            shard_size = shard_embeddings.shape[0]
-
-            if not is_trained:
-                builder.train(shard_embeddings)
-                is_trained = True
-
-            for i in range(0, shard_size, args.batch_size):
-                end = i + args.batch_size
-                batch = shard_embeddings[i:end]
-                builder.add(batch)
-                progress.update(batch.shape[0])
-
-    builder.write_path(args.output)
+    builder.write_path(kwarg_output)
+    return []
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--spec", type=pathlib.Path, required=True)
+    parser.add_argument("--specs", type=pathlib.Path, required=True)
     parser.add_argument("--index-type", type=str, required=True)
     parser.add_argument("--use-gpus", action="store_true")
     parser.add_argument("--output", type=str, required=True)
     parser.add_argument("--batch-size", type=int, default=32768)
     args = parser.parse_args()
 
-    main(args)
+    specs = json.load(args.specs.open("r"))
+    total_embeddings = sum([numpy.load(shard["embeddings"], mmap_mode="r").shape[0] for shard in specs])
+
+
+    tasks_train_index = [
+        Task(
+            id=0,
+            description="Train index",
+            size=total_embeddings,
+            progress_type=ProgressType.ITERATIONS_PER_SECOND,
+            function=function_train_index,
+            index_type=args.index_type,
+            use_gpus=args.use_gpus,
+            specs=specs,
+            output=args.output,
+            batch_size=args.batch_size,
+        )
+    ]
+
+    processor = TaskProcessor(command="RETRO Index Trainer", max_workers=50)
+    processor.add_tasks(tasks_train_index)
+    processor.process_tasks()
