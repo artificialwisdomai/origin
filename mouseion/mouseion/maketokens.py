@@ -1,14 +1,15 @@
-from tasks import Task, TaskProcessor, ProgressType
-from typing import Dict
-from multiprocessing import Queue
-import orjson
 import os
 from pathlib import Path
-from transformers import T5Tokenizer
+from multiprocessing import Queue, Manager
+from typing import Dict
+
 import numpy as np
-from multiprocessing import Manager
+import orjson
 import torch
 from sentence_transformers import SentenceTransformer
+from transformers import T5Tokenizer
+
+from tasks import Task, TaskProcessor, ProgressType
 
 
 def get_tokenizer():
@@ -20,7 +21,7 @@ def get_tokenizer():
 
 def function_load_jsonl(size: int, progress_queue: Queue, **kwargs) -> list:
     file_path = "/mnt/datasets/arxiv/arxiv_trained_minimized.json"
-    split_count = kwargs['split_count']
+    split_count = kwargs["split_count"]
     file_size = os.path.getsize(file_path)
     file = open(file_path)
     progress_queue.put(10000000)
@@ -34,14 +35,14 @@ def function_load_jsonl(size: int, progress_queue: Queue, **kwargs) -> list:
 
 
 def function_tokenize(size: int, progress_queue: Queue, **kwargs) -> list:
-    data = kwargs['data']
-    path_prefix = Path(kwargs['path_prefix'])
+    data = kwargs["data"]
+    path_prefix = Path(kwargs["path_prefix"])
 
-    sequence_to_chunks_pathname = Path(f'{path_prefix}_sequence_to_chunks.npy')
-    chunks_to_sequence_pathname = Path(f'{path_prefix}_chunks_to_sequence.npy')
-    tokenized_pathname = Path(f'{path_prefix}_tokenized.npy')
-    max_chunks=kwargs['max_chunks']
-    chunk_column_size=kwargs['chunk_column_size']
+    sequence_to_chunks_pathname = Path(f"{path_prefix}_sequence_to_chunks.npy")
+    chunks_to_sequence_pathname = Path(f"{path_prefix}_chunks_to_sequence.npy")
+    tokenized_pathname = Path(f"{path_prefix}_tokenized.npy")
+    max_chunks = kwargs["max_chunks"]
+    chunk_column_size = kwargs["chunk_column_size"]
 
     chunks_buffer = np.empty(shape=(max_chunks, chunk_column_size), dtype=np.uint16)
     sequence_to_chunk_index = []  # Index from seq_idx to idx of first chunk in sequence
@@ -63,19 +64,24 @@ def function_tokenize(size: int, progress_queue: Queue, **kwargs) -> list:
         sequence_to_chunk_index.append(chunks_total)
 
         chunk_to_sequence_index += [sequence] * chunk_row_size
-        chunks_total += chunk_row_size;
+        chunks_total += chunk_row_size
         progress_queue.put(1)
 
     np.save(tokenized_pathname, chunks_buffer[:chunks_total, :])
-    np.save(sequence_to_chunks_pathname, np.array(sequence_to_chunk_index, dtype=np.int64))
-    np.save(chunks_to_sequence_pathname, np.array(chunk_to_sequence_index, dtype=np.int32))
+    np.save(
+        sequence_to_chunks_pathname, np.array(sequence_to_chunk_index, dtype=np.int64)
+    )
+    np.save(
+        chunks_to_sequence_pathname, np.array(chunk_to_sequence_index, dtype=np.int32)
+    )
     return [chunks_buffer[:chunks_total, :]]
 
+
 def function_embed(size: int, progress_queue: Queue, **kwargs) -> list:
-    path_prefix = Path(kwargs['path_prefix'])
-    embed_path = Path(f'{path_prefix}_embedding')
-    chunks = kwargs['chunks']
-    batch_size = kwargs['batch_size']
+    path_prefix = Path(kwargs["path_prefix"])
+    embed_path = Path(f"{path_prefix}_embedding")
+    chunks = kwargs["chunks"]
+    batch_size = kwargs["batch_size"]
     model = SentenceTransformer("all-MiniLM-L6-v2")
 
     tokenizer = get_tokenizer()
@@ -109,8 +115,8 @@ if __name__ == "__main__":
             size=file_size,
             progress_type=ProgressType.MIBI_PER_SECOND,
             function=function_load_jsonl,
-            path_prefix='/mnt/datasets/arxiv/00_arxiv_train',
-            split_count=split_count
+            path_prefix="/mnt/datasets/arxiv/00_arxiv_train",
+            split_count=split_count,
         ),
     ]
 
@@ -125,17 +131,17 @@ if __name__ == "__main__":
 
     for i, split in enumerate(splits):
         task_tokenize = [
-           Task(
-               id=i + 1,
-               size=len(splits),
-               description=f'Tokenize {i:02}',
-               progress_type=ProgressType.ITERATIONS_PER_SECOND,
-               function=function_tokenize,
-               path_prefix=f'/home/sdake/datasets/arxiv/{i:02}_arxiv_train',
-               data=split,
-               chunk_column_size=64,
-               max_chunks=50000000,
-           )
+            Task(
+                id=i + 1,
+                size=len(splits),
+                description=f"Tokenize {i:02}",
+                progress_type=ProgressType.ITERATIONS_PER_SECOND,
+                function=function_tokenize,
+                path_prefix=f"/home/sdake/datasets/arxiv/{i:02}_arxiv_train",
+                data=split,
+                chunk_column_size=64,
+                max_chunks=50000000,
+            )
         ]
         processor.add_tasks(task_tokenize)
 
@@ -146,18 +152,18 @@ if __name__ == "__main__":
     # Create 32 tasks to embed data
 
     for i in range(split_count):
-        chunks=processor.get_task_result(i+1)[0]
+        chunks = processor.get_task_result(i + 1)[0]
         task_embed = [
-           Task(
-               id=i + 33,
-               description=f'Embed {i:02}',
-               progress_type=ProgressType.ITERATIONS_PER_SECOND,
-               function=function_embed,
-               path_prefix=f'/home/sdake/datasets/arxiv/{i:02}_arxiv_train',
-               size=len(chunks),
-               batch_size=64,
-               chunks=chunks
-           )
+            Task(
+                id=i + 33,
+                description=f"Embed {i:02}",
+                progress_type=ProgressType.ITERATIONS_PER_SECOND,
+                function=function_embed,
+                path_prefix=f"/home/sdake/datasets/arxiv/{i:02}_arxiv_train",
+                size=len(chunks),
+                batch_size=64,
+                chunks=chunks,
+            )
         ]
         processor.add_tasks(task_embed)
 
