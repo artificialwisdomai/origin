@@ -1,182 +1,226 @@
 [
     {
-        "chunks": "/home/sdake/datasets/arxiv/00_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/00_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/00_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/00_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/00_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/00_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/00_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/00_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/00_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/01_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/01_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/01_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/01_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/01_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/01_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/01_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/01_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/01_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/02_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/02_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/02_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/02_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/02_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/02_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/02_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/02_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/02_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/03_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/03_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/03_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/03_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/03_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/03_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/03_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/03_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/03_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/04_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/04_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/04_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/04_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/04_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/04_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/04_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/04_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/04_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/05_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/05_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/05_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/05_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/05_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/05_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/05_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/05_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/05_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/06_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/06_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/06_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/06_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/06_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/06_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/06_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/06_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/06_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/08_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/08_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/08_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/08_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/07_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/07_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/07_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/07_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/07_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/09_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/09_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/09_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/09_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/08_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/08_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/08_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/08_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/08_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/10_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/10_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/10_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/10_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/09_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/09_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/09_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/09_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/09_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/11_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/11_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/11_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/11_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/10_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/10_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/10_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/10_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/10_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/12_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/12_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/12_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/12_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/11_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/11_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/11_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/11_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/11_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/13_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/13_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/13_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/13_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/12_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/12_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/12_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/12_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/12_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/14_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/14_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/14_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/14_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/13_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/13_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/13_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/13_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/13_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/15_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/15_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/15_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/15_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/14_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/14_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/14_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/14_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/14_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/16_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/16_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/16_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/16_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/15_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/15_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/15_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/15_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/15_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/17_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/17_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/17_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/17_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/16_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/16_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/16_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/16_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/16_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/18_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/18_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/18_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/18_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/17_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/17_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/17_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/17_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/17_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/20_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/20_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/20_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/20_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/18_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/18_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/18_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/18_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/18_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/21_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/21_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/21_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/21_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/19_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/19_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/19_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/19_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/19_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/22_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/22_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/22_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/22_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/20_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/20_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/20_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/20_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/20_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/23_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/23_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/23_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/23_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/21_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/21_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/21_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/21_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/21_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/24_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/24_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/24_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/24_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/22_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/22_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/22_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/22_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/22_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/25_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/25_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/25_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/25_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/23_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/23_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/23_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/23_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/23_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/26_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/26_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/26_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/26_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/24_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/24_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/24_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/24_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/24_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/27_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/27_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/27_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/27_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/25_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/25_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/25_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/25_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/25_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/28_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/28_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/28_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/28_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/26_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/26_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/26_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/26_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/26_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/29_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/29_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/29_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/29_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/27_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/27_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/27_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/27_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/27_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/30_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/30_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/30_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/30_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/28_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/28_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/28_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/28_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/28_neighbors.npy"
     },
     {
-        "chunks": "/home/sdake/datasets/arxiv/31_arxiv_train_tokenized.npy",
-        "chunk2seq": "/home/sdake/datasets/arxiv/31_arxiv_train_sequence_to_chunks.npy",
-        "seq2chunk": "/home/sdake/datasets/arxiv/31_arxiv_train_chunks_to_sequence.npy",
-        "embeddings": "/home/sdake/datasets/arxiv/31_arxiv_train_embedding.npy"
+        "chunks": "/home/sdake/datasets/arxiv/29_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/29_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/29_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/29_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/29_neighbors.npy"
+    },
+    {
+        "chunks": "/home/sdake/datasets/arxiv/30_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/30_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/30_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/30_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/30_neighbors.npy"
+    },
+    {
+        "chunks": "/home/sdake/datasets/arxiv/31_chunks.npy",
+        "sequence_to_chunks": "/home/sdake/datasets/arxiv/31_sequence_to_chunks.npy",
+        "chunks_to_sequence": "/home/sdake/datasets/arxiv/31_chunks_to_sequence.npy",
+        "embeddings": "/home/sdake/datasets/arxiv/31_embeddings.npy",
+        "neighbors": "/home/sdake/datasets/arxiv/31_neighbors.npy"
     }
 ]
