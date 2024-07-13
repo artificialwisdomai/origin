@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM docker.io/library/debian:12 as build_faiss
+FROM docker.io/library/debian:12 AS build_faiss
 LABEL "com.computelify.vendor"="Computelify, Inc."
 LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
 LABEL "version"="1.0"
@@ -11,23 +11,23 @@ LABEL "description"="This text illustrates that label-values can span multiple l
 # Our build environment variables
 # Learn more: https://github.com/artificialwisdomai/origin/wiki/Build-FAISS-from-source
 
-ENV DEBIAN_VERSION   "12"
-ENV FAISS_EPOCH      "0"
-ENV DEBIAN_FRONTEND  "noninteractive"
-ENV FAISS_VERSION    "v1.8.0"
-ENV VENV_PATH        "/workspace/v"
-ENV PYTHON_VENV      "${VENV_PATH}/bin/python"
-ENV PIP_VENV         "${VENV_PATH}/bin/pip"
-ENV MKL_VERSION      "2024.1"
-ENV PATH             "${PATH}:/workspace/v/bin:/usr/local/cuda/bin"
-ENV MKL_ROOT         "/opt/intel/oneapi/mkl/2024.1/lib/"
-ENV CUDA_VERSION     "12.2.2"
-ENV ZSTD_CLEVEL      "18"
-ENV ZSTD_NBTHREADS   "16"
-ENV MKL_ROOT         "/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
-ENV MKL_MODEL        "ilp64"
-ENV MKL_LIBRARIES    "-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
-ENV CUDA_ARCHS       "80;86;89;90"
+ENV DEBIAN_VERSION="12"
+ENV FAISS_EPOCH="1"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV FAISS_VERSION="v1.8.0"
+ENV VENV_PATH="/workspace/v"
+ENV PYTHON_VENV="${VENV_PATH}/bin/python"
+ENV PIP_VENV="${VENV_PATH}/bin/pip"
+ENV MKL_VERSION="2024.2"
+ENV PATH="${PATH}:/workspace/v/bin:/usr/local/cuda/bin"
+ENV MKL_ROOT="/opt/intel/oneapi/mkl/2024.2/lib/"
+ENV CUDA_VERSION="12.2.2"
+ENV ZSTD_CLEVEL="18"
+ENV ZSTD_NBTHREADS="16"
+ENV MKL_ROOT="/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
+ENV MKL_MODEL="ilp64"
+ENV MKL_LIBRARIES="-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
+ENV CUDA_ARCHS="80;86;89;90"
 
 ###
 #
@@ -183,7 +183,7 @@ RUN "${PYTHON_VENV}" -m build --wheel --sdist --no-isolation
 #   - faiss-v1.8.0-py3-none-any.whl
 #
 # - /workspace/target
-#   - intel-mkl-2024.1.0.tar.zst
+#   - intel-mkl-2024.2.0.tar.zst
 #   - ld-so-conf-intel-mkl.conf
 
 WORKDIR /workspace/target
