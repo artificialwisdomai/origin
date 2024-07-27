@@ -1,0 +1,20 @@
+diff --git a/aten/src/ATen/native/cuda/Blas.cpp b/aten/src/ATen/native/cuda/Blas.cpp
+index 8d3b3dbea7..5f04c0cdd1 100644
+--- a/aten/src/ATen/native/cuda/Blas.cpp
++++ b/aten/src/ATen/native/cuda/Blas.cpp
+@@ -820,7 +820,7 @@ static bool _scaled_mm_allowed_device() {
+     }
+     return false;
+ #else
+-    return dprops->major >= 9 || (dprops->major == 8 && dprops->minor == 9);
++    return (dprops->major == 8 && dprops->minor >= 0);
+ #endif
+ }
+ 
+diff --git a/third_party/cutlass b/third_party/cutlass
+index bbe579a9e3..56b46e2d13 160000
+--- a/third_party/cutlass
++++ b/third_party/cutlass
+@@ -1 +1 @@
+-Subproject commit bbe579a9e3beb6ea6626d9227ec32d0dae119a49
++Subproject commit 56b46e2d13875b46b8f6a03f9f5ac91e2bfdc01a
