@@ -131,8 +131,9 @@ RUN git clone --depth 1 --jobs ${MAX_JOBS} "https://github.com/pytorch/pytorch" 
 #
 #
 
-COPY /workspace/patches/pytorch-compute-86-override.patch /workspace/patches
-RUN patch --directory build -p1 pytorch-compute-86-override.patch
+COPY pytorch-compute-86-override.patch /workspace/patches
+RUN patch --directory build -p1 /workspace/patches/pytorch-compute-86-override.patch
+
 
 ###
 #
