@@ -64,12 +64,9 @@ ENV CUSPARSE_INCLUDE_PATH="/usr/include/x86_64-linux-gnu"
 ENV CUDNN_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu"
 ENV CUDNN_INCLUDE_PATH="/usr/include/x86_64-linux-gnu"
 
-#ENV USE_UCC="ON"
 ENV USE_MIMALLOC="ON"
 ENV USE_NCCL="ON"
 
-#ENV ATEN_THREADING="NATIVE"
-#ENV USE_SYSTEM_LIBS ON
 
 ###
 #
@@ -78,7 +75,6 @@ ENV USE_NCCL="ON"
 RUN apt update
 RUN apt -y install build-essential
 RUN apt -y install ca-certificates
-#RUN apt -y install ccache
 RUN apt -y install python3
 RUN apt -y install python3-full
 RUN apt -y install python3-venv
@@ -98,7 +94,6 @@ RUN apt -y install libucx-dev
 RUN apt -y install libmpfr-dev
 RUN apt -y install libgmp3-dev
 RUN apt -y install libfftw3-dev
-#RUN apt -y install libmagma-dev
 
 
 ###
@@ -108,9 +103,7 @@ RUN apt -y install libfftw3-dev
 RUN apt -y install libjpeg-dev
 RUN apt -y install libpng-dev
 
-#RUN /usr/sbin/update-ccache-symlinks
 RUN mkdir -p /opt/ccache
-#RUN ccache --set-config=cache_dir=/opt/ccache
 
 
 ###
@@ -167,7 +160,7 @@ ENV MKL_MODEL="ilp64"
 ENV MKL_LIBRARIES="-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
 ENV CUDA_ARCHS="80;86;89;90"
 ENV BLA_VENDOR=Intel10_64ilp
-ENV BLA_STATIS=True
+ENV BLA_STATIC=True
 
 
 ###
