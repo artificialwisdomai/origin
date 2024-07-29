@@ -21,6 +21,7 @@ ENV VENV_PATH="/workspace/v"
 ENV PYTHON_VENV="${VENV_PATH}/bin/python"
 ENV PIP_BIN="${VENV_PATH}/bin/pip"
 
+
 ###
 #
 # Workaround gcc-12 issue:
@@ -63,7 +64,6 @@ ENV CUSPARSELT_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu"
 ENV CUSPARSE_INCLUDE_PATH="/usr/include/x86_64-linux-gnu"
 ENV CUDNN_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu"
 ENV CUDNN_INCLUDE_PATH="/usr/include/x86_64-linux-gnu"
-
 ENV USE_MIMALLOC="ON"
 ENV USE_NCCL="ON"
 
@@ -103,8 +103,6 @@ RUN apt -y install libfftw3-dev
 RUN apt -y install libjpeg-dev
 RUN apt -y install libpng-dev
 
-RUN mkdir -p /opt/ccache
-
 
 ###
 #
@@ -120,12 +118,13 @@ RUN mkdir -p /workspace/patches
 
 RUN git clone --depth 1 --jobs ${MAX_JOBS} "https://github.com/pytorch/pytorch" --branch "${PYTORCH_VERSION}" --recurse-submodules --shallow-submodules build
 
+
 ###
 #
 #
 
 COPY pytorch-compute-86-override.patch /workspace/patches
-RUN patch --directory build -p1 /workspace/patches/pytorch-compute-86-override.patch
+RUN patch --directory build --strip 1 /workspace/patches/pytorch-compute-86-override.patch
 
 
 ###
