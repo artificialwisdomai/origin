@@ -1,9 +1,9 @@
 FROM docker.io/library/debian:bookworm as build_cloud_hypervisor
 
 ENV DEBIAN_FRONTEND           noninteractive
-ENV RUST_VERSION              1.78.0
+ENV RUST_VERSION              1.80.0
 ENV RUST_ARCH                 x86_64
-ENV CLOUD_HYPERVISOR_VERSION  v39.0
+ENV CLOUD_HYPERVISOR_VERSION  40.0
 
 ENV PATH                      "$PATH:/root/.cargo/bin/"
 
@@ -47,7 +47,7 @@ RUN cargo install cargo-deb --locked
 # Prepare and build cloud-hypervisor
 
 WORKDIR /workspace/build
-RUN git clone --filter=tree:0 -b ${CLOUD_HYPERVISOR_VERSION} https://github.com/cloud-hypervisor/cloud-hypervisor cloud-hypervisor-${CLOUD_HYPERVISOR_VERSION}
+RUN git clone --filter=tree:0 -b v${CLOUD_HYPERVISOR_VERSION} https://github.com/cloud-hypervisor/cloud-hypervisor cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}
 
 
 ###
@@ -55,8 +55,9 @@ RUN git clone --filter=tree:0 -b ${CLOUD_HYPERVISOR_VERSION} https://github.com/
 # TODO(sdake): Define features
 # https://doc.rust-lang.org/cargo/reference/features.html#the-features-section
 
-WORKDIR /workspace/build/cloud-hypervisor-${CLOUD_HYPERVISOR_VERSION}
-RUN cargo rustc --release --locked --bin="cloud-hypervisor" --no-default-features --features="kvm,io_uring"  --target="${RUST_ARCH}-unknown-linux-musl" --future-incompat-report -- -D warnings -D clippy::undocumented_unsafe_blocks
+WORKDIR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}
+RUN cargo deb --profile release --target=${RUST_ARCH}-unknown-linux-musl --separate-debug-symbols --compress-debug-symbols
+
 
 ###
 #
@@ -64,7 +65,9 @@ RUN cargo rustc --release --locked --bin="cloud-hypervisor" --no-default-feature
 # And then placed in ${PWD}/target
 
 WORKDIR /workspace/target
-RUN cp -aR /workspace/build/cloud-hypervisor-${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/cloud-hypervisor /workspace/target/cloud_hypervisor_${CLOUD_HYPERVISOR_VERSION}
+RUN cp -aR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/cloud-hypervisor /workspace/target/cloud-hypervisor_v${CLOUD_HYPERVISOR_VERSION}
+RUN cp -aR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/ch-remote /workspace/target/ch-remote_v${CLOUD_HYPERVISOR_VERSION}
+RUN cp -aR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/debian/cloud-hypervisor_${CLOUD_HYPERVISOR_VERSION}.0-1_amd64.deb /workspace/target
 
 FROM scratch
 COPY --from=build_cloud_hypervisor /workspace/target /
