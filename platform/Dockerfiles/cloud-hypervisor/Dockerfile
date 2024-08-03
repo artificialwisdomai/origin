@@ -1,4 +1,4 @@
-FROM docker.io/library/debian:bookworm as build_cloud_hypervisor
+FROM docker.io/library/debian:bookworm AS build_cloud_hypervisor
 
 ENV DEBIAN_FRONTEND           noninteractive
 ENV RUST_VERSION              1.80.0
@@ -32,10 +32,9 @@ RUN apt --yes install liblzma-dev
 ###
 #
 # Install rustup-init, which then installs the host toolchain, target toolchain, and cargo commands
-# https://doc.rust-lang.org/cargo/reference/unstable.html#list-of-unstable-features
 
 WORKDIR /workspace/install
-RUN curl -LO https://static.rust-lang.org/rustup/dist/${RUST_ARCH}-unknown-linux-gnu/rustup-init
+RUN curl --location --remote-name https://static.rust-lang.org/rustup/dist/${RUST_ARCH}-unknown-linux-gnu/rustup-init
 RUN chmod +x rustup-init
 RUN ./rustup-init -y --profile=minimal --default-host=${RUST_ARCH}-unknown-linux-gnu --default-toolchain=${RUST_VERSION}-${RUST_ARCH}-unknown-linux-gnu --target=${RUST_ARCH}-unknown-linux-musl
 RUN cargo install cargo-feature --locked
@@ -49,20 +48,13 @@ RUN cargo install cargo-deb --locked
 WORKDIR /workspace/build
 RUN git clone --depth 1 --branch v${CLOUD_HYPERVISOR_VERSION} https://github.com/cloud-hypervisor/cloud-hypervisor cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}
 
-
-###
-#
-# TODO(sdake): Define features
-# https://doc.rust-lang.org/cargo/reference/features.html#the-features-section
-
 WORKDIR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}
 RUN cargo deb --profile release --target=${RUST_ARCH}-unknown-linux-musl --separate-debug-symbols --compress-debug-symbols
 
 
 ###
 #
-# Output the build by copying the file to a new layer
-# And then placed in ${PWD}/target
+# Output the build by placing in ${PWD}/target
 
 WORKDIR /workspace/target
 RUN cp --archive --recursive /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/cloud-hypervisor /workspace/target/cloud-hypervisor_v${CLOUD_HYPERVISOR_VERSION}
