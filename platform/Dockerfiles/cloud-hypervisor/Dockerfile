@@ -13,20 +13,20 @@ ENV PATH                      "$PATH:/root/.cargo/bin/"
 # global build dependencies
 
 RUN apt update
-RUN apt -y install curl
-RUN apt -y install git
-RUN apt -y install build-essential
-RUN apt -y install pkg-config
-RUN apt -y install musl-tools
+RUN apt --yes install curl
+RUN apt --yes install git
+RUN apt --yes install build-essential
+RUN apt --yes install pkg-config
+RUN apt --yes install musl-tools
 
 
 ###
 #
 # Runtime dependencies for cargo-deb
 
-RUN apt -y install dpkg
-RUN apt -y install dpkg-dev
-RUN apt -y install liblzma-dev
+RUN apt --yes install dpkg
+RUN apt --yes install dpkg-dev
+RUN apt --yes install liblzma-dev
 
 
 ###
@@ -47,7 +47,7 @@ RUN cargo install cargo-deb --locked
 # Prepare and build cloud-hypervisor
 
 WORKDIR /workspace/build
-RUN git clone --filter=tree:0 -b v${CLOUD_HYPERVISOR_VERSION} https://github.com/cloud-hypervisor/cloud-hypervisor cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}
+RUN git clone --depth 1 --branch v${CLOUD_HYPERVISOR_VERSION} https://github.com/cloud-hypervisor/cloud-hypervisor cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}
 
 
 ###
@@ -65,30 +65,9 @@ RUN cargo deb --profile release --target=${RUST_ARCH}-unknown-linux-musl --separ
 # And then placed in ${PWD}/target
 
 WORKDIR /workspace/target
-RUN cp -aR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/cloud-hypervisor /workspace/target/cloud-hypervisor_v${CLOUD_HYPERVISOR_VERSION}
-RUN cp -aR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/ch-remote /workspace/target/ch-remote_v${CLOUD_HYPERVISOR_VERSION}
-RUN cp -aR /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/debian/cloud-hypervisor_${CLOUD_HYPERVISOR_VERSION}.0-1_amd64.deb /workspace/target
+RUN cp --archive --recursive /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/cloud-hypervisor /workspace/target/cloud-hypervisor_v${CLOUD_HYPERVISOR_VERSION}
+RUN cp --archive --recursive /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/release/ch-remote /workspace/target/ch-remote_v${CLOUD_HYPERVISOR_VERSION}
+RUN cp --archive --recursive /workspace/build/cloud-hypervisor-v${CLOUD_HYPERVISOR_VERSION}/target/${RUST_ARCH}-unknown-linux-musl/debian/cloud-hypervisor_${CLOUD_HYPERVISOR_VERSION}.0-1_amd64.deb /workspace/target
 
 FROM scratch
 COPY --from=build_cloud_hypervisor /workspace/target /
-
-# TODO: cargo deb will build a debian package for us
-# Although I wish to maintain the capability to have multiple hypervisor versions
-# on the same filesystem at the same time.
-#
-###
-
-
-# These may be important to follow up with, or they may be uninteresting.
-#
-# https://doc.rust-lang.org/rustc/linker-plugin-lto.html
-# https://github.com/rust-cuda/wg/blob/master/documents/roadmap.md
-# https://github.com/japaric-archived/nvptx#targets
-# https://llvm.org/docs/LinkTimeOptimization.html
-# https://doc.rust-lang.org/cargo/reference/profiles.html#profile-settings
-# Environment: https://doc.rust-lang.org/cargo/reference/environment-variables.html
-# https://doc.rust-lang.org/cargo/reference/config.html#configuration-format
-# https://doc.rust-lang.org/cargo/reference/environment-variables.html
-# https://doc.rust-lang.org/cargo/commands/cargo-vendor.html
-# https://github.com/cloud-hypervisor/cloud-hypervisor/pull/5941
-# https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/programmer-references/24593.pdf
