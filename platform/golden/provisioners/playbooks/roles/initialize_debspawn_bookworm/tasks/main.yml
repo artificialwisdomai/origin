@@ -1,0 +1,4 @@
+---
+- name: Create bookworm building environment
+  ansible.builtin.command:
+    cmd: debspawn create bookworm

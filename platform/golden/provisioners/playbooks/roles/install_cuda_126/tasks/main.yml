@@ -20,15 +20,7 @@
     deb: https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb
     state: present
 
-- name: Install NVIDIA CUDA Drivers 550
-  become: yes
-  become_user: root
-  ansible.builtin.apt:
-    name: cuda-drivers-550
-    state: "present"
-    update_cache: true
-
-- name: Install NVIDIA CUDA 12.4
+- name: Install NVIDIA CUDA 12.6
   become: yes
   become_user: root
   ansible.builtin.apt:
@@ -36,8 +28,8 @@
     state: "present"
     update_cache: true
   with_items:
-    - cuda-toolkit-12-4
-    - libcublas-12-4
-    - cuda-nsight-12-4
-    - libcufft-12-4
+    - cuda-toolkit-12-6
+    - libcublas-12-6
+    - cuda-nsight-12-6
+    - libcufft-12-6
     - libcudnn8
