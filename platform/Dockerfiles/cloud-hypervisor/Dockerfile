@@ -42,7 +42,7 @@ WORKDIR /workspace/install
 RUN curl --location --remote-name https://static.rust-lang.org/rustup/dist/${RUST_ARCH}-unknown-linux-gnu/rustup-init
 RUN chmod +x rustup-init
 RUN ./rustup-init -y --profile=minimal --default-host=${RUST_ARCH}-unknown-linux-gnu --default-toolchain=${RUST_VERSION}-${RUST_ARCH}-unknown-linux-gnu --target=${RUST_ARCH}-unknown-linux-musl
-RUN cargo install cargo-feature --locked
+# 1-liner to list project features: cargo metadata --format-version=1 --no-deps | jq '.packages[].features | keys'
 RUN cargo install cargo-deb --locked
 
 
