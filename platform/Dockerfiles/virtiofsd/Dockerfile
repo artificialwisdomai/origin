@@ -1,10 +1,17 @@
-FROM docker.io/library/debian:bookworm AS toolchain
+# syntax=docker/dockerfile:1
+FROM docker.io/library/debian:12 AS toolchain
+LABEL "com.computelify.vendor"="Computelify, Inc."
+LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
+LABEL "version"="v1.11.1"
+LABEL "description"="debian/virtiofsd"
 
-ENV DEBIAN_FRONTEND           noninteractive
-ENV RUST_VERSION              1.80.0
-ENV RUST_ARCH                 x86_64
 
-ENV PATH                      "$PATH:/root/.cargo/bin/"
+ENV VIRTIOFSD_VERSION="1.11.1"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV RUST_VERSION="1.80.0"
+ENV RUST_ARCH="x86_64"
+
+ENV PATH="$PATH:/root/.cargo/bin/"
 
 
 ###
@@ -105,15 +112,15 @@ RUN make install
 # Prepare final application
 
 FROM dependencies AS build_virtiofsd
-ENV PATH                      "$PATH:/root/.cargo/bin/"
-ENV RUST_VERSION              1.80.0
-ENV RUST_ARCH                 x86_64
-ENV VIRTIOFSD_VERSION         1.11.1
-ENV RUSTFLAGS                 "--codegen target-feature=+crt-static --codegen link-self-contained=yes"
-ENV LIBSECCOMP_LINK_TYPE      "static"
-ENV LIBSECCOMP_LIB_PATH       "/usr/lib"
-ENV LIBCAPNG_LINK_TYPE        "static"
-ENV LIBCAPNG_LIB_PATH         "/usr/lib"
+ENV PATH="$PATH:/root/.cargo/bin/"
+ENV RUST_VERSION="1.80.0"
+ENV RUST_ARCH="x86_64"
+ENV VIRTIOFSD_VERSION="1.11.1"
+ENV RUSTFLAGS="--codegen target-feature=+crt-static --codegen link-self-contained=yes"
+ENV LIBSECCOMP_LINK_TYPE="static"
+ENV LIBSECCOMP_LIB_PATH="/usr/lib"
+ENV LIBCAPNG_LINK_TYPE="static"
+ENV LIBCAPNG_LIB_PATH="/usr/lib"
 
 
 ###
@@ -124,8 +131,8 @@ WORKDIR /workspace/build/
 RUN git clone --depth 1 --branch v${VIRTIOFSD_VERSION} https://gitlab.com/virtio-fs/virtiofsd virtiofsd-v${VIRTIOFSD_VERSION}
 
 WORKDIR /workspace/build/"virtiofsd-v${VIRTIOFSD_VERSION}"
-# Need the virtiofsd features. --all-features was here prior
-RUN cargo deb --profile release --target=${RUST_ARCH}-unknown-linux-musl --separate-debug-symbols --compress-debug-symbols -- --all-features
+RUN cargo build --release --target=${RUST_ARCH}-unknown-linux-musl --all-features
+RUN cargo deb --profile release --target=${RUST_ARCH}-unknown-linux-musl --separate-debug-symbols --compress-debug-symbols
 
 
 ###
