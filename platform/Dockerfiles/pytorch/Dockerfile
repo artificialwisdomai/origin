@@ -1,4 +1,11 @@
-FROM debian:bookworm AS bookworm_cuda
+# syntax=docker/dockerfile:1
+FROM docker.io/library/debian:12 AS build_pytorch
+LABEL "com.computelify.vendor"="Computelify, Inc."
+LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
+LABEL "version"="v2.4.0"
+LABEL "epoch"="0"
+LABEL "description"="debian/pytorch"
+
 
 ###
 #
@@ -11,8 +18,9 @@ WORKDIR /workspace
 #
 # Set global environment variables
 
-ENV PYTORCH_VERSION="v2.3.1"
-ENV CUDA_VERSION="12.5.1_555.42.06"
+ENV PYTORCH_VERSION="2.4.0"
+ENV PYTORCH_EPOCH="0"
+ENV CUDA_VERSION="12-6"
 ENV PATH="$PATH:/usr/local/cuda/bin"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV NVIDIA_DRIVER_CAPABILITIES="compute,utility"
@@ -52,8 +60,8 @@ ENV USE_SYSTEM_NCCL="OFF"
 ENV USE_OPENMP="ON"
 ENV USE_FLASH_ATTENTION="ON"
 ENV USE_MEM_EFF_ATTENTION="ON"
-ENV PYTORCH_BUILD_VERSION="2.3.1"
-ENV PYTORCH_BUILD_NUMBER="1"
+ENV PYTORCH_BUILD_VERSION="${PYTORCH_VERSION}"
+ENV PYTORCH_BUILD_NUMBER="${PYTORCH_EPOCH}"
 ENV TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
 ENV CUDA_PATH="/usr/local/cuda"
 ENV CUDA_HOME="/usr/local/cuda"
@@ -109,14 +117,14 @@ RUN apt -y install libpng-dev
 # Setup build environment and clone pytorch
 
 RUN mkdir -p /workspace/build
-RUN mkdir -p /workspace/${PYTORCH_VERSION}
+RUN mkdir -p /workspace/v${PYTORCH_VERSION}
 RUN mkdir -p /workspace/tmp
 RUN mkdir -p /workspace/added
 RUN mkdir -p /workspace/uncompressed
 RUN mkdir -p /workspace/target
 RUN mkdir -p /workspace/patches
 
-RUN git clone --depth 1 --jobs ${MAX_JOBS} "https://github.com/pytorch/pytorch" --branch "${PYTORCH_VERSION}" --recurse-submodules --shallow-submodules build
+RUN git clone --depth 1 --jobs ${MAX_JOBS} "https://github.com/pytorch/pytorch" --branch "v${PYTORCH_VERSION}" --recurse-submodules --shallow-submodules build
 
 
 ###
@@ -137,7 +145,7 @@ RUN apt-get update
 RUN apt -y install software-properties-common
 RUN add-apt-repository contrib
 RUN apt-get update
-RUN apt -y install cuda-toolkit-12-5
+RUN apt -y install cuda-toolkit-${CUDA_VERSION}
 RUN apt -y install libcusparselt-dev
 RUN apt -y install cudnn
 
@@ -146,7 +154,8 @@ RUN apt -y install cudnn
 #
 # Install Intel MKL BLAS
 
-RUN curl --location "https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB" | gpg --dearmor > /usr/share/keyrings/oneapi-archive-keyring.gpg
+RUN curl --location "https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB" --remote-name
+RUN gpg --dearmor -o /usr/share/keyrings/oneapi-archive-keyring.gpg GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
 RUN echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" > /etc/apt/sources.list.d/oneAPI.list
 
 RUN apt update
@@ -181,6 +190,7 @@ RUN ${PIP_BIN} install -r /workspace/build/requirements.txt
 ###
 #
 # Hardcode the cuda library path for the system loader
+# This should not be neccessary - investigate.
 
 RUN echo "/opt/nvidia/cuda/lib64" > /etc/ld.so.conf.d/cuda.conf
 RUN ldconfig -v
@@ -199,4 +209,4 @@ RUN ${PYTHON_VENV} -m build --wheel --sdist --no-isolation
 # Produce a clean image of build results for output from buildx
 
 FROM scratch
-COPY --from=bookworm_cuda /workspace/build/dist /
+COPY --from=build_pytorch /workspace/build/dist /
