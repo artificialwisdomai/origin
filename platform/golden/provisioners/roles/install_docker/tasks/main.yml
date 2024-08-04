@@ -1,63 +1,54 @@
 ---
 # https://docs.docker.com/engine/install/debian/
 
-- name: Install gnupg
+- name: Install Docker prerequisites and Docker Engine
+  hosts: all
   become: true
   become_user: root
-  ansible.builtin.apt:
-    name: gnupg
-    state: present
-    
-- name: Install ca-certificates
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name: ca-certificates
-    state: present
+  tasks:
+    - name: Install gnupg
+      ansible.builtin.apt:
+        name: gnupg
+        state: present
 
-- name: Install curl
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name: curl
-    state: present
+    - name: Install ca-certificates
+      ansible.builtin.apt:
+        name: ca-certificates
+        state: present
 
-- name: Install Docker's GPG key
-  become: true
-  become_user: root
-  ansible.builtin.apt_key:
-    url: "https://download.docker.com/linux/debian/gpg"
-    keyring: "/etc/apt/keyrings/docker.gpg"
-    state: present
+    - name: Install curl
+      ansible.builtin.apt:
+        name: curl
+        state: present
 
-- name: Install Docker Engine APT repository
-  become: true
-  become_user: root
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable"
-    update_cache: true
-    state: present
+    - name: Install Docker's GPG key
+      ansible.builtin.apt_key:
+        url: "https://download.docker.com/linux/debian/gpg"
+        keyring: "/etc/apt/keyrings/docker.gpg"
+        state: present
 
-- name: Install docker-ce
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name: docker-ce
+    - name: Install Docker Engine APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable"
+        update_cache: true
+        state: present
 
-- name: Install docker-ce-cli
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name: docker-ce-cli
+    - name: Install docker-ce
+      ansible.builtin.apt:
+        name: docker-ce
+        state: present
 
-- name: Install containerd.io
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name: containerd.io
+    - name: Install docker-ce-cli
+      ansible.builtin.apt:
+        name: docker-ce-cli
+        state: present
 
-- name: Install docker-buildx-plugin
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name: docker-buildx-plugin
+    - name: Install containerd.io
+      ansible.builtin.apt:
+        name: containerd.io
+        state: present
+
+    - name: Install docker-buildx-plugin
+      ansible.builtin.apt:
+        name: docker-buildx-plugin
+        state: present
