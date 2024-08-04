@@ -56,7 +56,6 @@ WORKDIR /workspace/install
 RUN curl --location --remote-name https://static.rust-lang.org/rustup/dist/${RUST_ARCH}-unknown-linux-gnu/rustup-init
 RUN chmod +x rustup-init
 RUN ./rustup-init -y --profile=minimal --default-host=${RUST_ARCH}-unknown-linux-gnu --default-toolchain=${RUST_VERSION}-${RUST_ARCH}-unknown-linux-gnu --target=${RUST_ARCH}-unknown-linux-musl
-RUN cargo install cargo-feature --locked
 RUN cargo install cargo-deb --locked
 
 
@@ -102,7 +101,7 @@ RUN make install
 
 WORKDIR /workspace/build/libcap-ng-v${LIBCAP_NG_VERSION}
 RUN bash autogen.sh
-RUN ./configure --enable-shared="no" --enable-static="yes" --enable-silent-rules="no" --with-python="no" --with-python3="no" --with-capability_header="/usr/include/linux/capability.h" --prefix="/usr"
+RUN ./configure --enable-shared="no" --enable-static="yes" --enable-silent-rules="no" --with-python3="no" --with-capability_header="/usr/include/linux/capability.h" --prefix="/usr"
 RUN make
 RUN make install
 
@@ -130,9 +129,9 @@ ENV LIBCAPNG_LIB_PATH="/usr/lib"
 WORKDIR /workspace/build/
 RUN git clone --depth 1 --branch v${VIRTIOFSD_VERSION} https://gitlab.com/virtio-fs/virtiofsd virtiofsd-v${VIRTIOFSD_VERSION}
 
-WORKDIR /workspace/build/"virtiofsd-v${VIRTIOFSD_VERSION}"
-RUN cargo build --release --target=${RUST_ARCH}-unknown-linux-musl --all-features
-RUN cargo deb --profile release --target=${RUST_ARCH}-unknown-linux-musl --separate-debug-symbols --compress-debug-symbols
+WORKDIR /workspace/build/virtiofsd-v${VIRTIOFSD_VERSION}
+RUN cargo build --release --target=${RUST_ARCH}-unknown-linux-musl --all-targets
+RUN cargo deb --no-build --separate-debug-symbols --compress-debug-symbols --target=${RUST_ARCH}-unknown-linux-musl
 
 
 ###
