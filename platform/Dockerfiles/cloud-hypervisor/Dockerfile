@@ -1,4 +1,9 @@
-FROM docker.io/library/debian:bookworm AS build_cloud_hypervisor
+# syntax=docker/dockerfile:1
+FROM docker.io/library/debian:12 AS build_cloud_hypervisor
+LABEL "com.computelify.vendor"="Computelify, Inc."
+LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
+LABEL "version"="v1.80.0"
+LABEL "description"="debian/cloud-hypervisor"
 
 ENV DEBIAN_FRONTEND           noninteractive
 ENV RUST_VERSION              1.80.0
