@@ -17,7 +17,7 @@
   become: true
   become_user: root
   ansible.builtin.apt:
-    deb: https://developer.download.nvidia.com/compute/cuda/repos/debian11/x86_64/cuda-keyring_1.1-1_all.deb
+    deb: https://developer.download.nvidia.com/compute/cuda/repos/debian12/x86_64/cuda-keyring_1.1-1_all.deb
     state: present
 
 - name: Install NVIDIA CUDA 12.6
