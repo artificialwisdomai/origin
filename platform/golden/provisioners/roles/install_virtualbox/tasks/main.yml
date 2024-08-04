@@ -1,29 +1,27 @@
 ---
-- name: Install gpg
+- name: Setup VirtualBox
+  hosts: all
   become: true
   become_user: root
-  ansible.builtin.apt:
-    name: gpg
-    state: present
+  tasks:
+    - name: Install gpg
+      ansible.builtin.apt:
+        name: gpg
+        state: present
 
-- name: Install VirtualBox gpg key
-  become: true
-  become_user: root
-  ansible.builtin.apt_key:
-    url: "https://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc"
-    keyring: "/usr/share/keyrings/oracle-virtualbox-2016.gpg"
-    state: present
+    - name: Install VirtualBox gpg key
+      ansible.builtin.apt_key:
+        url: "https://download.virtualbox.org/virtualbox/debian/oracle_vbox_2016.asc"
+        keyring: "/usr/share/keyrings/oracle-virtualbox-2016.gpg"
+        state: present
 
-- name: Install VirtualBox apt repository
-  become: true
-  become_user: root
-  ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib"
-    update_cache: yes
-    state: present
+    - name: Install VirtualBox apt repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian bullseye contrib"
+        update_cache: true
+        state: present
 
-- name: Install VirtualBox tooling
-  become: true
-  become_user: root
-  ansible.builtin.apt:
-    name: virtualbox-7.0
+    - name: Install VirtualBox tooling
+      ansible.builtin.apt:
+        name: virtualbox-7.0
+        state: present
