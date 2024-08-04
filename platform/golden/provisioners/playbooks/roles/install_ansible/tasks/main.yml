@@ -1,13 +1,13 @@
 ---
 - name: Install gpg
-  become: yes
+  become: true
   become_user: root
   ansible.builtin.apt:
     name: gpg
     state: present
     
 - name: Install Ansible
-  become: yes
+  become: true
   become_user: root
   ansible.builtin.apt:
     name: ansible

@@ -1,4 +1,0 @@
----
-- name: Create bullseye building environment
-  ansible.builtin.command:
-    cmd: debspawn create bullseye
