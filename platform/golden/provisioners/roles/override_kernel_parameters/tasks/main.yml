@@ -7,4 +7,3 @@
   become: true
   ansible.builtin.command:
     cmd: update-grub2
-
