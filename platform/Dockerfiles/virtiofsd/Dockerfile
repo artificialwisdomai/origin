@@ -90,7 +90,6 @@ RUN git clone --depth 1 --branch v${LIBSECCOMP_VERSION} https://github.com/secco
 WORKDIR /workspace/build/libseccomp-v${LIBSECCOMP_VERSION}
 RUN bash autogen.sh
 RUN ./configure --enable-shared="no" --enable-static="yes" --enable-silent-rules="no" --prefix="/usr"
-RUN ls -lR /workspace/build
 RUN make
 RUN make install
 
