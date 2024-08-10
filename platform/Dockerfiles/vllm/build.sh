@@ -2,7 +2,7 @@
 #
 # Build pytorch and output the build results to  "${PWD}/target"
 
-VLLM_VERSION=v0.5.3
+VLLM_VERSION=v0.5.4
 VLLM_EPOCH=0
 date=$(date '+%Y%m%d%H%M%S')
 
