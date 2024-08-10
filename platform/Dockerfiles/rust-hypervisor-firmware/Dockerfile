@@ -1,16 +1,15 @@
 # syntax=docker/dockerfile:1
-FROM docker.io/library/debian:12 AS build_rust_hypervisor_firmware
+FROM docker.io/library/debian:12 AS build_rust_hypervisor_fw
 LABEL "com.computelify.vendor"="Computelify, Inc."
 LABEL "cloud.artificialwisdom.vendor"="The Artificial Wisdom Cloud"
 LABEL "version"="v0.4.2"
-LABEL "description"="debian/rust_hypervisor_firmware"
+LABEL "description"="debian/rust_hypervisor_fw"
 
 
 ENV DEBIAN_FRONTEND="noninteractive"
-ENV RUST_HYPERVISOR_FIRMWARE_VERSION="0.4.2"
-ENV RUST_HYPERVISOR_FIRMWARE_EPOCH="1"
+ENV RUST_HYPERVISOR_FW_VERSION="0.4.2"
+ENV RUST_HYPERVISOR_FW_EPOCH="1"
 ENV PATH="$PATH:/root/.cargo/bin/"
-ENV RUST_VERSION="v1.80.0"
 ENV RUST_ARCH="x86_64"
 
 
@@ -36,10 +35,11 @@ RUN apt -y install liblzma-dev
 
 ###
 #
-# Prepare and build rust-hypervisor-firmware
+# Prepare and build rust-hypervisor-fw
 
-WORKDIR /workspace/build
-RUN git clone --depth 1 -b ${RUST_HYPERVISOR_FIRMWARE_VERSION} https://github.com/cloud-hypervisor/rust-hypervisor-firmware rust-hypervisor-firmware-${RUST_HYPERVISOR_FIRMWARE_VERSION}
+WORKDIR /workspace
+RUN rm -rf build
+RUN git clone --depth 1 --branch ${RUST_HYPERVISOR_FW_VERSION} https://github.com/cloud-hypervisor/rust-hypervisor-firmware build
 
 
 ###
@@ -50,26 +50,18 @@ RUN git clone --depth 1 -b ${RUST_HYPERVISOR_FIRMWARE_VERSION} https://github.co
 WORKDIR /workspace/install
 RUN curl --location --remote-name https://static.rust-lang.org/rustup/dist/${RUST_ARCH}-unknown-linux-gnu/rustup-init
 RUN chmod +x rustup-init
-RUN ./rustup-init -y --profile minimal --default-host ${RUST_ARCH}-unknown-linux-gnu --default-toolchain stable --target ${RUST_ARCH}-unknown-none
+
+RUN ./rustup-init -y --profile minimal --default-host ${RUST_ARCH}-unknown-linux-gnu --default-toolchain nightly --target ${RUST_ARCH}-unknown-none
 RUN cargo install cargo-deb --locked
-
-#RUN rustup component add rust-std
-#RUN rustup component add rust-src
-
-
-
-#RUN rustup default nightly
-#RUN rustup component add rust-src --toolchain nightly
 
 
 ###
 #
 # Build rust-hypervisor-firmware
 
-WORKDIR /workspace/build/rust-hypervisor-firmware-${RUST_HYPERVISOR_FIRMWARE_VERSION}
-#RUN rustup target add ${RUST_ARCH}-unknown-none
+WORKDIR /workspace/build
+RUN rustup target add ${RUST_ARCH}-unknown-none
 RUN cargo build --release --target ${RUST_ARCH}-unknown-none.json -Z build-std=core,alloc -Z build-std-features=compiler-builtins-mem
-RUN ls -lR /workspace/build/rust-hypervisor-firmware-0.4.2/
 RUN cargo deb --no-build --no-strip --target ${RUST_ARCH}-unknown-none
 RUN find / -name \*deb -ls
 
@@ -80,9 +72,10 @@ RUN find / -name \*deb -ls
 # And then placed in ${PWD}/target
 
 WORKDIR /workspace/target
-RUN cp --archive --recursive /workspace/build/rust-hypervisor-firmware-${RUST_HYPERVISOR_FIRMWARE_VERSION}/target/${RUST_ARCH}-unknown-none/release /workspace/target/
-RUN cp --archive --recursive /workspace/build/rust-hypervisor-firmware-${RUST_HYPERVISOR_FIRMWARE_VERSION}/target/${RUST_ARCH}-unknown-none/debian/hypervisor-fw_${RUST_HYPERVISOR_FIRMWARE_VERSION}-${RUST_HYPERVISOR_FIRMWARE_EPOCH}_amd64.deb /workspace/target
+
+RUN cp --archive --recursive /workspace/build/target/${RUST_ARCH}-unknown-none/release/hypervisor-fw /workspace/target/hypervisor-fw-${RUST_HYPERVISOR_FW_VERSION}-${RUST_HYPERVISOR_FW_EPOCH}
+RUN cp --archive --recursive /workspace/build/target/${RUST_ARCH}-unknown-none/debian/hypervisor-fw_${RUST_HYPERVISOR_FW_VERSION}-${RUST_HYPERVISOR_FW_EPOCH}_amd64.deb /workspace/target
 
 
 FROM scratch
-COPY --from=build_rust_hypervisor_firmware /workspace/target /
+COPY --from=build_rust_hypervisor_fw /workspace/target /
