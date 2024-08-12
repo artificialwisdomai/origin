@@ -22,6 +22,20 @@ ENV DEBIAN_FRONTEND="noninteractive"
 ENV VENV_PATH="/workspace/v"
 ENV PYTHON="${VENV_PATH}/bin/python"
 ENV PIP="${VENV_PATH}/bin/pip"
+ENV LIBSECCOMP_LINK_TYPE="static"
+ENV LIBSECCOMP_LIB_PATH="/usr/lib"
+ENV LIBCAPNG_LINK_TYPE="static"
+ENV LIBCAPNG_LIB_PATH="/usr/lib"
+
+
+###
+#
+# Create default paths
+
+RUN mkdir -p /workspace/source
+RUN mkdir -p /workspace/build
+RUN mkdir -p /workspace/target
+RUN mkdir -p /workspace/install
 
 
 ###
@@ -39,7 +53,6 @@ RUN apt --yes install git
 RUN apt --yes install gpg
 RUN apt --yes install curl
 RUN apt --yes install pkg-config
-RUN apt --yes install musl-tools
 RUN apt --yes install zstd
 RUN apt --yes install dpkg
 RUN apt --yes install dpkg-dev
@@ -53,6 +66,23 @@ RUN apt --yes install libgmp3-dev
 RUN apt --yes install libfftw3-dev
 RUN apt --yes install libjpeg-dev
 RUN apt --yes install libpng-dev
+RUN apt --yes install dpkg-dev
+RUN apt --yes install liblzma-dev
+RUN apt --yes install apt-utils
+RUN apt --yes install gperf
+RUN apt --yes install musl
+RUN apt --yes install musl-tools
+RUN apt --yes install musl-dev
+RUN apt --yes install bindgen
+RUN apt --yes install debhelper-compat
+RUN apt --yes install pkg-config
+RUN apt --yes install linux-libc-dev
+RUN apt --yes install autoconf
+RUN apt --yes install automake
+RUN apt --yes install libtool
+RUN apt --yes install m4
+RUN apt --yes install make
+RUN apt --yes install dpkg
 
 
 ###
@@ -104,7 +134,7 @@ RUN mv go /usr/local
 
 ###
 #
-# Install Python virtual environmnet
+# Install Python build virtual environmnet
 
 RUN python3 -m venv ${VENV_PATH}
 RUN ${PIP} install build
