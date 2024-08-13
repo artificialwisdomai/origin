@@ -19,9 +19,8 @@ ENV RUST_ARCH="x86_64"
 ENV TARGET_ARCH="amd64"
 ENV DEB_COMPRESSION="--deb-compression=none"
 ENV BUILD_WITH_CONTAINER="0"
-
+ENV TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
 ENV PATH="$PATH:/usr/local/cuda/bin:/root/.cargo/bin:/usr/local/go/bin:/workspace/v/bin"
-ENV DEBIAN_FRONTEND="noninteractive"
 ENV VENV_PATH="/workspace/v"
 ENV PYTHON="${VENV_PATH}/bin/python"
 ENV PIP="${VENV_PATH}/bin/pip"
@@ -29,7 +28,15 @@ ENV LIBSECCOMP_LINK_TYPE="static"
 ENV LIBSECCOMP_LIB_PATH="/usr/lib"
 ENV LIBCAPNG_LINK_TYPE="static"
 ENV LIBCAPNG_LIB_PATH="/usr/lib"
-
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV DEBIAN_VERSION="12"
+ENV MKL_ROOT="/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/"
+ENV ZSTD_CLEVEL="18"
+ENV ZSTD_NBTHREADS="16"
+ENV MKL_ROOT="/opt/intel/oneapi/mkl/${MKL_VERSION}/lib/intel64"
+ENV MKL_MODEL="ilp64"
+ENV MKL_LIBRARIES="-Wl,--start-group;${MKL_ROOT}/libmkl_intel_${MKL_MODEL}.a;${MKL_ROOT}/libmkl_gnu_thread.a;${MKL_ROOT}/libmkl_core.a;-Wl,--end-group"
+ENV CUDA_ARCHS="80;86;89;90"
 
 ###
 #
@@ -39,7 +46,7 @@ RUN mkdir -p /workspace/source
 RUN mkdir -p /workspace/build
 RUN mkdir -p /workspace/target
 RUN mkdir -p /workspace/install
-
+RUN mkdir -p /workspace/target
 
 ###
 #
