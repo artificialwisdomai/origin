@@ -9,7 +9,6 @@ module "kubernetes" {
     tenancy_id           = var.tenancy_id
     compartment_id       = var.compartment_id
     user_id              = var.user_id
-    vcn_cidrs            = var.vcn_cidrs
     region               = var.region
     kubernetes_version   = var.kubernetes_version
     pods_cidr            = var.pods_cidr

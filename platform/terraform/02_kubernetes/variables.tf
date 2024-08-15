@@ -37,10 +37,7 @@ variable "compartment_id" {
 # Cluster Networking Configuration
 
 # It would be cool to enhance this such that an array of clusters could be created.
-variable "vcn_cidrs" {
-    description = "VCN CIDRs. I don't know how this is used"
-    type        = list
-}
+
 variable "pods_cidr" {
     description = "Network CIDR associated with PODs. Must be a /16 that does not overlap with other networks."
     type        = string

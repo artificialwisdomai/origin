@@ -17,19 +17,12 @@ user_id        = "ocid1.user.oc1..aaaaaaaa64i4tqgymgevje33u6tx7ejxgh2dipggg42lwi
 
 ###
 #
-# Networking Configuration
-
-vcn_cidrs     = ["10.1.0.0/16"]
-
-
-###
-#
 # Kubernetes Configuration
 
 region             = "us-phoenix-1"
 kubernetes_version = "v1.30.1"
-worker_nodes       = 2
+worker_nodes       = 3
 worker_cpu         = 2
-worker_memory      = 8
+worker_memory      = 16
 pods_cidr          = "10.201.0.0/16"
 services_cidr      = "10.101.0.0/16"
