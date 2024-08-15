@@ -12,15 +12,6 @@ variable "api_private_key_path" {
   type        = string
 }
 
-#variable "ssh_private_key_path" {
-#  description = "The path to ssh private key."
-#  type        = string
-#}
-
-#variable "ssh_public_key_path" {
-#  description = "The path to ssh public key."
-#  type        = string
-#}
 
 ###
 #
@@ -39,12 +30,6 @@ variable "compartment_id" {
   description = "The compartment id where to create all resources."
   type        = string
 }
-
-# this may not be needed
-#variable "home_region" {
-#  description = "The home region for this compartment."
-#  type        = string
-#}
 
 
 ###
@@ -66,10 +51,11 @@ variable "services_cidr" {
     type        = string
 }
 
-# It would be cool to enhance this such that an array of clusters could be created.
+
 ###
 #
 # Kubernetes Control Plane Configuration
+# It would be cool to enhance this such that an array of clusters could be created.
 
 variable "region" {
   description = "Create Kubernetes in this region."
