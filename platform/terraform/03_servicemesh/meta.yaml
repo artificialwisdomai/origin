@@ -1,0 +1,107 @@
+###
+#
+# The goal of this manifest is to
+# 1. provide a workloadgroup for vllm serverless operations
+# 2. provide a vllm.vllm dns resolved name that maps to the virtual machines
+# 3. automatically healthcheck vllm.vllm on port 8000
+# 4. forward all traffic from ingressgateway to vllm.vllm. This last part doesn't appear to work.
+
+---
+apiVersion: networking.istio.io/v1
+kind: WorkloadGroup
+metadata:
+  name: vllm
+  namespace: vllm
+spec:
+  metadata:
+    labels:
+      app: vllm
+  template:
+    ports:
+      http: 8000
+    serviceAccount: default
+    network: vmnetwork
+  probe:
+    periodSeconds: 5
+    initialDelaySeconds: 1
+    httpGet:
+      port: 8000
+      path: /health
+---
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: vllm
+  namespace: vllm
+  labels:
+    app: vllm
+spec:
+  hosts:
+  - vllm
+  location: MESH_INTERNAL
+  ports:
+  - name: http
+    number: 8000
+    protocol: http
+  resolution: STATIC
+  workloadSelector:
+    labels:
+      app: vllm
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: vllm
+  namespace: vllm
+  labels:
+    app: vllm
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - gateway
+  http:
+  - match:
+    - uri:
+        prefix: /health
+    route:
+    - destination:
+        port:
+          number: 8000
+        host: vllm
+---
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: gateway
+  namespace: vllm
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+#---
+# I am not currently using this
+#
+#apiVersion: networking.istio.io/v1
+#kind: DestinationRule
+#metadata:
+#  name: vllm-dr
+#  namespace: vllm
+#  labels:
+#    app: foo
+#spec:
+#  host: vm1
+#  trafficPolicy:
+#    loadBalancer:
+#      simple: ROUND_ROBIN
+        #  subsets:
+        #  - name: v1
+        #    labels:
+        #      version: v1
+---
