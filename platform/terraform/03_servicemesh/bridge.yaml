@@ -1,0 +1,37 @@
+###
+#
+# I couldn't get this to work. The jist was to forward servicees that arrive on ingress-gateway
+# to the eastwest-gateway. Just storing in git for now as a reference for later.
+
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: eastwest-gateway
+spec:
+  selector:
+    istio: eastwest-gateway
+  servers:
+  - port:
+      number: 8080
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: forward-to-eastwest
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - ingress-gateway
+  http:
+  - match:
+    - port: 8080
+    route:
+    - destination:
+        host: eastwest-gateway
+        port:
+          number: 8080

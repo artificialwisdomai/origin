@@ -1,0 +1,26 @@
+# labels.topology.istio.io/network: vmnetwork
+name: istio-eastwestgateway
+labels:
+  istio: eastwestgateway
+  app: istio-eastwestgateway
+service:
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: "lb"
+    service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+    topology.istio.io/network: kubenetwork
+  ports:
+    - name: status-port
+      port: 15021
+      targetPort: 15021
+    - name: tls
+      port: 15443
+      targetPort: 15443
+    - name: tls-istiod
+      port: 15012
+      targetPort: 15012
+    - name: tls-webhook
+      port: 15017
+      targetPort: 15017
+networkGateway: kubenetwork

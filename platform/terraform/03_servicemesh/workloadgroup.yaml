@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1
+kind: WorkloadGroup
+metadata:
+  name: vllm
+  namespace: vllm
+spec:
+  metadata:
+    labels:
+      app: vllm
+  template:
+    ports:
+      http: 8000
+    serviceAccount: default
+    network: vmnetwork
+  probe:
+    periodSeconds: 5
+    initialDelaySeconds: 1
+    httpGet:
+      port: 8000
+      path: /health
